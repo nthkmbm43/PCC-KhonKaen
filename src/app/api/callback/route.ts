@@ -41,17 +41,20 @@ export async function GET(request: Request) {
           <title>OAuth Callback</title>
         </head>
         <body>
-          <p>เข้าสู่ระบบสำเร็จ! กำลังพากลับไปยังหน้าแอดมิน...</p>
-          <p>ถ้าหน้านี้ไม่ปิดอัตโนมัติ ให้สลับแท็บกลับไปหน้าเว็บหลัก แล้วปิดหน้านี้ได้เลยครับ</p>
+          <p>กำลังเข้าสู่ระบบ... (ระบบกำลังแลกเปลี่ยนข้อมูลกับหน้าหลัก)</p>
           <script>
-            if (window.opener) {
+            function receiveMessage(e) {
               window.opener.postMessage(
                 'authorization:github:success:{"token":"${accessToken}","provider":"github"}',
-                "https://pcc-khon-kaen.vercel.app"
+                e.origin
               );
+              window.removeEventListener("message", receiveMessage, false);
               setTimeout(() => window.close(), 100);
+            }
+            if (window.opener) {
+              window.addEventListener("message", receiveMessage, false);
+              window.opener.postMessage("authorizing:github", "*");
             } else {
-              // If opened in same tab (fallback)
               window.location.href = '/admin';
             }
           </script>
