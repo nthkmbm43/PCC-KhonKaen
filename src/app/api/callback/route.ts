@@ -43,13 +43,17 @@ export async function GET(request: Request) {
         <body>
           <p>เข้าสู่ระบบสำเร็จ! กำลังพากลับไปยังหน้าแอดมิน...</p>
           <script>
-            if (window.opener) {
-              const targetOrigin = new URL(window.location.href).origin;
+            function receiveMessage(e) {
               window.opener.postMessage(
                 'authorization:github:success:{"token":"${accessToken}","provider":"github"}',
-                targetOrigin
+                e.origin
               );
+              window.removeEventListener("message", receiveMessage, false);
               setTimeout(() => window.close(), 100);
+            }
+            if (window.opener) {
+              window.addEventListener("message", receiveMessage, false);
+              window.opener.postMessage("authorizing:github", "*");
             } else {
               window.location.href = '/admin';
             }
