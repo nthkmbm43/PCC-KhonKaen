@@ -2,6 +2,7 @@ backend:
   name: github
   repo: nthkmbm43/PCC-KhonKaen
   branch: main
+  base_url: "https://pcc-khon-kaen.vercel.app/api"
 
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
