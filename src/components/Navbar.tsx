@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Phone, MessageCircle, ChevronDown, Menu, X } from "lucide-react";
-import { products } from "@/data/products";
 import { siteConfig } from "@/data/site-config";
+import { Product } from "@/data/products";
 
-export default function Navbar() {
+export default function Navbar({ products }: { products: Product[] }) {
   const lineUrl = "https://lin.ee/5O8rHvD";
   const phoneNo = siteConfig.phoneRaw;
   const displayPhone = siteConfig.phone;

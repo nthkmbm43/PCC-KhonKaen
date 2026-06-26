@@ -1,9 +1,9 @@
-import { products } from "@/data/products";
+import { Metadata } from "next";
+import { getAllProducts } from "@/data/products";
+import { createSeoMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ChevronRight, ArrowUpRight, MessageCircle, Phone } from "lucide-react";
-import { Metadata } from "next";
 import { siteConfig } from "@/data/site-config";
-import { createSeoMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createSeoMetadata({
   title: "สินค้าและบริการคอนกรีต | โพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป",
@@ -19,8 +19,9 @@ export const metadata: Metadata = createSeoMetadata({
   ],
 });
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
   const lineUrl = siteConfig.social.line.url;
+  const products = await getAllProducts();
 
   return (
     <div className="pt-24 pb-32 bg-zinc-50 min-h-screen relative overflow-hidden">

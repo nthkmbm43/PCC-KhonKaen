@@ -1,8 +1,8 @@
-import { Phone, MessageCircle, CheckCircle2, Factory, Truck, ChevronRight, HelpCircle, MapPin, ArrowUpRight, Sparkles } from "lucide-react";
+import { Phone, MessageCircle, CheckCircle2, Factory, Truck, ChevronRight, MapPin, ArrowUpRight, Sparkles, HelpCircle } from "lucide-react";
 import Link from "next/link";
-import { products } from "@/data/products";
+import { getAllProducts } from "@/data/products";
+import { getAllPortfolios } from "@/data/portfolio";
 import { faqs as homeFAQ } from "@/data/faq";
-import { portfolios as portfolioItems } from "@/data/portfolio";
 import { siteConfig } from "@/data/site-config";
 import { createSeoMetadata, faqJsonLd, JsonLd } from "@/lib/seo";
 
@@ -14,15 +14,15 @@ export const metadata = createSeoMetadata({
   path: "/",
 });
 
-export default function Home() {
+export default async function Home() {
   const lineUrl = siteConfig.social.line.url;
   const phoneNo = siteConfig.phoneRaw;
 
   // Show all products instead of just 3
-  const allProducts = products;
+  const allProducts = await getAllProducts();
   
   // Get latest 6 portfolio items
-  const recentPortfolios = portfolioItems.slice(0, 6);
+  const recentPortfolios = (await getAllPortfolios()).slice(0, 6);
 
 
   return (
@@ -180,7 +180,7 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
             {recentPortfolios.map((portfolio, index) => (
               <div 
-                key={portfolio.id} 
+                key={index} 
                 className="bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-3 group"
                 style={{ animationDelay: `${index * 100}ms` }}
               >

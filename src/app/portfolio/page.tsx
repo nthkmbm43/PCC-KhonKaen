@@ -1,15 +1,17 @@
 import { Metadata } from "next";
-import { portfolios } from "@/data/portfolio";
+import { getAllPortfolios } from "@/data/portfolio";
 import { createSeoMetadata } from "@/lib/seo";
 import { MapPin } from "lucide-react";
 
 export const metadata: Metadata = createSeoMetadata({
-  title: "ผลงานที่ผ่านมาของเรา | พีซีซี โพสเทนชั่น",
-  description: "รวมผลงานการรับเหมาและติดตั้ง ระบบพื้นโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป โดยพีซีซี โพสเทนชั่น (PCC Post-Tension)",
+  title: "ผลงานของเรา | โครงการติดตั้งโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป",
+  description: "รวมภาพผลงานการติดตั้งแผ่นพื้นโพสเทนชั่น กำแพงกันดินตัว L และรั้วสำเร็จรูป โดยทีมวิศวกรผู้เชี่ยวชาญจากพีซีซี โพสเทนชั่น",
   path: "/portfolio",
 });
 
-export default function PortfolioPage() {
+export default async function PortfolioPage() {
+  const portfolios = await getAllPortfolios();
+  
   // Extract unique categories
   const categories = ["ทั้งหมด", ...Array.from(new Set(portfolios.map(p => p.category)))];
 
@@ -29,8 +31,8 @@ export default function PortfolioPage() {
 
         {/* Portfolio Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-          {portfolios.map((item) => (
-            <div key={item.id} className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 flex flex-col">
+          {portfolios.map((item, idx) => (
+            <div key={idx} className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 flex flex-col">
               <div className="h-64 sm:h-72 bg-slate-200 relative overflow-hidden">
                 <img 
                   src={item.image} 

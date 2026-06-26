@@ -1,29 +1,47 @@
-import type { MetadataRoute } from "next";
-import { products } from "@/data/products";
-import { absoluteUrl } from "@/lib/seo";
+import { MetadataRoute } from "next";
+import { siteConfig } from "@/data/site-config";
+import { getAllProducts } from "@/data/products";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
-  const staticRoutes = [
-    { path: "/", priority: 1 },
-    { path: "/products", priority: 0.9 },
-    { path: "/about", priority: 0.7 },
-    { path: "/contact", priority: 0.9 },
-  ];
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const products = await getAllProducts();
+  const productEntries: MetadataRoute.Sitemap = products.map((product) => ({
+    url: `${siteConfig.url}/products/${product.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
 
   return [
-    ...staticRoutes.map((route) => ({
-      url: absoluteUrl(route.path),
-      lastModified: now,
-      changeFrequency: "weekly" as const,
-      priority: route.priority,
-    })),
-    ...products.map((product) => ({
-      url: absoluteUrl(`/products/${product.slug}`),
-      lastModified: now,
+    {
+      url: siteConfig.url,
+      lastModified: new Date(),
+      changeFrequency: "yearly" as const,
+      priority: 1,
+    },
+    {
+      url: `${siteConfig.url}/about`,
+      lastModified: new Date(),
       changeFrequency: "monthly" as const,
-      priority: 0.85,
-      images: [absoluteUrl(product.image)],
-    })),
+      priority: 0.8,
+    },
+    {
+      url: `${siteConfig.url}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${siteConfig.url}/products`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${siteConfig.url}/portfolio`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    ...productEntries,
   ];
 }

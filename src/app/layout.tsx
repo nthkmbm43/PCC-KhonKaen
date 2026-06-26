@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StickyFloatingLineBtn from "@/components/ui/StickyFloatingLineBtn";
 import { createSeoMetadata, JsonLd, organizationJsonLd } from "@/lib/seo";
+import { getAllProducts } from "@/data/products";
 import "./globals.css";
 
 const prompt = Prompt({
@@ -32,16 +33,18 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const products = await getAllProducts();
+  
   return (
     <html lang="th" className={`${prompt.variable} antialiased scroll-smooth`}>
       <body className="min-h-screen flex flex-col">
         <JsonLd data={organizationJsonLd()} />
-        <Navbar />
+        <Navbar products={products} />
         <main className="flex-grow flex flex-col">{children}</main>
         <Footer />
         <StickyFloatingLineBtn />

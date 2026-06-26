@@ -3,7 +3,7 @@ backend:
   repo: nthkmbm43/PCC-KhonKaen
   branch: main
   auth_type: pkce
-  app_id: "YOUR_GITHUB_OAUTH_CLIENT_ID" # <--- เราจะต้องเอาโค้ด Client ID จาก Github มาใส่ตรงนี้ครับ
+  app_id: "Ov23liLlTNxep4Q3VdI9"
 
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"

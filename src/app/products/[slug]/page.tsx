@@ -1,4 +1,4 @@
-import { getProductBySlug, products } from "@/data/products";
+import { getProductBySlug, getAllProducts } from "@/data/products";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, MessageCircle, Phone, ArrowLeft, ArrowRight } from "lucide-react";
@@ -7,6 +7,7 @@ import { absoluteUrl, createSeoMetadata, JsonLd } from "@/lib/seo";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
+  const products = await getAllProducts();
   return products.map((product) => ({
     slug: product.slug,
   }));
@@ -14,7 +15,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   
   if (!product) {
     return createSeoMetadata({
@@ -35,8 +36,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   
+  const allProducts = await getAllProducts();
+  const currentIndex = allProducts.findIndex(p => p.slug === slug);
+  const nextProduct = currentIndex >= 0 && currentIndex < allProducts.length - 1 ? allProducts[currentIndex + 1] : null;
+  const prevProduct = currentIndex > 0 ? allProducts[currentIndex - 1] : null;
   if (!product) {
     notFound();
   }
@@ -178,6 +183,18 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </ul>
 
               <div className="space-y-4 relative z-10 pt-8 border-t border-gray-100">
+                <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100">
+                  {prevProduct ? (
+                    <Link href={`/products/${prevProduct.slug}`} className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-bold transition-colors group/nav">
+                      <ArrowLeft size={20} className="group-hover/nav:-translate-x-1 transition-transform" /> {prevProduct.shortTitle}
+                    </Link>
+                  ) : <div></div>}
+                  {nextProduct ? (
+                    <Link href={`/products/${nextProduct.slug}`} className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-bold transition-colors group/nav">
+                      {nextProduct.shortTitle} <ArrowRight size={20} className="group-hover/nav:translate-x-1 transition-transform" />
+                    </Link>
+                  ) : <div></div>}
+                </div>
                 <div className="bg-brand-50 text-brand-700 px-4 py-2 rounded-xl text-center font-bold text-sm mb-6 border border-brand-100 flex items-center justify-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
                   จัดส่งด่วนทั่วอีสานตอนบนและเชียงใหม่
