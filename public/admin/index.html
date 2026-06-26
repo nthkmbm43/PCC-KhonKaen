@@ -1,16 +1,204 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PCC Post-Tension Content Manager</title>
-    <!-- Explicitly set the config URL to prevent 404s when trailing slash is missing -->
+    <title>PCC Post-Tension — Content Manager</title>
     <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      /* ─── Reset & Base ─── */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --brand:        #0057FF;
+        --brand-dark:   #003CC5;
+        --brand-light:  #EEF4FF;
+        --accent:       #F97316;
+        --success:      #22C55E;
+        --danger:       #EF4444;
+        --bg:           #F8FAFC;
+        --surface:      #FFFFFF;
+        --border:       #E2E8F0;
+        --text-primary: #0F172A;
+        --text-muted:   #64748B;
+        --radius:       12px;
+        --shadow-sm:    0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+        --shadow-md:    0 4px 12px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
+        --shadow-lg:    0 12px 40px rgba(0,0,0,.12);
+        --transition:   .2s cubic-bezier(.4,0,.2,1);
+      }
+
+      html, body { height: 100%; font-family: 'Inter', 'Noto Sans Thai', sans-serif; }
+
+      /* ─── Loading Screen ─── */
+      #cms-loading {
+        position: fixed; inset: 0; z-index: 9999;
+        background: linear-gradient(135deg, #0A1628 0%, #0C2461 50%, #1A3A8F 100%);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 24px; transition: opacity .5s ease;
+      }
+      #cms-loading.fade-out { opacity: 0; pointer-events: none; }
+      .loading-logo {
+        display: flex; align-items: center; gap: 14px;
+      }
+      .loading-logo .logo-icon {
+        width: 52px; height: 52px; border-radius: 14px;
+        background: linear-gradient(135deg, #0057FF, #60A5FA);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px; font-weight: 800; color: white;
+        box-shadow: 0 8px 24px rgba(0,87,255,.4);
+        animation: pulse-logo 2s ease-in-out infinite;
+      }
+      @keyframes pulse-logo {
+        0%, 100% { box-shadow: 0 8px 24px rgba(0,87,255,.4); }
+        50%       { box-shadow: 0 12px 36px rgba(0,87,255,.7); }
+      }
+      .loading-logo .logo-text { color: white; }
+      .loading-logo .logo-text h1 { font-size: 22px; font-weight: 700; letter-spacing: -.3px; }
+      .loading-logo .logo-text p  { font-size: 13px; opacity: .6; margin-top: 2px; }
+
+      .loading-spinner {
+        width: 40px; height: 40px; border-radius: 50%;
+        border: 3px solid rgba(255,255,255,.15);
+        border-top-color: #60A5FA;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .loading-text { color: rgba(255,255,255,.5); font-size: 13px; }
+
+      /* ─── Override Decap CMS Global Styles ─── */
+      #nc-root, #nc-root * {
+        font-family: 'Inter', 'Noto Sans Thai', sans-serif !important;
+      }
+
+      /* Header / Toolbar */
+      #nc-root header,
+      [class*="AppHeader"],
+      [class*="Toolbar"] {
+        background: linear-gradient(135deg, #0A1628 0%, #0C2461 100%) !important;
+        border-bottom: 1px solid rgba(255,255,255,.08) !important;
+        box-shadow: 0 2px 20px rgba(0,0,0,.3) !important;
+      }
+
+      /* Sidebar / Collection list */
+      [class*="CollectionTop"],
+      [class*="SidebarContainer"],
+      [class*="sidebar"] {
+        background: #FAFBFF !important;
+        border-right: 1px solid #E2E8F0 !important;
+      }
+
+      /* Collection item */
+      [class*="CollectionTopRow"],
+      [class*="ListItemTopRow"] {
+        border-radius: 8px !important;
+        transition: background .15s ease !important;
+      }
+
+      /* Primary Button */
+      [class*="Button-"] button[class*="primary"],
+      button[class*="ButtonRaw"][data-testid*="expand"],
+      button[class*="Publish"] {
+        background: linear-gradient(135deg, #0057FF, #2563EB) !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 12px rgba(0,87,255,.3) !important;
+        transition: all .2s ease !important;
+      }
+      button[class*="Publish"]:hover {
+        transform: translateY(-1px) !important;
+        box-shadow: 0 6px 18px rgba(0,87,255,.4) !important;
+      }
+
+      /* Card / Entry list items */
+      [class*="EntryCard"],
+      [class*="Card"] {
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,.05) !important;
+        transition: box-shadow .2s ease, transform .2s ease !important;
+        overflow: hidden !important;
+      }
+      [class*="EntryCard"]:hover,
+      [class*="Card"]:hover {
+        box-shadow: 0 6px 20px rgba(0,0,0,.1) !important;
+        transform: translateY(-2px) !important;
+      }
+
+      /* Input fields */
+      [class*="StyledTextInput"],
+      [class*="Input"],
+      textarea,
+      input[type="text"] {
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        transition: border-color .15s, box-shadow .15s !important;
+      }
+      [class*="StyledTextInput"]:focus,
+      [class*="Input"]:focus,
+      textarea:focus,
+      input[type="text"]:focus {
+        border-color: #0057FF !important;
+        box-shadow: 0 0 0 3px rgba(0,87,255,.12) !important;
+        outline: none !important;
+      }
+
+      /* Labels */
+      [class*="FieldLabel"],
+      label {
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #374151 !important;
+        margin-bottom: 6px !important;
+        letter-spacing: .01em !important;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
+      ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+    </style>
   </head>
   <body>
-    <!-- Decap CMS will render here -->
-    
-    <!-- Scripts must be at the end of the body to prevent appendChild errors -->
+    <!-- Loading Screen -->
+    <div id="cms-loading">
+      <div class="loading-logo">
+        <div class="logo-icon">P</div>
+        <div class="logo-text">
+          <h1>PCC Post-Tension</h1>
+          <p>Content Management System</p>
+        </div>
+      </div>
+      <div class="loading-spinner"></div>
+      <span class="loading-text">กำลังโหลดระบบจัดการเนื้อหา...</span>
+    </div>
+
+    <!-- Decap CMS mounts here -->
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+      // Fade out loading screen once CMS is ready
+      if (window.CMS) {
+        window.CMS.registerEventListener({
+          name: 'prePublish',
+          handler: () => {}
+        });
+      }
+      // Fallback: hide loader after 3 seconds max
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loader = document.getElementById('cms-loading');
+          if (loader) {
+            loader.classList.add('fade-out');
+            setTimeout(() => loader.remove(), 500);
+          }
+        }, 2000);
+      });
+    </script>
   </body>
 </html>
