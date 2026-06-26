@@ -8,80 +8,59 @@ export async function GET(request: Request) {
     return new NextResponse('No code provided', { status: 400 });
   }
 
-  const clientId = "Ov23liLlTNxep4Q3VdI9";
-  const clientSecret = "6adc13956a9c5c183dab91377110c734f40cccb3";
-
   try {
-    const response = await fetch('https://github.com/login/oauth/access_token', {
+    // 1. เอา Code ไปแลกเป็น Access Token จาก GitHub
+    const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
         'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
       body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
+        client_id: process.env.GITHUB_CLIENT_ID || "Ov23liLlTNxep4Q3VdI9",
+        client_secret: process.env.GITHUB_CLIENT_SECRET || "6adc13956a9c5c183dab91377110c734f40cccb3",
         code,
       }),
     });
 
-    const data = await response.json();
-    const accessToken = data.access_token;
+    const tokenData = await tokenResponse.json();
+    const accessToken = tokenData.access_token;
 
     if (!accessToken) {
-      return new NextResponse('Failed to get access token from GitHub', { status: 400 });
+      return new NextResponse('Failed to get access token', { status: 400 });
     }
 
-    // Return the postMessage script expected by Decap CMS
-    const script = `
+    // 2. สร้าง HTML ที่มี Script ส่ง Token กลับไปให้ Decap CMS อย่างถูกต้อง
+    const html = `
       <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>OAuth Callback</title>
-        </head>
-        <body>
-          <p>เข้าสู่ระบบสำเร็จ! กำลังพากลับไปยังหน้าแอดมิน...</p>
-          <script>
-            let handshakeInterval;
-            function receiveMessage(e) {
-              if (handshakeInterval) clearInterval(handshakeInterval);
-              window.opener.postMessage(
-                'authorization:github:success:{"token":"${accessToken}","provider":"github"}',
-                e.origin
-              );
-              window.removeEventListener("message", receiveMessage, false);
-              setTimeout(() => window.close(), 100);
-            }
+      <html lang="en">
+      <head><title>Login Success</title></head>
+      <body>
+        <p>กำลังเข้าสู่ระบบ กรุณารอสักครู่...</p>
+        <script>
+          (function() {
+            // นี่คือ Format ที่ Decap CMS ต้องการเป๊ะๆ
+            const message = 'authorization:github:success:{"token":"${accessToken}","provider":"github"}';
+            
             if (window.opener) {
-              window.addEventListener("message", receiveMessage, false);
-              // Blast handshake message repeatedly until we get a reply
-              handshakeInterval = setInterval(() => {
-                window.opener.postMessage("authorizing:github", "*");
-              }, 50);
-              // Fallback: If handshake fails after 2 seconds, send token directly and close
-              setTimeout(() => {
-                clearInterval(handshakeInterval);
-                const targetOrigin = new URL(window.location.href).origin;
-                window.opener.postMessage(
-                  'authorization:github:success:{"token":"${accessToken}","provider":"github"}',
-                  targetOrigin
-                );
-                window.close();
-              }, 2000);
+              // ส่งข้อความกลับไปยังหน้าต่างหลัก (Admin)
+              window.opener.postMessage(message, new URL(window.location.origin).origin);
+              // ปิดหน้าต่าง Popup
+              window.close();
             } else {
-              window.location.href = '/admin';
+              document.body.innerHTML = "เกิดข้อผิดพลาด: ไม่สามารถสื่อสารกับหน้าต่างหลักได้";
             }
-          </script>
-        </body>
+          })();
+        </script>
+      </body>
       </html>
     `;
 
-    return new NextResponse(script, {
-      headers: { 'Content-Type': 'text/html' },
+    return new NextResponse(html, {
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
     });
 
   } catch (error) {
-    return new NextResponse('Internal Server Error', { status: 500 });
+    return new NextResponse('Authentication error', { status: 500 });
   }
 }
