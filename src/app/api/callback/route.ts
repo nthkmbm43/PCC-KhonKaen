@@ -30,31 +30,19 @@ export async function GET(request: Request) {
       return new NextResponse('Failed to get access token', { status: 400 });
     }
 
-    // 2. สร้าง HTML ที่มี Script ส่ง Token กลับไปให้ Decap CMS อย่างถูกต้อง
-    const html = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head><title>Login Success</title></head>
-      <body>
-        <p>กำลังเข้าสู่ระบบ กรุณารอสักครู่...</p>
-        <script>
-          (function() {
-            // นี่คือ Format ที่ Decap CMS ต้องการเป๊ะๆ
-            const message = 'authorization:github:success:{"token":"${accessToken}","provider":"github"}';
-            
-            if (window.opener) {
-              // ส่งข้อความกลับไปยังหน้าต่างหลัก (Admin)
-              window.opener.postMessage(message, new URL(window.location.origin).origin);
-              // ปิดหน้าต่าง Popup
-              window.close();
-            } else {
-              document.body.innerHTML = "เกิดข้อผิดพลาด: ไม่สามารถสื่อสารกับหน้าต่างหลักได้";
-            }
-          })();
-        </script>
-      </body>
-      </html>
-    `;
+    const html = `<!DOCTYPE html>
+<html>
+  <head><title>Login Success</title></head>
+  <body>
+    <script>
+      const message = 'authorization:github:success:{"token":"${accessToken}","provider":"github"}';
+      if (window.opener) {
+        window.opener.postMessage(message, window.location.origin);
+      }
+      window.close();
+    </script>
+  </body>
+</html>`;
 
     return new NextResponse(html, {
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
