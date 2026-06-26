@@ -1,5 +1,5 @@
 import { buildConfig } from 'payload'
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { fileURLToPath } from 'url'
@@ -19,9 +19,9 @@ export default buildConfig({
   collections: [Users, Media, Products, Portfolio],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'fallback-secret-key-replace-in-production',
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URI || (process.env.VERCEL ? 'file:/tmp/payload.db' : 'file:./payload.db'),
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URI || 'postgres://user:password@localhost:5432/payload',
     },
   }),
   typescript: {
