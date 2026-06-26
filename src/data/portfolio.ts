@@ -4,6 +4,7 @@ export type PortfolioItem = {
   description: string;
   image: string;
   category: string;
+  location?: string;
 };
 
 export const portfolios: PortfolioItem[] = [
