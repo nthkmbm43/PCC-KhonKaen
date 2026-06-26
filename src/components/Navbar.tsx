@@ -14,8 +14,9 @@ export default function Navbar() {
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
-      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 h-16 md:h-20 lg:h-24 xl:h-28 flex items-center justify-between gap-3">
+    <>
+      <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 h-16 md:h-20 lg:h-24 xl:h-28 flex items-center justify-between gap-3">
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center group py-2">
           {/* ใช้ความกว้าง (width) ในการกำหนดขนาด 3 ระดับ (Mobile, Tablet, PC) เพื่อแก้ปัญหาโลโก้เล็กจาก padding ของรูปภาพ */}
@@ -87,62 +88,63 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+    </header>
 
-      {/* Mobile Menu Overlay */}
-      <div 
-        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 lg:hidden ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
-        onClick={() => setIsMobileMenuOpen(false)}
-      ></div>
+    {/* Mobile Menu Overlay */}
+    <div 
+      className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 lg:hidden ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
+      onClick={() => setIsMobileMenuOpen(false)}
+    ></div>
 
-      {/* Mobile Menu Drawer */}
-      <div className={`fixed top-16 sm:top-20 right-0 bottom-0 w-[300px] bg-white z-50 shadow-2xl border-l border-gray-100 transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="flex flex-col p-6 gap-2">
-          <Link href="/" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>หน้าแรก</Link>
-          
-          <div className="flex flex-col">
-            <button 
-              className="flex items-center justify-between p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors w-full"
-              onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
-            >
-              สินค้าและบริการ <ChevronDown size={20} className={`transition-transform duration-300 ${isMobileProductsOpen ? 'rotate-180 text-brand-600' : ''}`} />
-            </button>
-            <div className={`flex flex-col gap-1 overflow-hidden transition-all duration-300 ${isMobileProductsOpen ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-              {products.map(product => (
-                <Link 
-                  key={product.slug} 
-                  href={`/products/${product.slug}`} 
-                  className="pl-8 pr-4 py-3 text-base text-gray-600 hover:text-brand-600 hover:bg-brand-50/50 rounded-lg transition-colors flex items-center gap-3"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-300"></div>
-                  {product.shortTitle}
-                </Link>
-              ))}
+    {/* Mobile Menu Drawer */}
+    <div className={`fixed top-16 sm:top-20 right-0 bottom-0 w-[300px] bg-white z-50 shadow-2xl border-l border-gray-100 transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className="flex flex-col p-6 gap-2">
+        <Link href="/" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>หน้าแรก</Link>
+        
+        <div className="flex flex-col">
+          <button 
+            className="flex items-center justify-between p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors w-full"
+            onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+          >
+            สินค้าและบริการ <ChevronDown size={20} className={`transition-transform duration-300 ${isMobileProductsOpen ? 'rotate-180 text-brand-600' : ''}`} />
+          </button>
+          <div className={`flex flex-col gap-1 overflow-hidden transition-all duration-300 ${isMobileProductsOpen ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+            {products.map(product => (
               <Link 
-                href="/products" 
-                className="pl-8 pr-4 py-3 mt-1 text-base text-brand-600 font-bold hover:bg-brand-50 rounded-lg transition-colors"
+                key={product.slug} 
+                href={`/products/${product.slug}`} 
+                className="pl-8 pr-4 py-3 text-base text-gray-600 hover:text-brand-600 hover:bg-brand-50/50 rounded-lg transition-colors flex items-center gap-3"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                ดูสินค้าทั้งหมด &rarr;
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-300"></div>
+                {product.shortTitle}
               </Link>
-            </div>
-          </div>
-
-          <Link href="/portfolio" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>ผลงานของเรา</Link>
-          <Link href="/about" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>เกี่ยวกับเรา</Link>
-          <Link href="/contact" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>ติดต่อเรา</Link>
-          
-          <div className="mt-6 pt-6 border-t border-gray-100">
-            <a href={`tel:${phoneNo}`} className="flex items-center justify-center gap-3 w-full py-4 bg-slate-100 text-gray-800 font-bold rounded-xl mb-4">
-              <Phone size={20} /> โทรศัพท์
-            </a>
-            <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full py-4 bg-[#06C755] text-white font-bold rounded-xl shadow-lg shadow-[#06C755]/30">
-              <MessageCircle size={20} /> แอดไลน์สอบถาม
-            </a>
+            ))}
+            <Link 
+              href="/products" 
+              className="pl-8 pr-4 py-3 mt-1 text-base text-brand-600 font-bold hover:bg-brand-50 rounded-lg transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              ดูสินค้าทั้งหมด &rarr;
+            </Link>
           </div>
         </div>
+
+        <Link href="/portfolio" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>ผลงานของเรา</Link>
+        <Link href="/about" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>เกี่ยวกับเรา</Link>
+        <Link href="/contact" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>ติดต่อเรา</Link>
+        
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <a href={`tel:${phoneNo}`} className="flex items-center justify-center gap-3 w-full py-4 bg-slate-100 text-gray-800 font-bold rounded-xl mb-4">
+            <Phone size={20} /> โทรศัพท์
+          </a>
+          <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 w-full py-4 bg-[#06C755] text-white font-bold rounded-xl shadow-lg shadow-[#06C755]/30">
+            <MessageCircle size={20} /> แอดไลน์สอบถาม
+          </a>
+        </div>
       </div>
-    </header>
+    </div>
+  </>
   );
 }
 
