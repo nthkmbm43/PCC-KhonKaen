@@ -1,28 +1,32 @@
-import fs from 'fs';
-import path from 'path';
+import { getPayload } from 'payload'
+import configPromise from '@/payload.config'
 
 export type PortfolioItem = {
   title: string;
-  category: "post-tension" | "concrete-product" | "fence" | "other";
+  category: "post-tension" | "concrete-product" | "fence" | "other" | string;
   description: string;
   image: string;
   location?: string;
 };
 
 export async function getAllPortfolios(): Promise<PortfolioItem[]> {
-  const dir = path.join(process.cwd(), 'src/content/portfolio');
-  let files: string[] = [];
   try {
-    files = fs.readdirSync(dir);
-  } catch (e) {
+    const payload = await getPayload({ config: configPromise });
+    const result = await payload.find({
+      collection: 'portfolio',
+      depth: 1,
+      limit: 100,
+    });
+    
+    return result.docs.map((doc: any) => ({
+      title: doc.title,
+      category: doc.category || 'other',
+      description: doc.description,
+      image: doc.image?.url || '',
+      location: doc.location || '',
+    }));
+  } catch (error) {
+    console.error('Error fetching portfolios from Payload:', error);
     return [];
   }
-  const portfolios: PortfolioItem[] = [];
-  for (const file of files) {
-    if (file.endsWith('.json')) {
-      const content = fs.readFileSync(path.join(dir, file), 'utf8');
-      portfolios.push(JSON.parse(content));
-    }
-  }
-  return portfolios;
 }
