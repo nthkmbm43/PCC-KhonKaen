@@ -213,7 +213,181 @@
       }
 
       /* ════════════════════════════
-         BUTTONS — Global base
+         FIX 1: FIELD LABEL CHIPS
+         (the blue chip badges on editor form)
+      ════════════════════════════ */
+      /* Override ALL label/span inside the editor that have blue bg */
+      #nc-root label,
+      #nc-root label span,
+      #nc-root [class*="Label"],
+      #nc-root [class*="label"] {
+        background: transparent !important;
+        background-color: transparent !important;
+        color: #374151 !important;
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: .07em !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        display: block !important;
+        margin-bottom: 6px !important;
+      }
+
+      /* ════════════════════════════
+         FIX 2: ALL BUTTON COLORS
+         Override every dark/teal/black button
+      ════════════════════════════ */
+      /* Reset ALL buttons first */
+      #nc-root button {
+        background: #F1F5F9 !important;
+        color: #374151 !important;
+        border: 1.5px solid #E2E8F0 !important;
+        box-shadow: none !important;
+      }
+      #nc-root button:hover {
+        background: #E2E8F0 !important;
+        border-color: #CBD5E1 !important;
+        transform: none !important;
+      }
+
+      /* PRIMARY buttons — any button with darker bg from Decap */
+      /* Target by position: first button / button containing text Publish/Save/Upload */
+      #nc-root button[class*="primary"],
+      #nc-root button[class*="Primary"],
+      #nc-root button[class*="default"][class*="primary"],
+      #nc-root [data-testid="publish-button"],
+      #nc-root [data-testid="new-entry-button"],
+      #nc-root [data-testid="upload-button"] {
+        background: linear-gradient(135deg, #0057FF, #2563EB) !important;
+        color: #fff !important;
+        border: none !important;
+        box-shadow: 0 3px 10px rgba(0,87,255,.3) !important;
+      }
+      #nc-root button[class*="primary"]:hover,
+      #nc-root [data-testid="publish-button"]:hover,
+      #nc-root [data-testid="new-entry-button"]:hover,
+      #nc-root [data-testid="upload-button"]:hover {
+        background: linear-gradient(135deg, #0046D0, #1D4ED8) !important;
+        box-shadow: 0 5px 16px rgba(0,87,255,.45) !important;
+        transform: translateY(-1px) !important;
+      }
+
+      /* Aggressively override any button with dark/black background */
+      #nc-root button[style*="background-color: rgb(0"],
+      #nc-root button[style*="background: rgb(0"],
+      #nc-root button[style*="background-color: #000"],
+      #nc-root button[style*="background-color: #1"],
+      #nc-root button[style*="background-color: #2"] {
+        background: linear-gradient(135deg, #0057FF, #2563EB) !important;
+        color: #fff !important;
+        border: none !important;
+      }
+
+      /* ════════════════════════════
+         FIX 3: QUICK ADD DROPDOWN
+      ════════════════════════════ */
+      #nc-root [role="menu"],
+      #nc-root ul[role="menu"],
+      #nc-root [class*="dropdown"],
+      #nc-root [class*="Dropdown"],
+      #nc-root [class*="menu"],
+      #nc-root [class*="Menu"] {
+        background: #fff !important;
+        border: 1.5px solid #E2E8F0 !important;
+        border-radius: 14px !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,.14), 0 2px 8px rgba(0,0,0,.06) !important;
+        padding: 6px !important;
+        overflow: hidden !important;
+      }
+      #nc-root [role="menuitem"],
+      #nc-root [class*="MenuItem"],
+      #nc-root [class*="menuItem"],
+      #nc-root [class*="DropdownItem"],
+      #nc-root [class*="dropdownItem"] {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #1E293B !important;
+        border-radius: 8px !important;
+        padding: 10px 14px !important;
+        transition: background .12s ease, color .12s ease !important;
+        cursor: pointer !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      #nc-root [role="menuitem"]:hover,
+      #nc-root [class*="MenuItem"]:hover,
+      #nc-root [class*="DropdownItem"]:hover {
+        background: #EEF4FF !important;
+        color: #0057FF !important;
+        transform: none !important;
+        box-shadow: none !important;
+      }
+
+      /* ════════════════════════════
+         FIX 4: MEDIA MODAL BUTTONS
+      ════════════════════════════ */
+      /* Upload button — blue primary */
+      #nc-root [role="dialog"] button:last-of-type,
+      #nc-root [aria-label*="Upload"],
+      #nc-root button[aria-label*="Upload"],
+      #nc-root [data-testid*="upload"] {
+        background: linear-gradient(135deg, #0057FF, #2563EB) !important;
+        color: #fff !important;
+        border: none !important;
+        box-shadow: 0 3px 10px rgba(0,87,255,.3) !important;
+      }
+      /* Delete selected — red */
+      #nc-root [aria-label*="Delete"],
+      #nc-root button[aria-label*="Delete"],
+      #nc-root [data-testid*="delete-selected"] {
+        background: transparent !important;
+        color: #EF4444 !important;
+        border: 1.5px solid #FCA5A5 !important;
+        box-shadow: none !important;
+      }
+      #nc-root [aria-label*="Delete"]:hover {
+        background: #FEE2E2 !important;
+        border-color: #EF4444 !important;
+        transform: none !important;
+      }
+
+      /* Copy / Download — outlined secondary */
+      #nc-root [aria-label*="Copy"],
+      #nc-root button[aria-label*="Copy"],
+      #nc-root [aria-label*="Download"],
+      #nc-root button[aria-label*="Download"] {
+        background: #fff !important;
+        color: #374151 !important;
+        border: 1.5px solid #D1D5DB !important;
+        box-shadow: none !important;
+      }
+
+      /* ════════════════════════════
+         FIX 5: PUBLISH AREA HEADER
+         (top bar of the editor page)
+      ════════════════════════════ */
+      /* "Writing in X collection" bar */
+      #nc-root [data-testid="editor-toolbar"],
+      #nc-root header + div[class] {
+        background: #fff !important;
+        border-bottom: 1px solid #E2E8F0 !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,.04) !important;
+      }
+      /* "CHANGES SAVED" badge */
+      #nc-root [data-testid="status-badge"],
+      #nc-root span[class*="status"],
+      #nc-root span[class*="saved"] {
+        color: #16A34A !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: .06em !important;
+      }
+
+      /* ════════════════════════════
+         BUTTONS — Global base (kept)
       ════════════════════════════ */
       #nc-root button {
         font-family: 'Inter','Noto Sans Thai',sans-serif !important;
