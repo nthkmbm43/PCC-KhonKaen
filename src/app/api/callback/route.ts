@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const code = searchParams.get('code');
 
   if (!code) {
-    return new NextResponse('Error: ไม่ได้รับ Code จาก GitHub', { status: 400 });
+    return new NextResponse('Error: ไม่ได้รับ Code', { status: 400 });
   }
 
   try {
@@ -26,52 +26,40 @@ export async function GET(request: Request) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
-    // ถ้าไม่ได้ Token ให้โชว์ Error ออกมาตรงๆ ห้ามปิดหน้าต่าง!
     if (!accessToken) {
-      const errorHtml = `
-        <div style="color: red; font-family: sans-serif; padding: 20px;">
-          <h2>เกิดข้อผิดพลาดในการขอ Token!</h2>
-          <p>กรุณาเช็ค GITHUB_CLIENT_SECRET ใน Vercel Environment Variables ว่าถูกต้องหรือไม่</p>
-          <pre>${JSON.stringify(tokenData, null, 2)}</pre>
-        </div>
-      `;
-      return new NextResponse(errorHtml, { status: 400, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+      return new NextResponse(`Error: ${JSON.stringify(tokenData)}`, { status: 400 });
     }
 
-    // ถ้าสำเร็จ จะแสดงปุ่มให้กดด้วยมือ เพื่อทะลวงระบบบล็อกอัตโนมัติของเบราว์เซอร์
-    const successHtml = `
+    // โค้ดชุดนี้คือการทำ Handshake ให้ตรงสเปกของ Decap CMS v3 เป๊ะๆ (พร้อมแก้บั๊กของ AI เล็กน้อย)
+    const html = `
       <!DOCTYPE html>
-      <html lang="th">
-      <head>
-        <title>Login Success</title>
-        <style>
-          body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f9fafb; margin: 0; }
-          button { background-color: #24292e; color: white; border: none; padding: 15px 30px; font-size: 18px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-          button:hover { background-color: #0366d6; }
-        </style>
-      </head>
+      <html>
+      <head><title>Authenticating...</title></head>
       <body>
-        <h2 style="color: #28a745;">✅ ดึงข้อมูลจาก GitHub สำเร็จแล้ว!</h2>
-        <p style="color: #6c757d; margin-bottom: 25px;">(ระบบหยุดการปิดหน้าต่างอัตโนมัติ เพื่อป้องกันเบราว์เซอร์บล็อกการทำงาน)</p>
-        <button id="loginBtn">คลิกปุ่มนี้เพื่อเข้าสู่ระบบ CMS</button>
-        
+        <p>กำลังเชื่อมต่อระบบ กรุณารอสักครู่...</p>
         <script>
-          document.getElementById('loginBtn').addEventListener('click', function() {
-            const message = 'authorization:github:success:{"token":"${accessToken}","provider":"github"}';
-            
-            if (window.opener) {
-              window.opener.postMessage(message, '*');
-              window.close();
-            } else {
-              alert('❌ เกิดข้อผิดพลาด: ไม่สามารถสื่อสารกับหน้าต่างหลักได้ (window.opener ถูกบล็อก)\\nกรุณาลองเข้าใช้งานผ่านหน้าต่างปกติ (ไม่ใช่โหมดไม่ระบุตัวตน) หรือเช็คการตั้งค่าเบราว์เซอร์');
-            }
-          });
+          const provider = 'github';
+          const message = 'authorization:' + provider + ':success:{"token":"${accessToken}","provider":"' + provider + '"}';
+          
+          // ดักฟังข้อความจากหน้าต่างหลัก (Admin)
+          window.addEventListener("message", (event) => {
+            // ถ้าระบบหลักทักกลับมา ให้ส่ง Token กลับไปที่จุดกำเนิดนั้นทันที
+            window.opener.postMessage(message, event.origin);
+            // ส่งเสร็จแล้ว ปิดหน้าต่างตัวเองทันที
+            window.close();
+          }, false);
+
+          // สิ่งที่ AI ของคุณตกหล่นไป: Popup ต้องเป็นฝ่ายเริ่มทักหน้าหลักไปก่อนว่า "authorizing:github"
+          // ไม่งั้นหน้าหลักจะไม่มีวันตอบกลับมา และมันจะค้างครับ
+          if (window.opener) {
+            window.opener.postMessage("authorizing:" + provider, "*");
+          }
         </script>
       </body>
       </html>
     `;
 
-    return new NextResponse(successHtml, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    return new NextResponse(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 
   } catch (error: any) {
     return new NextResponse(`Error: ${error.message}`, { status: 500 });
