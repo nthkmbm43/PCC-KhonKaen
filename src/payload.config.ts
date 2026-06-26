@@ -21,7 +21,7 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || 'fallback-secret-key-replace-in-production',
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || 'postgres://user:password@localhost:5432/payload',
+      connectionString: process.env.DATABASE_URI || process.env.POSTGRES_URL || 'postgres://user:password@localhost:5432/payload',
     },
   }),
   typescript: {
