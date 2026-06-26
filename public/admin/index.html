@@ -9,196 +9,509 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-      /* ─── Reset & Base ─── */
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; font-family: 'Inter', 'Noto Sans Thai', sans-serif; background: #0A1628; }
 
-      :root {
-        --brand:        #0057FF;
-        --brand-dark:   #003CC5;
-        --brand-light:  #EEF4FF;
-        --accent:       #F97316;
-        --success:      #22C55E;
-        --danger:       #EF4444;
-        --bg:           #F8FAFC;
-        --surface:      #FFFFFF;
-        --border:       #E2E8F0;
-        --text-primary: #0F172A;
-        --text-muted:   #64748B;
-        --radius:       12px;
-        --shadow-sm:    0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
-        --shadow-md:    0 4px 12px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.06);
-        --shadow-lg:    0 12px 40px rgba(0,0,0,.12);
-        --transition:   .2s cubic-bezier(.4,0,.2,1);
-      }
-
-      html, body { height: 100%; font-family: 'Inter', 'Noto Sans Thai', sans-serif; }
-
-      /* ─── Loading Screen ─── */
+      /* ── Loading Screen ── */
       #cms-loading {
         position: fixed; inset: 0; z-index: 9999;
-        background: linear-gradient(135deg, #0A1628 0%, #0C2461 50%, #1A3A8F 100%);
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 24px; transition: opacity .5s ease;
+        background: linear-gradient(135deg, #0A1628 0%, #0C2461 60%, #1A3A8F 100%);
+        display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+        transition: opacity .6s ease;
       }
       #cms-loading.fade-out { opacity: 0; pointer-events: none; }
-      .loading-logo {
-        display: flex; align-items: center; gap: 14px;
-      }
-      .loading-logo .logo-icon {
-        width: 52px; height: 52px; border-radius: 14px;
+      .ld-logo { display: flex; align-items: center; gap: 16px; }
+      .ld-icon {
+        width: 56px; height: 56px; border-radius: 16px;
         background: linear-gradient(135deg, #0057FF, #60A5FA);
         display: flex; align-items: center; justify-content: center;
-        font-size: 24px; font-weight: 800; color: white;
-        box-shadow: 0 8px 24px rgba(0,87,255,.4);
-        animation: pulse-logo 2s ease-in-out infinite;
+        font-size: 26px; font-weight: 800; color: #fff;
+        box-shadow: 0 8px 32px rgba(0,87,255,.5);
+        animation: iconPulse 2s ease-in-out infinite;
       }
-      @keyframes pulse-logo {
-        0%, 100% { box-shadow: 0 8px 24px rgba(0,87,255,.4); }
-        50%       { box-shadow: 0 12px 36px rgba(0,87,255,.7); }
-      }
-      .loading-logo .logo-text { color: white; }
-      .loading-logo .logo-text h1 { font-size: 22px; font-weight: 700; letter-spacing: -.3px; }
-      .loading-logo .logo-text p  { font-size: 13px; opacity: .6; margin-top: 2px; }
-
-      .loading-spinner {
-        width: 40px; height: 40px; border-radius: 50%;
-        border: 3px solid rgba(255,255,255,.15);
-        border-top-color: #60A5FA;
-        animation: spin 0.8s linear infinite;
+      @keyframes iconPulse { 0%,100%{box-shadow:0 8px 32px rgba(0,87,255,.4)} 50%{box-shadow:0 12px 48px rgba(0,87,255,.8)} }
+      .ld-text h1 { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -.3px; }
+      .ld-text p  { font-size: 13px; color: rgba(255,255,255,.45); margin-top: 3px; }
+      .ld-spinner {
+        width: 36px; height: 36px; border-radius: 50%;
+        border: 3px solid rgba(255,255,255,.1); border-top-color: #60A5FA;
+        animation: spin .8s linear infinite;
       }
       @keyframes spin { to { transform: rotate(360deg); } }
-      .loading-text { color: rgba(255,255,255,.5); font-size: 13px; }
+      .ld-text-hint { font-size: 13px; color: rgba(255,255,255,.35); }
 
-      /* ─── Override Decap CMS Global Styles ─── */
-      #nc-root, #nc-root * {
-        font-family: 'Inter', 'Noto Sans Thai', sans-serif !important;
-      }
+      /* ── Global CSS injected into the CMS document ── */
+    </style>
+  </head>
+  <body>
 
-      /* Header / Toolbar */
-      #nc-root header,
-      [class*="AppHeader"],
-      [class*="Toolbar"] {
+    <!-- Loading Screen -->
+    <div id="cms-loading">
+      <div class="ld-logo">
+        <div class="ld-icon">P</div>
+        <div class="ld-text">
+          <h1>PCC Post-Tension</h1>
+          <p>Content Management System</p>
+        </div>
+      </div>
+      <div class="ld-spinner"></div>
+      <span class="ld-text-hint">กำลังโหลดระบบจัดการเนื้อหา...</span>
+    </div>
+
+    <!-- Decap CMS -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+    <script>
+    // ────────────────────────────────────────────────────────────
+    //  PREMIUM THEME — injected via MutationObserver into #nc-root
+    // ────────────────────────────────────────────────────────────
+    const THEME_CSS = `
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap');
+
+      /* ── Base ── */
+      *, *::before, *::after { box-sizing: border-box; }
+      * { font-family: 'Inter', 'Noto Sans Thai', sans-serif !important; }
+
+      /* ── App Shell Background ── */
+      #nc-root { background: #F1F5F9 !important; }
+
+      /* ══════════════════════════════════
+         HEADER / NAV BAR
+      ══════════════════════════════════ */
+      header, [class*="Header"], [class*="AppBar"], [class*="Topbar"] {
         background: linear-gradient(135deg, #0A1628 0%, #0C2461 100%) !important;
-        border-bottom: 1px solid rgba(255,255,255,.08) !important;
-        box-shadow: 0 2px 20px rgba(0,0,0,.3) !important;
+        box-shadow: 0 2px 24px rgba(0,0,0,.4) !important;
+        border-bottom: 1px solid rgba(255,255,255,.06) !important;
+        height: 60px !important;
       }
 
-      /* Sidebar / Collection list */
-      [class*="CollectionTop"],
-      [class*="SidebarContainer"],
-      [class*="sidebar"] {
-        background: #FAFBFF !important;
+      /* Brand/Logo text in header */
+      [class*="AppHeader"] a, [class*="brand"], header a {
+        font-weight: 700 !important;
+        font-size: 17px !important;
+        letter-spacing: -.3px !important;
+        color: #fff !important;
+      }
+
+      /* Header nav links */
+      header nav a, [class*="Header"] a {
+        color: rgba(255,255,255,.7) !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        padding: 6px 12px !important;
+        border-radius: 8px !important;
+        transition: all .15s ease !important;
+        text-decoration: none !important;
+      }
+      header nav a:hover, [class*="Header"] a:hover {
+        color: #fff !important;
+        background: rgba(255,255,255,.1) !important;
+      }
+
+      /* ══════════════════════════════════
+         SIDEBAR / COLLECTION LIST
+      ══════════════════════════════════ */
+      [class*="SidebarContainer"], [class*="sidebar"], [class*="Sidebar"],
+      [class*="CollectionContainer"], [class*="Menu"] {
+        background: #FFFFFF !important;
         border-right: 1px solid #E2E8F0 !important;
+        padding: 16px 12px !important;
       }
 
-      /* Collection item */
-      [class*="CollectionTopRow"],
-      [class*="ListItemTopRow"] {
-        border-radius: 8px !important;
-        transition: background .15s ease !important;
+      /* Sidebar section title */
+      [class*="SidebarNavLink"], [class*="CollectionTop"] h2,
+      [class*="sidebar"] h2, [class*="CollectionLink"] {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: .08em !important;
+        text-transform: uppercase !important;
+        color: #94A3B8 !important;
+        padding: 8px 12px 4px !important;
       }
 
-      /* Primary Button */
-      [class*="Button-"] button[class*="primary"],
-      button[class*="ButtonRaw"][data-testid*="expand"],
-      button[class*="Publish"] {
-        background: linear-gradient(135deg, #0057FF, #2563EB) !important;
-        border: none !important;
-        border-radius: 8px !important;
+      /* Sidebar nav items */
+      [class*="sidebar"] a, [class*="SidebarNavLink"] a,
+      [class*="CollectionLink"] a, nav[class] a {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 9px 12px !important;
+        border-radius: 10px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #374151 !important;
+        text-decoration: none !important;
+        transition: all .15s ease !important;
+        margin-bottom: 2px !important;
+      }
+      [class*="sidebar"] a:hover, [class*="CollectionLink"] a:hover {
+        background: #EEF4FF !important;
+        color: #0057FF !important;
+      }
+      [class*="sidebar"] a[class*="active"], [class*="CollectionLink"] a[class*="active"] {
+        background: linear-gradient(135deg, #EEF4FF, #DBEAFE) !important;
+        color: #0057FF !important;
         font-weight: 600 !important;
-        box-shadow: 0 4px 12px rgba(0,87,255,.3) !important;
-        transition: all .2s ease !important;
-      }
-      button[class*="Publish"]:hover {
-        transform: translateY(-1px) !important;
-        box-shadow: 0 6px 18px rgba(0,87,255,.4) !important;
       }
 
-      /* Card / Entry list items */
-      [class*="EntryCard"],
-      [class*="Card"] {
-        border: 1px solid #E2E8F0 !important;
-        border-radius: 12px !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,.05) !important;
-        transition: box-shadow .2s ease, transform .2s ease !important;
-        overflow: hidden !important;
+      /* ══════════════════════════════════
+         MAIN CONTENT AREA
+      ══════════════════════════════════ */
+      [class*="MainView"], [class*="ViewContainer"], main {
+        background: #F1F5F9 !important;
+        padding: 24px !important;
       }
-      [class*="EntryCard"]:hover,
-      [class*="Card"]:hover {
-        box-shadow: 0 6px 20px rgba(0,0,0,.1) !important;
+
+      /* Page title */
+      [class*="ViewTitle"], [class*="CollectionView"] h1,
+      h1[class], h2[class] {
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        color: #0F172A !important;
+        letter-spacing: -.4px !important;
+        margin-bottom: 4px !important;
+      }
+
+      /* ══════════════════════════════════
+         ENTRY CARDS (List View)
+      ══════════════════════════════════ */
+      [class*="EntryCard"], [class*="ListItem"], [class*="listItem"] {
+        background: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 14px !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,.05) !important;
+        transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease !important;
+        overflow: hidden !important;
+        margin-bottom: 12px !important;
+      }
+      [class*="EntryCard"]:hover, [class*="ListItem"]:hover {
+        box-shadow: 0 8px 24px rgba(0,87,255,.1) !important;
+        border-color: #BAD0FF !important;
         transform: translateY(-2px) !important;
       }
 
-      /* Input fields */
-      [class*="StyledTextInput"],
-      [class*="Input"],
-      textarea,
-      input[type="text"] {
-        border: 1.5px solid #CBD5E1 !important;
-        border-radius: 8px !important;
-        font-size: 14px !important;
-        transition: border-color .15s, box-shadow .15s !important;
+      /* Card title */
+      [class*="EntryCard"] h2, [class*="EntryCard"] h3,
+      [class*="ListItemTitle"] {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #0F172A !important;
       }
-      [class*="StyledTextInput"]:focus,
-      [class*="Input"]:focus,
-      textarea:focus,
-      input[type="text"]:focus {
+
+      /* Card subtitle / date */
+      [class*="EntryCard"] p, [class*="ListItemSubtitle"] {
+        font-size: 13px !important;
+        color: #64748B !important;
+      }
+
+      /* ══════════════════════════════════
+         BUTTONS — All variants
+      ══════════════════════════════════ */
+      button, [role="button"] {
+        font-family: 'Inter', 'Noto Sans Thai', sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
+        transition: all .2s cubic-bezier(.4,0,.2,1) !important;
+      }
+
+      /* Primary / Blue button */
+      button[class*="primary"], button[class*="Primary"],
+      [class*="PublishButton"], [class*="ToolbarButton"],
+      button[data-testid*="publish"], button[type="submit"] {
+        background: linear-gradient(135deg, #0057FF 0%, #2563EB 100%) !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 10px 20px !important;
+        box-shadow: 0 4px 14px rgba(0,87,255,.35) !important;
+        letter-spacing: -.01em !important;
+      }
+      button[class*="primary"]:hover, [class*="PublishButton"]:hover {
+        background: linear-gradient(135deg, #0046D0 0%, #1D4ED8 100%) !important;
+        box-shadow: 0 6px 20px rgba(0,87,255,.5) !important;
+        transform: translateY(-1px) !important;
+      }
+      button[class*="primary"]:active {
+        transform: translateY(0) !important;
+        box-shadow: 0 2px 8px rgba(0,87,255,.3) !important;
+      }
+
+      /* Secondary / Ghost button */
+      button[class*="secondary"], button[class*="Secondary"],
+      button[class*="cancel"], button[class*="Cancel"] {
+        background: #fff !important;
+        color: #374151 !important;
+        border: 1.5px solid #D1D5DB !important;
+        border-radius: 10px !important;
+        padding: 10px 20px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,.07) !important;
+      }
+      button[class*="secondary"]:hover {
+        background: #F8FAFC !important;
+        border-color: #9CA3AF !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,.1) !important;
+        transform: translateY(-1px) !important;
+      }
+
+      /* Danger / Delete button */
+      button[class*="danger"], button[class*="delete"], button[class*="Delete"] {
+        background: linear-gradient(135deg, #EF4444, #DC2626) !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 10px 20px !important;
+        box-shadow: 0 4px 14px rgba(239,68,68,.3) !important;
+      }
+      button[class*="danger"]:hover {
+        box-shadow: 0 6px 20px rgba(239,68,68,.45) !important;
+        transform: translateY(-1px) !important;
+      }
+
+      /* Toolbar / Icon button */
+      [class*="ToolbarButton"], [class*="IconButton"] {
+        border-radius: 8px !important;
+        padding: 8px !important;
+        transition: background .15s ease !important;
+      }
+      [class*="ToolbarButton"]:hover { background: rgba(0,87,255,.08) !important; }
+
+      /* New Entry button (+ button) */
+      [class*="NewEntry"], [class*="CreateNew"], a[href*="new"] {
+        background: linear-gradient(135deg, #0057FF, #60A5FA) !important;
+        color: #fff !important;
+        border-radius: 10px !important;
+        padding: 10px 18px !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 14px rgba(0,87,255,.35) !important;
+        text-decoration: none !important;
+        transition: all .2s ease !important;
+      }
+      [class*="NewEntry"]:hover { transform: translateY(-1px) !important; box-shadow: 0 6px 20px rgba(0,87,255,.5) !important; }
+
+      /* ══════════════════════════════════
+         BADGES / STATUS CHIPS
+      ══════════════════════════════════ */
+      [class*="Badge"], [class*="Status"], [class*="Label"][class*="status"] {
+        display: inline-flex !important;
+        align-items: center !important;
+        padding: 3px 10px !important;
+        border-radius: 99px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: .04em !important;
+        text-transform: uppercase !important;
+      }
+      [class*="published"], [class*="Published"] {
+        background: #DCFCE7 !important; color: #166534 !important; }
+      [class*="draft"], [class*="Draft"] {
+        background: #FEF9C3 !important; color: #854D0E !important; }
+
+      /* ══════════════════════════════════
+         FORM FIELDS & INPUTS
+      ══════════════════════════════════ */
+      input[type="text"], input[type="email"], input[type="url"],
+      input[type="search"], input[type="number"], textarea, select,
+      [class*="TextInput"], [class*="Input"], [class*="input"] {
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 10px !important;
+        background: #fff !important;
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+        color: #0F172A !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,.04) !important;
+        transition: border-color .15s ease, box-shadow .15s ease !important;
+        width: 100% !important;
+      }
+      input:focus, textarea:focus, select:focus,
+      [class*="TextInput"]:focus, [class*="Input"]:focus {
         border-color: #0057FF !important;
         box-shadow: 0 0 0 3px rgba(0,87,255,.12) !important;
         outline: none !important;
       }
 
-      /* Labels */
-      [class*="FieldLabel"],
-      label {
+      /* Field label */
+      label, [class*="FieldLabel"], [class*="Label"] {
         font-size: 13px !important;
         font-weight: 600 !important;
         color: #374151 !important;
         margin-bottom: 6px !important;
+        display: block !important;
         letter-spacing: .01em !important;
       }
 
-      /* Scrollbar */
-      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      /* Field wrapper */
+      [class*="FieldWrapper"], [class*="FormControl"] {
+        margin-bottom: 20px !important;
+      }
+
+      /* Hint text */
+      [class*="FieldHint"], [class*="hint"] {
+        font-size: 12px !important;
+        color: #94A3B8 !important;
+        margin-top: 5px !important;
+      }
+
+      /* Markdown editor toolbar */
+      [class*="EditorToolbar"], [class*="Toolbar"][class*="editor"] {
+        background: #F8FAFC !important;
+        border-bottom: 1px solid #E2E8F0 !important;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 8px 12px !important;
+        gap: 4px !important;
+      }
+
+      /* Editor container */
+      [class*="EditorContainer"], [class*="RichText"] {
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+      }
+      [class*="EditorContainer"]:focus-within {
+        border-color: #0057FF !important;
+        box-shadow: 0 0 0 3px rgba(0,87,255,.12) !important;
+      }
+
+      /* ══════════════════════════════════
+         LIST WIDGET ITEMS
+      ══════════════════════════════════ */
+      [class*="ListItem"], [class*="listItem"] {
+        background: #F8FAFC !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 10px !important;
+        padding: 12px 16px !important;
+        margin-bottom: 8px !important;
+        transition: border-color .15s ease !important;
+      }
+      [class*="ListItem"]:hover { border-color: #BAD0FF !important; }
+
+      /* ══════════════════════════════════
+         MEDIA / IMAGE WIDGET
+      ══════════════════════════════════ */
+      [class*="ImageWrapper"], [class*="MediaCard"] {
+        border: 1.5px dashed #CBD5E1 !important;
+        border-radius: 12px !important;
+        background: #F8FAFC !important;
+        transition: border-color .15s, background .15s !important;
+      }
+      [class*="ImageWrapper"]:hover { border-color: #0057FF !important; background: #EEF4FF !important; }
+
+      /* ══════════════════════════════════
+         NOTIFICATION / TOAST
+      ══════════════════════════════════ */
+      [class*="Toast"], [class*="Notification"], [class*="Alert"] {
+        border-radius: 12px !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        padding: 14px 18px !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,.15) !important;
+      }
+
+      /* ══════════════════════════════════
+         MODAL / DIALOG
+      ══════════════════════════════════ */
+      [class*="Modal"], [class*="Dialog"] {
+        border-radius: 18px !important;
+        box-shadow: 0 20px 60px rgba(0,0,0,.25) !important;
+        border: 1px solid #E2E8F0 !important;
+      }
+      [class*="ModalHeader"], [class*="DialogTitle"] {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        padding: 20px 24px !important;
+        border-bottom: 1px solid #F1F5F9 !important;
+      }
+      [class*="ModalBody"], [class*="DialogContent"] {
+        padding: 20px 24px !important;
+      }
+
+      /* ══════════════════════════════════
+         EMPTY STATE
+      ══════════════════════════════════ */
+      [class*="EmptyMessage"], [class*="NoItems"] {
+        color: #94A3B8 !important;
+        font-size: 15px !important;
+        text-align: center !important;
+        padding: 60px 20px !important;
+      }
+
+      /* ══════════════════════════════════
+         SCROLLBAR
+      ══════════════════════════════════ */
+      ::-webkit-scrollbar { width: 5px; height: 5px; }
       ::-webkit-scrollbar-track { background: transparent; }
       ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
       ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
-    </style>
-  </head>
-  <body>
-    <!-- Loading Screen -->
-    <div id="cms-loading">
-      <div class="loading-logo">
-        <div class="logo-icon">P</div>
-        <div class="logo-text">
-          <h1>PCC Post-Tension</h1>
-          <p>Content Management System</p>
-        </div>
-      </div>
-      <div class="loading-spinner"></div>
-      <span class="loading-text">กำลังโหลดระบบจัดการเนื้อหา...</span>
-    </div>
 
-    <!-- Decap CMS mounts here -->
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-    <script>
-      // Fade out loading screen once CMS is ready
-      if (window.CMS) {
-        window.CMS.registerEventListener({
-          name: 'prePublish',
-          handler: () => {}
-        });
+      /* ══════════════════════════════════
+         SEARCH BAR
+      ══════════════════════════════════ */
+      [class*="Search"] input, input[placeholder*="earch"] {
+        background: #F1F5F9 !important;
+        border: 1.5px solid #E2E8F0 !important;
+        border-radius: 10px !important;
+        padding: 9px 14px 9px 36px !important;
+        font-size: 14px !important;
+        transition: border-color .15s, box-shadow .15s !important;
       }
-      // Fallback: hide loader after 3 seconds max
-      window.addEventListener('load', () => {
-        setTimeout(() => {
-          const loader = document.getElementById('cms-loading');
-          if (loader) {
-            loader.classList.add('fade-out');
-            setTimeout(() => loader.remove(), 500);
+      [class*="Search"] input:focus {
+        border-color: #0057FF !important;
+        background: #fff !important;
+        box-shadow: 0 0 0 3px rgba(0,87,255,.1) !important;
+      }
+
+      /* ══════════════════════════════════
+         DROPDOWN / SELECT
+      ══════════════════════════════════ */
+      [class*="Dropdown"], [class*="Select"] {
+        border: 1.5px solid #CBD5E1 !important;
+        border-radius: 10px !important;
+        background: #fff !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,.08) !important;
+      }
+      [class*="DropdownItem"], [class*="SelectOption"] {
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+        transition: background .1s ease !important;
+      }
+      [class*="DropdownItem"]:hover { background: #EEF4FF !important; color: #0057FF !important; }
+    `;
+
+    // Inject theme via MutationObserver (waits for #nc-root to appear)
+    function injectTheme() {
+      const root = document.getElementById('nc-root');
+      if (root) {
+        if (!document.getElementById('pcc-cms-theme')) {
+          const style = document.createElement('style');
+          style.id = 'pcc-cms-theme';
+          style.textContent = THEME_CSS;
+          document.head.appendChild(style);
+        }
+        // Also inject into shadow roots if any
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.shadowRoot && !node.shadowRoot.getElementById('pcc-cms-theme-shadow')) {
+            const s = document.createElement('style');
+            s.id = 'pcc-cms-theme-shadow';
+            s.textContent = THEME_CSS;
+            node.shadowRoot.appendChild(s);
           }
-        }, 2000);
-      });
+        }
+      }
+    }
+
+    const observer = new MutationObserver(() => injectTheme());
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Hide loading screen after CMS mounts
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const loader = document.getElementById('cms-loading');
+        if (loader) { loader.classList.add('fade-out'); setTimeout(() => loader.remove(), 600); }
+      }, 2200);
+    });
     </script>
   </body>
 </html>
