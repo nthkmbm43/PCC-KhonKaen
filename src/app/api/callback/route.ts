@@ -41,19 +41,15 @@ export async function GET(request: Request) {
           <title>OAuth Callback</title>
         </head>
         <body>
-          <p>กำลังเข้าสู่ระบบ... (ระบบกำลังแลกเปลี่ยนข้อมูลกับหน้าหลัก)</p>
+          <p>เข้าสู่ระบบสำเร็จ! กำลังพากลับไปยังหน้าแอดมิน...</p>
           <script>
-            function receiveMessage(e) {
+            if (window.opener) {
+              const targetOrigin = new URL(window.location.href).origin;
               window.opener.postMessage(
                 'authorization:github:success:{"token":"${accessToken}","provider":"github"}',
-                e.origin
+                targetOrigin
               );
-              window.removeEventListener("message", receiveMessage, false);
               setTimeout(() => window.close(), 100);
-            }
-            if (window.opener) {
-              window.addEventListener("message", receiveMessage, false);
-              window.opener.postMessage("authorizing:github", "*");
             } else {
               window.location.href = '/admin';
             }
