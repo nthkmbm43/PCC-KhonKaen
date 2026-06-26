@@ -2,9 +2,7 @@ backend:
   name: github
   repo: nthkmbm43/PCC-KhonKaen
   branch: main
-  auth_type: pkce
-  app_id: "Ov23liLlTNxep4Q3VdI9"
-  base_url: "https://github.com"
+  base_url: "https://pcc-khon-kaen.vercel.app/api"
 
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
