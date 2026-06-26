@@ -43,7 +43,9 @@ export async function GET(request: Request) {
         <body>
           <p>เข้าสู่ระบบสำเร็จ! กำลังพากลับไปยังหน้าแอดมิน...</p>
           <script>
+            let handshakeInterval;
             function receiveMessage(e) {
+              if (handshakeInterval) clearInterval(handshakeInterval);
               window.opener.postMessage(
                 'authorization:github:success:{"token":"${accessToken}","provider":"github"}',
                 e.origin
@@ -53,7 +55,20 @@ export async function GET(request: Request) {
             }
             if (window.opener) {
               window.addEventListener("message", receiveMessage, false);
-              window.opener.postMessage("authorizing:github", "*");
+              // Blast handshake message repeatedly until we get a reply
+              handshakeInterval = setInterval(() => {
+                window.opener.postMessage("authorizing:github", "*");
+              }, 50);
+              // Fallback: If handshake fails after 2 seconds, send token directly and close
+              setTimeout(() => {
+                clearInterval(handshakeInterval);
+                const targetOrigin = new URL(window.location.href).origin;
+                window.opener.postMessage(
+                  'authorization:github:success:{"token":"${accessToken}","provider":"github"}',
+                  targetOrigin
+                );
+                window.close();
+              }, 2000);
             } else {
               window.location.href = '/admin';
             }
