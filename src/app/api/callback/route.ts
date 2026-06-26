@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -5,11 +6,10 @@ export async function GET(request: Request) {
   const code = searchParams.get('code');
 
   if (!code) {
-    return new NextResponse('No code provided', { status: 400 });
+    return new NextResponse('Error: ไม่ได้รับ Code จาก GitHub', { status: 400 });
   }
 
   try {
-    // 1. เอา Code ไปแลกเป็น Access Token จาก GitHub
     const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
       headers: {
@@ -26,29 +26,40 @@ export async function GET(request: Request) {
     const tokenData = await tokenResponse.json();
     const accessToken = tokenData.access_token;
 
+    // ถ้าไม่ได้ Token ให้โชว์ Error ออกมาตรงๆ ห้ามปิดหน้าต่าง!
     if (!accessToken) {
-      return new NextResponse('Failed to get access token', { status: 400 });
+      const errorHtml = `
+        <div style="color: red; font-family: sans-serif; padding: 20px;">
+          <h2>เกิดข้อผิดพลาดในการขอ Token!</h2>
+          <p>กรุณาเช็ค GITHUB_CLIENT_SECRET ใน Vercel Environment Variables ว่าถูกต้องหรือไม่</p>
+          <pre>${JSON.stringify(tokenData, null, 2)}</pre>
+        </div>
+      `;
+      return new NextResponse(errorHtml, { status: 400, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
     }
 
-    const html = `<!DOCTYPE html>
-<html>
-  <head><title>Login Success</title></head>
-  <body>
-    <script>
-      const message = 'authorization:github:success:{"token":"${accessToken}","provider":"github"}';
-      if (window.opener) {
-        window.opener.postMessage(message, window.location.origin);
-      }
-      window.close();
-    </script>
-  </body>
-</html>`;
+    // ถ้าสำเร็จ ส่งข้อความด้วย '*' เพื่อแก้ปัญหา Origin Mismatch
+    const successHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head><title>Login Success</title></head>
+      <body>
+        <script>
+          const message = 'authorization:github:success:{"token":"${accessToken}","provider":"github"}';
+          if (window.opener) {
+            window.opener.postMessage(message, '*');
+          }
+          window.close();
+        </script>
+      </body>
+      </html>
+    `;
 
-    return new NextResponse(html, {
+    return new NextResponse(successHtml, {
       headers: { 'Content-Type': 'text/html; charset=utf-8' },
     });
 
-  } catch (error) {
-    return new NextResponse('Authentication error', { status: 500 });
+  } catch (error: any) {
+    return new NextResponse(`Error: ${error.message}`, { status: 500 });
   }
 }
