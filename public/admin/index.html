@@ -60,554 +60,26 @@
     //  Only touches: color, background, border, border-radius, font, shadow
     // ─────────────────────────────────────────────────────────────────────
     const THEME = `
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
 
-      /* ── Font everywhere ── */
+      /* ════════════════════════════
+         GLOBAL BASE RESETS
+      ════════════════════════════ */
       #nc-root, #nc-root * {
         font-family: 'Inter', 'Noto Sans Thai', sans-serif !important;
         -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+        box-sizing: border-box !important;
       }
 
       /* ════════════════════════════
-         HEADER
-      ════════════════════════════ */
-      #nc-root header {
-        background: linear-gradient(135deg, #0A1628 0%, #0C2461 100%) !important;
-        border-bottom: 1px solid rgba(255,255,255,.08) !important;
-        box-shadow: 0 2px 16px rgba(0,0,0,.3) !important;
-      }
-      /* All text inside header — white */
-      #nc-root header, #nc-root header * {
-        color: rgba(255,255,255,.9) !important;
-      }
-      /* Nav pill buttons (Contents / Media) */
-      #nc-root header nav a,
-      #nc-root header nav button {
-        border-radius: 8px !important;
-        transition: background .15s, color .15s !important;
-      }
-      #nc-root header nav a:hover,
-      #nc-root header nav button:hover {
-        background: rgba(255,255,255,.12) !important;
-        color: #fff !important;
-      }
-      /* Active/selected nav item */
-      #nc-root header nav a[aria-current],
-      #nc-root header nav [aria-selected="true"] {
-        background: rgba(255,255,255,.15) !important;
-        color: #fff !important;
-        font-weight: 600 !important;
-      }
-      /* Quick add button */
-      #nc-root header button {
-        background: rgba(255,255,255,.1) !important;
-        border: 1px solid rgba(255,255,255,.15) !important;
-        border-radius: 8px !important;
-        color: #fff !important;
-        font-weight: 500 !important;
-        transition: background .15s !important;
-      }
-      #nc-root header button:hover {
-        background: rgba(255,255,255,.2) !important;
-      }
-
-      /* ════════════════════════════
-         SIDEBAR (Collections panel)
-      ════════════════════════════ */
-      #nc-root aside,
-      #nc-root [role="navigation"] {
-        background: #ffffff !important;
-        border-right: 1px solid #E2E8F0 !important;
-      }
-      /* "COLLECTIONS" label */
-      #nc-root aside h2,
-      #nc-root [role="navigation"] h2 {
-        font-size: 10px !important;
-        font-weight: 700 !important;
-        letter-spacing: .1em !important;
-        text-transform: uppercase !important;
-        color: #94A3B8 !important;
-      }
-      /* Nav links */
-      #nc-root aside a,
-      #nc-root [role="navigation"] a {
-        border-radius: 10px !important;
-        font-size: 13.5px !important;
-        font-weight: 500 !important;
-        color: #374151 !important;
-        text-decoration: none !important;
-        transition: background .15s, color .15s !important;
-      }
-      #nc-root aside a:hover,
-      #nc-root [role="navigation"] a:hover {
-        background: #EEF4FF !important;
-        color: #0057FF !important;
-      }
-      #nc-root aside a[class*="active"],
-      #nc-root [role="navigation"] a[class*="active"],
-      #nc-root aside a[aria-current],
-      #nc-root [role="navigation"] a[aria-current] {
-        background: #EEF4FF !important;
-        color: #0057FF !important;
-        font-weight: 600 !important;
-      }
-      /* Sidebar search input */
-      #nc-root aside input[type="text"],
-      #nc-root aside input[type="search"],
-      #nc-root [role="navigation"] input {
-        background: #F8FAFC !important;
-        border: 1.5px solid #E2E8F0 !important;
-        border-radius: 10px !important;
-        color: #0F172A !important;
-        font-size: 13px !important;
-        transition: border-color .15s, box-shadow .15s !important;
-      }
-      #nc-root aside input:focus,
-      #nc-root [role="navigation"] input:focus {
-        border-color: #0057FF !important;
-        background: #fff !important;
-        box-shadow: 0 0 0 3px rgba(0,87,255,.1) !important;
-        outline: none !important;
-      }
-
-      /* ════════════════════════════
-         MAIN CONTENT BACKGROUND
-      ════════════════════════════ */
-      #nc-root main {
-        background: #F1F5F9 !important;
-      }
-
-      /* ════════════════════════════
-         CONTENT LIST ITEMS (cards)
-      ════════════════════════════ */
-      /* Target the individual list item rows */
-      #nc-root [data-testid="entry-listing"] > div,
-      #nc-root [data-testid="entries-container"] > div {
-        background: #fff !important;
-        border: 1.5px solid #E2E8F0 !important;
-        border-radius: 12px !important;
-        box-shadow: 0 1px 4px rgba(0,0,0,.04) !important;
-        transition: box-shadow .2s, border-color .2s, transform .2s !important;
-        margin-bottom: 8px !important;
-      }
-      #nc-root [data-testid="entry-listing"] > div:hover,
-      #nc-root [data-testid="entries-container"] > div:hover {
-        box-shadow: 0 6px 20px rgba(0,87,255,.1) !important;
-        border-color: #93C5FD !important;
-        transform: translateY(-1px) !important;
-      }
-
-      /* Title text inside cards */
-      #nc-root [data-testid="entry-listing"] h2,
-      #nc-root [data-testid="entry-listing"] h3,
-      #nc-root [data-testid="entries-container"] h2,
-      #nc-root [data-testid="entries-container"] h3 {
-        font-size: 14px !important;
-        font-weight: 600 !important;
-        color: #0F172A !important;
-      }
-      #nc-root [data-testid="entry-listing"] p,
-      #nc-root [data-testid="entries-container"] p {
-        font-size: 12px !important;
-        color: #64748B !important;
-      }
-
-      /* ════════════════════════════
-         FIX 1: FIELD LABEL CHIPS
-         (the blue chip badges on editor form)
-      ════════════════════════════ */
-      /* Override ALL label/span inside the editor that have blue bg */
-      #nc-root label,
-      #nc-root label span,
-      #nc-root [class*="Label"],
-      #nc-root [class*="label"] {
-        background: transparent !important;
-        background-color: transparent !important;
-        color: #374151 !important;
-        font-size: 11.5px !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        letter-spacing: .07em !important;
-        padding: 0 !important;
-        border-radius: 0 !important;
-        display: block !important;
-        margin-bottom: 6px !important;
-      }
-
-      /* ════════════════════════════
-         FIX 2: ALL BUTTON COLORS
-         Override every dark/teal/black button
-      ════════════════════════════ */
-      /* Reset ALL buttons first */
-      #nc-root button {
-        background: #F1F5F9 !important;
-        color: #374151 !important;
-        border: 1.5px solid #E2E8F0 !important;
-        box-shadow: none !important;
-      }
-      #nc-root button:hover {
-        background: #E2E8F0 !important;
-        border-color: #CBD5E1 !important;
-        transform: none !important;
-      }
-
-      /* PRIMARY buttons — any button with darker bg from Decap */
-      /* Target by position: first button / button containing text Publish/Save/Upload */
-      #nc-root button[class*="primary"],
-      #nc-root button[class*="Primary"],
-      #nc-root button[class*="default"][class*="primary"],
-      #nc-root [data-testid="publish-button"],
-      #nc-root [data-testid="new-entry-button"],
-      #nc-root [data-testid="upload-button"] {
-        background: linear-gradient(135deg, #0057FF, #2563EB) !important;
-        color: #fff !important;
-        border: none !important;
-        box-shadow: 0 3px 10px rgba(0,87,255,.3) !important;
-      }
-      #nc-root button[class*="primary"]:hover,
-      #nc-root [data-testid="publish-button"]:hover,
-      #nc-root [data-testid="new-entry-button"]:hover,
-      #nc-root [data-testid="upload-button"]:hover {
-        background: linear-gradient(135deg, #0046D0, #1D4ED8) !important;
-        box-shadow: 0 5px 16px rgba(0,87,255,.45) !important;
-        transform: translateY(-1px) !important;
-      }
-
-      /* Aggressively override any button with dark/black background */
-      #nc-root button[style*="background-color: rgb(0"],
-      #nc-root button[style*="background: rgb(0"],
-      #nc-root button[style*="background-color: #000"],
-      #nc-root button[style*="background-color: #1"],
-      #nc-root button[style*="background-color: #2"] {
-        background: linear-gradient(135deg, #0057FF, #2563EB) !important;
-        color: #fff !important;
-        border: none !important;
-      }
-
-      /* ════════════════════════════
-         FIX 3: QUICK ADD DROPDOWN
-      ════════════════════════════ */
-      #nc-root [role="menu"],
-      #nc-root ul[role="menu"],
-      #nc-root [class*="dropdown"],
-      #nc-root [class*="Dropdown"],
-      #nc-root [class*="menu"],
-      #nc-root [class*="Menu"] {
-        background: #fff !important;
-        border: 1.5px solid #E2E8F0 !important;
-        border-radius: 14px !important;
-        box-shadow: 0 8px 32px rgba(0,0,0,.14), 0 2px 8px rgba(0,0,0,.06) !important;
-        padding: 6px !important;
-        overflow: hidden !important;
-      }
-      #nc-root [role="menuitem"],
-      #nc-root [class*="MenuItem"],
-      #nc-root [class*="menuItem"],
-      #nc-root [class*="DropdownItem"],
-      #nc-root [class*="dropdownItem"] {
-        font-size: 14px !important;
-        font-weight: 500 !important;
-        color: #1E293B !important;
-        border-radius: 8px !important;
-        padding: 10px 14px !important;
-        transition: background .12s ease, color .12s ease !important;
-        cursor: pointer !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-      }
-      #nc-root [role="menuitem"]:hover,
-      #nc-root [class*="MenuItem"]:hover,
-      #nc-root [class*="DropdownItem"]:hover {
-        background: #EEF4FF !important;
-        color: #0057FF !important;
-        transform: none !important;
-        box-shadow: none !important;
-      }
-
-      /* ════════════════════════════
-         FIX 4: MEDIA MODAL BUTTONS
-      ════════════════════════════ */
-      /* Upload button — blue primary */
-      #nc-root [role="dialog"] button:last-of-type,
-      #nc-root [aria-label*="Upload"],
-      #nc-root button[aria-label*="Upload"],
-      #nc-root [data-testid*="upload"] {
-        background: linear-gradient(135deg, #0057FF, #2563EB) !important;
-        color: #fff !important;
-        border: none !important;
-        box-shadow: 0 3px 10px rgba(0,87,255,.3) !important;
-      }
-      /* Delete selected — red */
-      #nc-root [aria-label*="Delete"],
-      #nc-root button[aria-label*="Delete"],
-      #nc-root [data-testid*="delete-selected"] {
-        background: transparent !important;
-        color: #EF4444 !important;
-        border: 1.5px solid #FCA5A5 !important;
-        box-shadow: none !important;
-      }
-      #nc-root [aria-label*="Delete"]:hover {
-        background: #FEE2E2 !important;
-        border-color: #EF4444 !important;
-        transform: none !important;
-      }
-
-      /* Copy / Download — outlined secondary */
-      #nc-root [aria-label*="Copy"],
-      #nc-root button[aria-label*="Copy"],
-      #nc-root [aria-label*="Download"],
-      #nc-root button[aria-label*="Download"] {
-        background: #fff !important;
-        color: #374151 !important;
-        border: 1.5px solid #D1D5DB !important;
-        box-shadow: none !important;
-      }
-
-      /* ════════════════════════════
-         FIX 5: PUBLISH AREA HEADER
-         (top bar of the editor page)
-      ════════════════════════════ */
-      /* "Writing in X collection" bar */
-      #nc-root [data-testid="editor-toolbar"],
-      #nc-root header + div[class] {
-        background: #fff !important;
-        border-bottom: 1px solid #E2E8F0 !important;
-        box-shadow: 0 1px 4px rgba(0,0,0,.04) !important;
-      }
-      /* "CHANGES SAVED" badge */
-      #nc-root [data-testid="status-badge"],
-      #nc-root span[class*="status"],
-      #nc-root span[class*="saved"] {
-        color: #16A34A !important;
-        font-size: 12px !important;
-        font-weight: 700 !important;
-        text-transform: uppercase !important;
-        letter-spacing: .06em !important;
-      }
-
-      /* ════════════════════════════
-         BUTTONS — Global base (kept)
-      ════════════════════════════ */
-      #nc-root button {
-        font-family: 'Inter','Noto Sans Thai',sans-serif !important;
-        font-size: 13.5px !important;
-        font-weight: 600 !important;
-        cursor: pointer !important;
-        border-radius: 9px !important;
-        transition: all .18s cubic-bezier(.4,0,.2,1) !important;
-        letter-spacing: -.01em !important;
-      }
-
-      /* ── "New Entry / + สินค้า" button ── */
-      #nc-root [data-testid="new-entry-button"] {
-        background: linear-gradient(135deg,#0057FF,#2563EB) !important;
-        color: #fff !important;
-        border: none !important;
-        box-shadow: 0 3px 12px rgba(0,87,255,.35) !important;
-      }
-      #nc-root [data-testid="new-entry-button"]:hover {
-        background: linear-gradient(135deg,#0046D0,#1D4ED8) !important;
-        box-shadow: 0 5px 18px rgba(0,87,255,.5) !important;
-        transform: translateY(-1px) !important;
-      }
-
-      /* ── Publish / Save ── */
-      #nc-root [data-testid="publish-button"],
-      #nc-root button[class*="publish"],
-      #nc-root button[class*="Publish"],
-      #nc-root button[class*="save"],
-      #nc-root button[class*="Save"] {
-        background: linear-gradient(135deg,#0057FF,#2563EB) !important;
-        color: #fff !important;
-        border: none !important;
-        box-shadow: 0 3px 12px rgba(0,87,255,.35) !important;
-      }
-      #nc-root [data-testid="publish-button"]:hover {
-        background: linear-gradient(135deg,#0046D0,#1D4ED8) !important;
-        box-shadow: 0 5px 18px rgba(0,87,255,.5) !important;
-        transform: translateY(-1px) !important;
-      }
-
-      /* ── Delete / Danger ── */
-      #nc-root [data-testid="delete-button"],
-      #nc-root button[class*="delete"],
-      #nc-root button[class*="Delete"],
-      #nc-root button[class*="danger"] {
-        background: linear-gradient(135deg,#EF4444,#DC2626) !important;
-        color: #fff !important;
-        border: none !important;
-        box-shadow: 0 3px 12px rgba(239,68,68,.3) !important;
-      }
-      #nc-root [data-testid="delete-button"]:hover {
-        box-shadow: 0 5px 18px rgba(239,68,68,.45) !important;
-        transform: translateY(-1px) !important;
-      }
-
-      /* ── Cancel / Secondary ── */
-      #nc-root button[class*="cancel"],
-      #nc-root button[class*="Cancel"],
-      #nc-root button[class*="secondary"],
-      #nc-root button[class*="ghost"] {
-        background: #fff !important;
-        color: #374151 !important;
-        border: 1.5px solid #D1D5DB !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
-      }
-      #nc-root button[class*="cancel"]:hover {
-        background: #F8FAFC !important;
-        border-color: #9CA3AF !important;
-      }
-
-      /* ════════════════════════════
-         FORM INPUTS
-      ════════════════════════════ */
-      #nc-root input[type="text"],
-      #nc-root input[type="email"],
-      #nc-root input[type="url"],
-      #nc-root input[type="number"],
-      #nc-root textarea,
-      #nc-root select {
-        font-family: 'Inter','Noto Sans Thai',sans-serif !important;
-        font-size: 14px !important;
-        color: #0F172A !important;
-        background: #fff !important;
-        border: 1.5px solid #CBD5E1 !important;
-        border-radius: 10px !important;
-        box-shadow: 0 1px 2px rgba(0,0,0,.04) !important;
-        transition: border-color .15s, box-shadow .15s !important;
-        outline: none !important;
-      }
-      #nc-root input[type="text"]:focus,
-      #nc-root input[type="email"]:focus,
-      #nc-root input[type="url"]:focus,
-      #nc-root input[type="number"]:focus,
-      #nc-root textarea:focus,
-      #nc-root select:focus {
-        border-color: #0057FF !important;
-        box-shadow: 0 0 0 3px rgba(0,87,255,.12) !important;
-      }
-      #nc-root label {
-        font-size: 12.5px !important;
-        font-weight: 600 !important;
-        color: #374151 !important;
-        letter-spacing: .01em !important;
-      }
-
-      /* ════════════════════════════
-         EDITOR TOOLBAR (Rich Text)
-      ════════════════════════════ */
-      /* toolbar row inside the editor */
-      #nc-root [role="toolbar"] {
-        background: #F8FAFC !important;
-        border-bottom: 1px solid #E2E8F0 !important;
-        border-radius: 10px 10px 0 0 !important;
-      }
-      #nc-root [role="toolbar"] button {
-        background: transparent !important;
-        border: 1px solid transparent !important;
-        border-radius: 6px !important;
-        color: #374151 !important;
-        box-shadow: none !important;
-        transition: background .12s, color .12s !important;
-      }
-      #nc-root [role="toolbar"] button:hover {
-        background: #EEF4FF !important;
-        border-color: #BAD0FF !important;
-        color: #0057FF !important;
-        transform: none !important;
-        box-shadow: none !important;
-      }
-      #nc-root [role="toolbar"] button[class*="active"],
-      #nc-root [role="toolbar"] button[aria-pressed="true"] {
-        background: #DBEAFE !important;
-        color: #0057FF !important;
-        border-color: #93C5FD !important;
-      }
-
-      /* ════════════════════════════
-         DROPDOWNS / MENUS
-      ════════════════════════════ */
-      #nc-root [role="menu"],
-      #nc-root [role="listbox"] {
-        background: #fff !important;
-        border: 1.5px solid #E2E8F0 !important;
-        border-radius: 12px !important;
-        box-shadow: 0 8px 28px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.06) !important;
-        overflow: hidden !important;
-      }
-      #nc-root [role="menuitem"],
-      #nc-root [role="option"] {
-        border-radius: 0 !important;
-        font-size: 13.5px !important;
-        font-weight: 500 !important;
-        color: #374151 !important;
-        transition: background .1s !important;
-      }
-      #nc-root [role="menuitem"]:hover,
-      #nc-root [role="option"]:hover {
-        background: #EEF4FF !important;
-        color: #0057FF !important;
-      }
-
-      /* ════════════════════════════
-         MODAL
-      ════════════════════════════ */
-      #nc-root [role="dialog"] {
-        border-radius: 18px !important;
-        box-shadow: 0 20px 60px rgba(0,0,0,.2) !important;
-        border: 1px solid #E2E8F0 !important;
-        overflow: hidden !important;
-      }
-      #nc-root [role="dialog"] h2 {
-        font-size: 17px !important;
-        font-weight: 700 !important;
-        color: #0F172A !important;
-      }
-
-      /* ════════════════════════════
-         TABS
-      ════════════════════════════ */
-      #nc-root [role="tab"] {
-        font-size: 13.5px !important;
-        font-weight: 500 !important;
-        color: #64748B !important;
-        border-radius: 8px !important;
-        transition: background .15s, color .15s !important;
-      }
-      #nc-root [role="tab"]:hover { color: #0F172A !important; }
-      #nc-root [role="tab"][aria-selected="true"] {
-        color: #0057FF !important;
-        font-weight: 600 !important;
-        background: #EEF4FF !important;
-      }
-
-      /* ════════════════════════════
-         NOTIFICATIONS
-      ════════════════════════════ */
-      #nc-root [role="alert"] {
-        border-radius: 10px !important;
-        font-size: 13.5px !important;
-        font-weight: 500 !important;
-        box-shadow: 0 6px 20px rgba(0,0,0,.12) !important;
-      }
-
-      /* ════════════════════════════
-         CUSTOM SCROLLBAR
-      ════════════════════════════ */
-      #nc-root ::-webkit-scrollbar { width: 5px; height: 5px; }
-      #nc-root ::-webkit-scrollbar-track { background: transparent; }
-      #nc-root ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
-      #nc-root ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
-
-      /* ════════════════════════════
-         PAGE TITLES
+         TYPOGRAPHY
       ════════════════════════════ */
       #nc-root h1 {
-        font-size: 22px !important;
+        font-size: 24px !important;
         font-weight: 700 !important;
         color: #0F172A !important;
-        letter-spacing: -.4px !important;
+        letter-spacing: -.02em !important;
       }
       #nc-root h2 {
         font-size: 16px !important;
@@ -620,11 +92,572 @@
         color: #334155 !important;
       }
       #nc-root p, #nc-root span, #nc-root li {
-        font-size: 13.5px !important;
+        font-size: 14px !important;
         color: #374151 !important;
         line-height: 1.6 !important;
       }
-      #nc-root a { text-decoration: none !important; }
+      #nc-root a {
+        text-decoration: none !important;
+        transition: color 0.15s ease !important;
+      }
+
+      /* ════════════════════════════
+         LOGIN PAGE
+      ════════════════════════════ */
+      #nc-root [class*="LoginContainer"] {
+        background: linear-gradient(135deg, #0A1628 0%, #0C2461 60%, #1A3A8F 100%) !important;
+      }
+      #nc-root [class*="LoginCard"] {
+        background: rgba(255, 255, 255, 0.96) !important;
+        backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+        padding: 40px !important;
+      }
+      #nc-root [class*="LoginButton"] {
+        background: linear-gradient(135deg, #0057FF, #2563EB) !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 12px 24px !important;
+        box-shadow: 0 4px 14px rgba(0, 87, 255, 0.4) !important;
+        transition: all 0.2s ease !important;
+      }
+      #nc-root [class*="LoginButton"]:hover {
+        background: linear-gradient(135deg, #0046D0, #1D4ED8) !important;
+        box-shadow: 0 6px 20px rgba(0, 87, 255, 0.6) !important;
+        transform: translateY(-1px) !important;
+      }
+
+      /* ════════════════════════════
+         HEADER (Top Navigation)
+      ════════════════════════════ */
+      #nc-root header {
+        background: linear-gradient(135deg, #0A1628 0%, #0C2461 100%) !important;
+        border-bottom: 1px solid rgba(255,255,255,.08) !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,.2) !important;
+      }
+      /* Header logo/text color */
+      #nc-root header h1,
+      #nc-root header h2,
+      #nc-root header span,
+      #nc-root header a,
+      #nc-root header button {
+        color: #ffffff !important;
+      }
+      /* Navigation links inside header */
+      #nc-root header nav a {
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        padding: 8px 16px !important;
+        border-radius: 8px !important;
+        transition: background-color 0.15s, color 0.15s !important;
+        background: transparent !important;
+        border: none !important;
+      }
+      #nc-root header nav a:hover {
+        background: rgba(255,255,255,.1) !important;
+        color: #ffffff !important;
+      }
+      /* Active tab in header navigation */
+      #nc-root header nav a[aria-current],
+      #nc-root header nav a[class*="active"],
+      #nc-root header nav a[aria-selected="true"] {
+        background: rgba(255,255,255,.18) !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+      }
+      /* Header Buttons (e.g. Quick add, user profile trigger) */
+      #nc-root header button,
+      #nc-root header [role="button"] {
+        background: rgba(255,255,255,.08) !important;
+        border: 1px solid rgba(255,255,255,.15) !important;
+        border-radius: 8px !important;
+        padding: 8px 16px !important;
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        color: #ffffff !important;
+        transition: background-color 0.15s, border-color 0.15s !important;
+      }
+      #nc-root header button:hover,
+      #nc-root header [role="button"]:hover {
+        background: rgba(255,255,255,.15) !important;
+        border-color: rgba(255,255,255,.25) !important;
+      }
+
+      /* ════════════════════════════
+         SIDEBAR (Collections panel)
+      ════════════════════════════ */
+      #nc-root aside,
+      #nc-root [role="navigation"] {
+        background: #ffffff !important;
+        border-right: 1px solid #E2E8F0 !important;
+        padding-top: 16px !important;
+      }
+      /* "COLLECTIONS" header label */
+      #nc-root aside h2,
+      #nc-root [role="navigation"] h2 {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: .08em !important;
+        text-transform: uppercase !important;
+        color: #64748B !important;
+        margin-bottom: 12px !important;
+        padding-left: 8px !important;
+      }
+      /* Sidebar links */
+      #nc-root aside a,
+      #nc-root [role="navigation"] a {
+        border-radius: 8px !important;
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        color: #475569 !important;
+        padding: 10px 14px !important;
+        margin: 2px 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: background-color 0.15s, color 0.15s !important;
+        background: transparent !important;
+      }
+      #nc-root aside a:hover,
+      #nc-root [role="navigation"] a:hover {
+        background: #F1F5F9 !important;
+        color: #0F172A !important;
+      }
+      #nc-root aside a[class*="active"],
+      #nc-root [role="navigation"] a[class*="active"],
+      #nc-root aside a[aria-current],
+      #nc-root [role="navigation"] a[aria-current] {
+        background: #EFF6FF !important;
+        color: #2563EB !important;
+        font-weight: 600 !important;
+      }
+      /* Sidebar search input */
+      #nc-root aside input[type="text"],
+      #nc-root aside input[type="search"],
+      #nc-root [role="navigation"] input {
+        background: #F8FAFC !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 8px !important;
+        color: #0F172A !important;
+        font-size: 13.5px !important;
+        padding: 8px 12px !important;
+        margin: 8px !important;
+        width: calc(100% - 16px) !important;
+        transition: border-color .15s, box-shadow .15s, background-color .15s !important;
+      }
+      #nc-root aside input:focus,
+      #nc-root [role="navigation"] input:focus {
+        border-color: #3B82F6 !important;
+        background: #ffffff !important;
+        box-shadow: 0 0 0 3px rgba(59,130,246,.1) !important;
+        outline: none !important;
+      }
+
+      /* ════════════════════════════
+         MAIN CONTENT AREA
+      ════════════════════════════ */
+      #nc-root main {
+        background: #F8FAFC !important;
+      }
+
+      /* ════════════════════════════
+         CONTENT LIST CARDS
+      ════════════════════════════ */
+      #nc-root [data-testid="entry-listing"] > div,
+      #nc-root [data-testid="entries-container"] > div {
+        background: #ffffff !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,.02) !important;
+        padding: 16px !important;
+        margin-bottom: 12px !important;
+        transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease !important;
+      }
+      #nc-root [data-testid="entry-listing"] > div:hover,
+      #nc-root [data-testid="entries-container"] > div:hover {
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,.04), 0 4px 6px -4px rgba(0,0,0,.04) !important;
+        border-color: #CBD5E1 !important;
+        transform: translateY(-1px) !important;
+      }
+      /* Card headings */
+      #nc-root [data-testid="entry-listing"] h2,
+      #nc-root [data-testid="entry-listing"] h3,
+      #nc-root [data-testid="entries-container"] h2,
+      #nc-root [data-testid="entries-container"] h3 {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #0F172A !important;
+        margin-bottom: 4px !important;
+      }
+      #nc-root [data-testid="entry-listing"] p,
+      #nc-root [data-testid="entries-container"] p {
+        font-size: 13px !important;
+        color: #64748B !important;
+        line-height: 1.5 !important;
+      }
+
+      /* ════════════════════════════
+         GENERAL BUTTONS RESETS & STYLES
+      ════════════════════════════ */
+      #nc-root button {
+        font-size: 13.5px !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        border-radius: 8px !important;
+        padding: 8px 16px !important;
+        transition: all .15s ease !important;
+        background: #ffffff !important;
+        color: #334155 !important;
+        border: 1px solid #D1D5DB !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important;
+      }
+      #nc-root button:hover {
+        background: #F9FAFB !important;
+        border-color: #9CA3AF !important;
+        color: #0F172A !important;
+      }
+
+      /* PRIMARY BUTTONS (+ New Entry, Publish, Upload, etc.) */
+      #nc-root button[class*="primary"],
+      #nc-root button[class*="Primary"],
+      #nc-root [data-testid="publish-button"],
+      #nc-root [data-testid="new-entry-button"],
+      #nc-root [data-testid="upload-button"],
+      #nc-root [class*="LoginButton"] {
+        background: linear-gradient(135deg, #2563EB, #1D4ED8) !important;
+        color: #ffffff !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(37,99,235,.2) !important;
+      }
+      #nc-root button[class*="primary"]:hover,
+      #nc-root [data-testid="publish-button"]:hover,
+      #nc-root [data-testid="new-entry-button"]:hover,
+      #nc-root [data-testid="upload-button"]:hover,
+      #nc-root [class*="LoginButton"]:hover {
+        background: linear-gradient(135deg, #1D4ED8, #1E40AF) !important;
+        box-shadow: 0 6px 16px rgba(37,99,235,.35) !important;
+        transform: translateY(-1px) !important;
+      }
+      #nc-root button[class*="primary"]:active,
+      #nc-root [data-testid="publish-button"]:active,
+      #nc-root [data-testid="new-entry-button"]:active,
+      #nc-root [data-testid="upload-button"]:active {
+        transform: translateY(0) !important;
+      }
+
+      /* DANGER BUTTONS (Delete, Remove) */
+      #nc-root button[class*="danger"],
+      #nc-root button[class*="Danger"],
+      #nc-root [data-testid="delete-button"] {
+        background: linear-gradient(135deg, #EF4444, #DC2626) !important;
+        color: #ffffff !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(239,68,68,.18) !important;
+      }
+      #nc-root button[class*="danger"]:hover,
+      #nc-root [data-testid="delete-button"]:hover {
+        background: linear-gradient(135deg, #DC2626, #B91C1C) !important;
+        box-shadow: 0 6px 16px rgba(239,68,68,.3) !important;
+        transform: translateY(-1px) !important;
+      }
+
+      /* SECONDARY / CANCEL BUTTONS */
+      #nc-root button[class*="cancel"],
+      #nc-root button[class*="Cancel"],
+      #nc-root button[class*="secondary"],
+      #nc-root button[class*="Secondary"],
+      #nc-root button[class*="ghost"],
+      #nc-root button[class*="Ghost"] {
+        background: #ffffff !important;
+        color: #475569 !important;
+        border: 1px solid #E2E8F0 !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
+      }
+      #nc-root button[class*="cancel"]:hover,
+      #nc-root button[class*="secondary"]:hover {
+        background: #F8FAFC !important;
+        border-color: #CBD5E1 !important;
+        color: #1E293B !important;
+      }
+
+      /* ════════════════════════════
+         EDITOR TOP TOOLBAR
+      ════════════════════════════ */
+      #nc-root [data-testid="editor-toolbar"],
+      #nc-root header + div[class] {
+        background: #ffffff !important;
+        border-bottom: 1px solid #E2E8F0 !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,.02) !important;
+      }
+      /* Editor status saved badge */
+      #nc-root [data-testid="status-badge"],
+      #nc-root span[class*="status"],
+      #nc-root span[class*="saved"] {
+        color: #059669 !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: .06em !important;
+      }
+
+      /* ════════════════════════════
+         FORM INPUTS & LABELS
+      ════════════════════════════ */
+      /* Clean-up of Default Gray Header blocks on controls */
+      #nc-root [class*="ControlHeader"] {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        padding: 0 0 6px 0 !important;
+        margin: 0 !important;
+      }
+      /* Clean-up of control container cards to remove thick borders */
+      #nc-root [class*="ControlPane"],
+      #nc-root [class*="FieldControl"],
+      #nc-root [class*="EditorControl"] {
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin-bottom: 24px !important;
+      }
+      /* Form field labels */
+      #nc-root label,
+      #nc-root label span,
+      #nc-root [class*="Label"],
+      #nc-root [class*="ControlLabel"] {
+        color: #1E293B !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        letter-spacing: normal !important;
+        text-transform: none !important;
+        background: transparent !important;
+        border: none !important;
+        display: block !important;
+        margin-bottom: 6px !important;
+        padding: 0 !important;
+      }
+      /* Inputs and text areas style */
+      #nc-root input[type="text"],
+      #nc-root input[type="email"],
+      #nc-root input[type="url"],
+      #nc-root input[type="number"],
+      #nc-root textarea,
+      #nc-root select {
+        width: 100% !important;
+        font-size: 14px !important;
+        color: #0F172A !important;
+        background: #ffffff !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        padding: 10px 14px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,.03) !important;
+        transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease !important;
+        outline: none !important;
+      }
+      #nc-root input[type="text"]:focus,
+      #nc-root input[type="email"]:focus,
+      #nc-root input[type="url"]:focus,
+      #nc-root input[type="number"]:focus,
+      #nc-root textarea:focus,
+      #nc-root select:focus {
+        border-color: #3B82F6 !important;
+        background: #ffffff !important;
+        box-shadow: 0 0 0 3px rgba(59,130,246,.12) !important;
+      }
+
+      /* ── LIST ITEM NESTED CARDS (e.g. features, sections) ── */
+      #nc-root [class*="ListItem"] {
+        background: #F8FAFC !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 12px !important;
+        padding: 16px !important;
+        margin-bottom: 12px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
+      }
+
+      /* Rich Text toolbar */
+      #nc-root [role="toolbar"] {
+        background: #F8FAFC !important;
+        border: 1px solid #E2E8F0 !important;
+        border-bottom: none !important;
+        border-radius: 8px 8px 0 0 !important;
+        padding: 4px !important;
+      }
+      #nc-root [role="toolbar"] + div {
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 0 0 8px 8px !important;
+      }
+      #nc-root [role="toolbar"] button {
+        background: transparent !important;
+        border: 1px solid transparent !important;
+        border-radius: 6px !important;
+        color: #475569 !important;
+        padding: 6px !important;
+        box-shadow: none !important;
+        width: 32px !important;
+        height: 32px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      #nc-root [role="toolbar"] button:hover {
+        background: #EEF4FF !important;
+        color: #2563EB !important;
+      }
+      #nc-root [role="toolbar"] button[class*="active"],
+      #nc-root [role="toolbar"] button[aria-pressed="true"] {
+        background: #DBEAFE !important;
+        color: #1D4ED8 !important;
+        border-color: #93C5FD !important;
+      }
+
+      /* ════════════════════════════
+         DROPDOWNS / POPUPS / MENUS
+      ════════════════════════════ */
+      #nc-root [role="menu"],
+      #nc-root ul[role="menu"],
+      #nc-root [role="listbox"],
+      #nc-root [class*="DropdownMenu"],
+      #nc-root [class*="dropdownMenu"] {
+        min-width: 240px !important;
+        width: max-content !important;
+        background: #ffffff !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+        padding: 6px !important;
+        z-index: 99999 !important;
+        overflow: visible !important;
+      }
+      #nc-root [role="menuitem"],
+      #nc-root [role="option"],
+      #nc-root [class*="MenuItem"],
+      #nc-root [class*="DropdownItem"] {
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        color: #334155 !important;
+        border-radius: 8px !important;
+        padding: 10px 14px !important;
+        transition: background-color 0.15s, color 0.15s !important;
+        white-space: nowrap !important;
+        width: 100% !important;
+        text-align: left !important;
+        cursor: pointer !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      #nc-root [role="menuitem"]:hover,
+      #nc-root [role="option"]:hover,
+      #nc-root [class*="MenuItem"]:hover,
+      #nc-root [class*="DropdownItem"]:hover {
+        background-color: #EFF6FF !important;
+        color: #2563EB !important;
+      }
+
+      /* ════════════════════════════
+         MODALS & DIALOGS (e.g. Media Library)
+      ════════════════════════════ */
+      #nc-root [class*="Backdrop"],
+      #nc-root [class*="backdrop"] {
+        background-color: rgba(15, 23, 42, 0.6) !important;
+        backdrop-filter: blur(4px) !important;
+      }
+      #nc-root [role="dialog"] {
+        border-radius: 16px !important;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25) !important;
+        border: 1px solid #E2E8F0 !important;
+        overflow: hidden !important;
+        background: #ffffff !important;
+      }
+      #nc-root [role="dialog"] h2 {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: #0F172A !important;
+        margin-bottom: 16px !important;
+      }
+      /* Media library buttons overrides specifically */
+      #nc-root [role="dialog"] button[aria-label*="Delete"],
+      #nc-root [role="dialog"] [class*="Delete"] {
+        background: transparent !important;
+        color: #EF4444 !important;
+        border: 1.5px solid #FCA5A5 !important;
+        box-shadow: none !important;
+      }
+      #nc-root [role="dialog"] button[aria-label*="Delete"]:hover {
+        background: #FEE2E2 !important;
+        border-color: #EF4444 !important;
+      }
+      #nc-root [role="dialog"] button[aria-label*="Copy"],
+      #nc-root [role="dialog"] button[aria-label*="Download"] {
+        background: #ffffff !important;
+        color: #475569 !important;
+        border: 1px solid #D1D5DB !important;
+        box-shadow: none !important;
+      }
+      #nc-root [role="dialog"] button[aria-label*="Copy"]:hover,
+      #nc-root [role="dialog"] button[aria-label*="Download"]:hover {
+        background: #F8FAFC !important;
+      }
+
+      /* ════════════════════════════
+         TABS
+      ════════════════════════════ */
+      #nc-root [role="tablist"] {
+        border-bottom: 1px solid #E2E8F0 !important;
+        margin-bottom: 16px !important;
+      }
+      #nc-root [role="tab"] {
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        color: #64748B !important;
+        border-radius: 8px 8px 0 0 !important;
+        padding: 10px 16px !important;
+        transition: background-color 0.15s, color 0.15s !important;
+        border-bottom: 2px solid transparent !important;
+      }
+      #nc-root [role="tab"]:hover {
+        color: #0F172A !important;
+      }
+      #nc-root [role="tab"][aria-selected="true"],
+      #nc-root [role="tab"][class*="active"] {
+        color: #2563EB !important;
+        font-weight: 600 !important;
+        border-bottom: 2px solid #2563EB !important;
+      }
+
+      /* ════════════════════════════
+         NOTIFICATIONS & ALERTS
+      ════════════════════════════ */
+      #nc-root [role="alert"] {
+        border-radius: 8px !important;
+        font-size: 13.5px !important;
+        font-weight: 500 !important;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1) !important;
+        border: 1px solid transparent !important;
+      }
+      #nc-root [role="alert"][class*="success"] {
+        background: #ECFDF5 !important;
+        color: #065F46 !important;
+        border-color: #A7F3D0 !important;
+      }
+      #nc-root [role="alert"][class*="error"] {
+        background: #FEF2F2 !important;
+        color: #991B1B !important;
+        border-color: #FCA5A5 !important;
+      }
+
+      /* ════════════════════════════
+         CUSTOM SCROLLBAR
+      ════════════════════════════ */
+      #nc-root ::-webkit-scrollbar { width: 6px; height: 6px; }
+      #nc-root ::-webkit-scrollbar-track { background: transparent; }
+      #nc-root ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
+      #nc-root ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
     `;
 
     function applyTheme() {
@@ -640,13 +673,30 @@
     applyTheme();
     new MutationObserver(applyTheme).observe(document.body, { childList: true, subtree: false });
 
-    // Loading screen
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const loader = document.getElementById('cms-loading');
-        if (loader) { loader.classList.add('fade-out'); setTimeout(() => loader.remove(), 600); }
-      }, 2500);
-    });
+    // Auto-hide loading screen when CMS renders
+    const loader = document.getElementById('cms-loading');
+    if (loader) {
+      const observer = new MutationObserver((mutations, obs) => {
+        const root = document.getElementById('nc-root');
+        if (root && root.children.length > 0) {
+          loader.classList.add('fade-out');
+          setTimeout(() => loader.remove(), 600);
+          obs.disconnect(); // stop observing
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      // Fallback in case observer doesn't trigger
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loader = document.getElementById('cms-loading');
+          if (loader) {
+            loader.classList.add('fade-out');
+            setTimeout(() => loader.remove(), 600);
+          }
+        }, 5000);
+      });
+    }
     </script>
   </body>
 </html>
