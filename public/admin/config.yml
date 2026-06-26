@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: nthkmbm43/pcc-landing-page
+  repo: nthkmbm43/PCC-KhonKaen
   branch: main # <--- เปลี่ยนเป็น branch หลักของคุณ
 
 media_folder: "public/images/uploads"
