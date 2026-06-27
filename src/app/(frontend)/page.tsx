@@ -31,61 +31,61 @@ export default async function Home() {
     <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
       <JsonLd data={faqJsonLd(homeFAQ)} />
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[#0a174f] pt-14 pb-20 group sm:pt-20 sm:pb-28 lg:pt-32 lg:pb-40">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a174f] via-brand-900 to-brand-800/80 opacity-95 z-0 transition-opacity duration-1000"></div>
+      <section className="relative overflow-hidden bg-brand-50 pt-14 pb-20 group sm:pt-20 sm:pb-28 lg:pt-32 lg:pb-40">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-brand-100/50 opacity-95 z-0 transition-opacity duration-1000"></div>
 
-        <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110">
-          <img src="/images/hero-banner.webp" alt="PCC Post-Tension Factory" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 z-0 opacity-10 mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110">
+          <img src="/images/hero-banner.webp" alt="PCC Post-Tension Factory" className="w-full h-full object-cover grayscale" />
         </div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-up">
-          <div className="inline-flex max-w-full items-center gap-2 bg-accent-500/10 text-accent-400 border border-accent-500/30 px-4 py-2 rounded-full text-xs font-semibold tracking-wide mb-6 backdrop-blur-sm sm:px-6 sm:py-2.5 sm:text-sm sm:mb-8">
-            <Sparkles size={16} className="animate-pulse" /> รับประกันคุณภาพโดยทีมวิศวกรมืออาชีพ
+          <div className="inline-flex max-w-full items-center gap-2 bg-brand-100 text-brand-700 border border-brand-200 px-4 py-2 rounded-full text-xs font-semibold tracking-wide mb-6 backdrop-blur-sm sm:px-6 sm:py-2.5 sm:text-sm sm:mb-8">
+            <Sparkles size={16} className="animate-pulse text-brand-500" /> รับประกันคุณภาพโดยทีมวิศวกรมืออาชีพ
           </div>
-          <h1 className="text-3xl font-bold text-white mb-5 leading-tight drop-shadow-2xl sm:text-4xl md:text-5xl lg:text-7xl lg:mb-6">
-            รับเหมา <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-accent-600">งานโพสเทนชั่น</span> <br className="hidden md:block" />
+          <h1 className="text-3xl font-bold text-gray-900 mb-5 leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-7xl lg:mb-6">
+            รับเหมา <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-brand-500">งานโพสเทนชั่น</span> <br className="hidden md:block" />
             และผลิตภัณฑ์คอนกรีต
           </h1>
-          <p className="mt-5 text-base text-brand-100 max-w-3xl mx-auto mb-8 leading-relaxed drop-shadow-md sm:text-lg md:text-xl lg:mb-12">
+          <p className="mt-5 text-base text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed sm:text-lg md:text-xl lg:mb-12">
             บริการออกแบบ ผลิต และติดตั้งงานพื้นระบบโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป มั่นคง ปลอดภัย ด้วยมาตรฐานวิศวกรรมระดับสากล
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-            <a href={`tel:${phoneNo}`} className="relative overflow-hidden bg-accent-500 hover:bg-accent-600 text-white px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all animate-pulse-glow sm:px-8 sm:text-lg group">
+            <a href={`tel:${phoneNo}`} className="relative overflow-hidden bg-brand-500 hover:bg-brand-600 text-white px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all animate-pulse-glow sm:px-8 sm:text-lg group">
               <Phone size={24} className="group-hover:rotate-12 transition-transform" />
               ขอใบเสนอราคาฟรี
             </a>
-            <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="bg-[#06C755]/10 hover:bg-[#06C755]/20 text-[#06C755] backdrop-blur-md border border-[#06C755]/30 px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(6,199,85,0.2)] sm:px-8 sm:text-lg">
+            <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="bg-white hover:bg-gray-50 text-[#06C755] border-2 border-[#06C755] px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(6,199,85,0.2)] sm:px-8 sm:text-lg">
               <MessageCircle size={24} />
               ติดต่อสอบถามทาง LINE
             </a>
           </div>
           
           <div className="mt-14 grid grid-cols-1 gap-4 max-w-5xl mx-auto text-left sm:mt-20 md:grid-cols-3 md:gap-6 lg:mt-24">
-             <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl flex items-start gap-5 transition-all duration-300 hover:-translate-y-3 hover:bg-white/10 hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:border-accent-500/30 group/feature">
-               <div className="bg-accent-500/20 p-4 rounded-2xl text-accent-400 shrink-0 group-hover/feature:bg-accent-500 group-hover/feature:text-white transition-colors duration-300">
+             <div className="bg-white p-6 rounded-3xl flex items-start gap-5 transition-all duration-300 hover:-translate-y-3 shadow-md hover:shadow-xl border border-gray-100 hover:border-brand-200 group/feature">
+               <div className="bg-brand-50 p-4 rounded-2xl text-brand-500 shrink-0 group-hover/feature:bg-brand-500 group-hover/feature:text-white transition-colors duration-300">
                  <CheckCircle2 size={28} />
                </div>
                <div>
-                 <h3 className="text-white font-bold text-xl mb-1 group-hover/feature:text-accent-300 transition-colors">งานเสร็จตรงเวลา</h3>
-                 <p className="text-brand-100/70 text-sm mt-2 leading-relaxed group-hover/feature:text-brand-100">รับประกันคุณภาพและระยะเวลาส่งมอบงาน ตามสัญญาทุกประการ</p>
+                 <h3 className="text-gray-900 font-bold text-xl mb-1 group-hover/feature:text-brand-600 transition-colors">งานเสร็จตรงเวลา</h3>
+                 <p className="text-gray-600 text-sm mt-2 leading-relaxed">รับประกันคุณภาพและระยะเวลาส่งมอบงาน ตามสัญญาทุกประการ</p>
                </div>
              </div>
-             <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl flex items-start gap-5 transition-all duration-300 hover:-translate-y-3 hover:bg-white/10 hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:border-accent-500/30 group/feature">
-               <div className="bg-accent-500/20 p-4 rounded-2xl text-accent-400 shrink-0 group-hover/feature:bg-accent-500 group-hover/feature:text-white transition-colors duration-300">
+             <div className="bg-white p-6 rounded-3xl flex items-start gap-5 transition-all duration-300 hover:-translate-y-3 shadow-md hover:shadow-xl border border-gray-100 hover:border-brand-200 group/feature">
+               <div className="bg-brand-50 p-4 rounded-2xl text-brand-500 shrink-0 group-hover/feature:bg-brand-500 group-hover/feature:text-white transition-colors duration-300">
                  <Factory size={28} />
                </div>
                <div>
-                 <h3 className="text-white font-bold text-xl mb-1 group-hover/feature:text-accent-300 transition-colors">โรงงานมาตรฐาน</h3>
-                 <p className="text-brand-100/70 text-sm mt-2 leading-relaxed group-hover/feature:text-brand-100">ผลิตด้วยเครื่องจักรทันสมัย ควบคุมโดยวิศวกรผู้มีใบประกอบวิชาชีพ</p>
+                 <h3 className="text-gray-900 font-bold text-xl mb-1 group-hover/feature:text-brand-600 transition-colors">โรงงานมาตรฐาน</h3>
+                 <p className="text-gray-600 text-sm mt-2 leading-relaxed">ผลิตด้วยเครื่องจักรทันสมัย ควบคุมโดยวิศวกรผู้มีใบประกอบวิชาชีพ</p>
                </div>
              </div>
-             <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl flex items-start gap-5 transition-all duration-300 hover:-translate-y-3 hover:bg-white/10 hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:border-accent-500/30 group/feature">
-               <div className="bg-accent-500/20 p-4 rounded-2xl text-accent-400 shrink-0 group-hover/feature:bg-accent-500 group-hover/feature:text-white transition-colors duration-300">
+             <div className="bg-white p-6 rounded-3xl flex items-start gap-5 transition-all duration-300 hover:-translate-y-3 shadow-md hover:shadow-xl border border-gray-100 hover:border-brand-200 group/feature">
+               <div className="bg-brand-50 p-4 rounded-2xl text-brand-500 shrink-0 group-hover/feature:bg-brand-500 group-hover/feature:text-white transition-colors duration-300">
                  <Truck size={28} />
                </div>
                <div>
-                 <h3 className="text-white font-bold text-xl mb-1 group-hover/feature:text-accent-300 transition-colors">บริการรวดเร็ว</h3>
-                 <p className="text-brand-100/70 text-sm mt-2 leading-relaxed group-hover/feature:text-brand-100">มีรถขนส่งและเครื่องจักรพร้อมให้บริการทั่วภาคอีสานและเชียงใหม่</p>
+                 <h3 className="text-gray-900 font-bold text-xl mb-1 group-hover/feature:text-brand-600 transition-colors">บริการรวดเร็ว</h3>
+                 <p className="text-gray-600 text-sm mt-2 leading-relaxed">มีรถขนส่งและเครื่องจักรพร้อมให้บริการทั่วภาคอีสานและเชียงใหม่</p>
                </div>
              </div>
           </div>
@@ -242,20 +242,20 @@ export default async function Home() {
       </section>
 
       {/* CTA Banner */}
-      <section className="py-24 bg-gradient-to-br from-[#0a174f] to-[#1e3ca6] relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-brand-500 to-brand-700 relative overflow-hidden">
 
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/20 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2"></div>
         
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 drop-shadow-md">พร้อมเริ่มต้นโครงการของคุณหรือยัง?</h2>
-          <p className="text-xl text-brand-100 mb-12 drop-shadow-sm">ให้ทีมวิศวกรของเราช่วยประเมินราคาและให้คำปรึกษาฟรี ไม่มีค่าใช้จ่ายแอบแฝง</p>
+          <p className="text-xl text-brand-50 mb-12 drop-shadow-sm">ให้ทีมวิศวกรของเราช่วยประเมินราคาและให้คำปรึกษาฟรี ไม่มีค่าใช้จ่ายแอบแฝง</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-            <a href={`tel:${phoneNo}`} className="inline-flex bg-accent-500 hover:bg-accent-600 text-white px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all animate-pulse-glow hover:-translate-y-2 hover:scale-105 group">
+            <a href={`tel:${phoneNo}`} className="inline-flex bg-white text-brand-600 hover:bg-gray-50 px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all animate-pulse-glow hover:-translate-y-2 hover:scale-105 group">
               <Phone size={28} className="group-hover:rotate-12 transition-transform" />
               ขอใบเสนอราคาฟรี
             </a>
-            <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="inline-flex bg-[#06C755]/10 border border-[#06C755]/50 hover:bg-[#06C755]/20 text-[#06C755] backdrop-blur-md px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all hover:shadow-[0_15px_40px_rgba(6,199,85,0.2)] hover:-translate-y-2 hover:scale-105 group">
+            <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="inline-flex bg-[#06C755] hover:bg-[#05b34c] text-white px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all hover:shadow-[0_15px_40px_rgba(6,199,85,0.4)] hover:-translate-y-2 hover:scale-105 group">
               <MessageCircle size={28} className="group-hover:animate-bounce" />
               ส่งแบบแปลนมาประเมินทาง LINE
             </a>
