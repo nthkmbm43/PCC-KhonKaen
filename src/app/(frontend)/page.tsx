@@ -31,22 +31,21 @@ export default async function Home() {
     <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
       <JsonLd data={faqJsonLd(homeFAQ)} />
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-brand-50 pt-14 pb-20 group sm:pt-20 sm:pb-28 lg:pt-32 lg:pb-40">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-brand-100/50 opacity-95 z-0 transition-opacity duration-1000"></div>
-
-        <div className="absolute inset-0 z-0 opacity-10 mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110">
-          <img src="/images/hero-banner.webp" alt="PCC Post-Tension Factory" className="w-full h-full object-cover grayscale" />
+      <section className="relative overflow-hidden bg-gray-900 pt-14 pb-20 group sm:pt-20 sm:pb-28 lg:pt-32 lg:pb-40">
+        <div className="absolute inset-0 z-0 transition-transform duration-[20s] group-hover:scale-110">
+          <img src="https://pcc-posttension.com/wp-content/uploads/2025/02/pcc-โรงงาน-copy.jpg" alt="PCC Post-Tension Factory" className="w-full h-full object-cover opacity-60" />
         </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/80 to-brand-900/90 z-0 mix-blend-multiply"></div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-up">
-          <div className="inline-flex max-w-full items-center gap-2 bg-brand-100 text-brand-700 border border-brand-200 px-4 py-2 rounded-full text-xs font-semibold tracking-wide mb-6 backdrop-blur-sm sm:px-6 sm:py-2.5 sm:text-sm sm:mb-8">
-            <Sparkles size={16} className="animate-pulse text-brand-500" /> รับประกันคุณภาพโดยทีมวิศวกรมืออาชีพ
+          <div className="inline-flex max-w-full items-center gap-2 bg-white/10 text-white border border-white/20 px-4 py-2 rounded-full text-xs font-semibold tracking-wide mb-6 backdrop-blur-md sm:px-6 sm:py-2.5 sm:text-sm sm:mb-8 hover:bg-white/20 transition-colors">
+            <Sparkles size={16} className="animate-pulse text-brand-400" /> รับประกันคุณภาพโดยทีมวิศวกรมืออาชีพ
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-5 leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-7xl lg:mb-6">
-            รับเหมา <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-brand-500">งานโพสเทนชั่น</span> <br className="hidden md:block" />
+          <h1 className="text-3xl font-bold text-white mb-5 leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-7xl lg:mb-6">
+            รับเหมา <span className="text-brand-400">งานโพสเทนชั่น</span> <br className="hidden md:block" />
             และผลิตภัณฑ์คอนกรีต
           </h1>
-          <p className="mt-5 text-base text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed sm:text-lg md:text-xl lg:mb-12">
+          <p className="mt-5 text-base text-gray-200 max-w-3xl mx-auto mb-8 leading-relaxed sm:text-lg md:text-xl lg:mb-12">
             บริการออกแบบ ผลิต และติดตั้งงานพื้นระบบโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป มั่นคง ปลอดภัย ด้วยมาตรฐานวิศวกรรมระดับสากล
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
