@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import StickyFloatingLineBtn from "@/components/ui/StickyFloatingLineBtn";
 import { createSeoMetadata, JsonLd, organizationJsonLd } from "@/lib/seo";
 import { getAllProducts } from "@/data/products";
-import "./globals.css";
+import "../globals.css";
 
 const prompt = Prompt({
   variable: "--font-prompt",
