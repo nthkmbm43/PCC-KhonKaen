@@ -8,13 +8,13 @@ export async function GET() {
   try {
     // Trick Payload into thinking we are in development
     // This forces Payload's init() to honor push: true
-    process.env.NODE_ENV = 'development'
+    ;(process.env as any).NODE_ENV = 'development'
     
     console.log('Initializing Payload to push database schema...')
     const payload = await getPayload({ config })
     
     // Restore NODE_ENV
-    process.env.NODE_ENV = originalNodeEnv
+    ;(process.env as any).NODE_ENV = originalNodeEnv
     
     return Response.json({ 
       success: true, 
@@ -22,7 +22,7 @@ export async function GET() {
     })
   } catch (error) {
     // Restore NODE_ENV even on error
-    process.env.NODE_ENV = originalNodeEnv
+    ;(process.env as any).NODE_ENV = originalNodeEnv
     console.error('Error during schema push:', error)
     return Response.json({ 
       success: false, 
