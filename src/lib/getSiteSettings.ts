@@ -23,7 +23,7 @@ export async function getSiteSettings() {
       }
     }
   } catch (error) {
-    console.error('Error fetching site settings from Payload:', error)
+    console.error('Error fetching site settings from Payload:', error instanceof Error ? error.message : String(error))
     // Absolute fallback
     return {
       seo: {

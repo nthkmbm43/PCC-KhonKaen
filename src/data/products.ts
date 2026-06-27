@@ -51,7 +51,7 @@ export async function getAllProducts(): Promise<Product[]> {
     });
     return result.docs.map(mapProduct);
   } catch (error) {
-    console.error('Error fetching products from Payload:', error);
+    console.error('Error fetching products from Payload:', error instanceof Error ? error.message : String(error));
     return [];
   }
 }
@@ -73,7 +73,7 @@ export async function getProductBySlug(slug: string): Promise<Product | undefine
       return mapProduct(result.docs[0]);
     }
   } catch (error) {
-    console.error('Error fetching product by slug from Payload:', error);
+    console.error('Error fetching product by slug from Payload:', error instanceof Error ? error.message : String(error));
   }
   return undefined;
 }

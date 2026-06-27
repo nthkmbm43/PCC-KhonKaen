@@ -26,7 +26,7 @@ export async function getAllPortfolios(): Promise<PortfolioItem[]> {
       location: doc.location || '',
     }));
   } catch (error) {
-    console.error('Error fetching portfolios from Payload:', error);
+    console.error('Error fetching portfolios from Payload:', error instanceof Error ? error.message : String(error));
     return [];
   }
 }
