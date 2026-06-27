@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "npx tsx scripts/push-db.ts && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
