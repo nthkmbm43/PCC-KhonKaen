@@ -18,7 +18,8 @@ export default function AboutPage() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative pt-24 pb-32 lg:pt-32 lg:pb-40 bg-slate-900 overflow-hidden">
+      <section className="relative pt-24 pb-32 lg:pt-32 lg:pb-40 bg-[#0a174f] overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a174f] via-brand-900 to-brand-800/80 opacity-95 z-0 transition-opacity duration-1000"></div>
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay">
           <img src="/images/about-factory.jpg" alt="PCC Factory" className="w-full h-full object-cover" />
         </div>
@@ -102,8 +103,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-slate-950 py-20 text-white">
-        <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 px-4 text-center sm:px-6 lg:px-8">
+      <section className="bg-gradient-to-br from-[#0a174f] to-[#1e3ca6] py-20 text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/20 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2"></div>
+
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 px-4 text-center sm:px-6 lg:px-8 relative z-10">
           <div>
             <h2 className="text-3xl font-bold md:text-4xl">
               ให้ทีมวิศวกรช่วยดูแบบหรือหน้างานของคุณ
@@ -117,14 +121,14 @@ export default function AboutPage() {
               href={lineUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 bg-[#06C755] px-7 py-4 font-bold text-white transition-all hover:bg-[#05b34c]"
+              className="inline-flex bg-[#06C755]/10 border border-[#06C755]/50 hover:bg-[#06C755]/20 text-[#06C755] backdrop-blur-md px-7 py-4 font-bold rounded-xl transition-all hover:shadow-[0_10px_30px_rgba(6,199,85,0.2)] hover:-translate-y-1 items-center justify-center gap-3"
             >
               <MessageCircle size={22} />
               ส่งข้อมูลทาง LINE
             </a>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-3 border border-white/20 px-7 py-4 font-bold text-white transition-all hover:border-brand-300 hover:text-brand-200"
+              className="inline-flex bg-accent-500 hover:bg-accent-600 text-white px-7 py-4 font-bold rounded-xl items-center justify-center gap-3 transition-all animate-pulse-glow hover:-translate-y-1"
             >
               <Phone size={22} />
               ดูช่องทางติดต่อทั้งหมด

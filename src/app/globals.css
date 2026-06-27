@@ -1,14 +1,61 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-brand-50: #fffbeb;
-  --color-brand-100: #fef3c7;
-  --color-brand-500: #f59e0b;
-  --color-brand-600: #d97706;
-  --color-brand-700: #b45309;
+  /* Corporate Navy Blue (Primary) */
+  --color-brand-50: #f0f6ff;
+  --color-brand-100: #e0edff;
+  --color-brand-200: #c7dfff;
+  --color-brand-300: #9ec6ff;
+  --color-brand-400: #6ea3ff;
+  --color-brand-500: #427bf4;
+  --color-brand-600: #265be6;
+  --color-brand-700: #1d46cc;
+  --color-brand-800: #1e3ca6;
+  --color-brand-900: #0f277a;
+  --color-brand-950: #0a174f;
+  
+  /* Amber/Orange (Accent) */
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+
   --color-line-app: #06C755;
   --color-line-hover: #05b34c;
   --font-sans: var(--font-prompt), ui-sans-serif, system-ui, sans-serif;
+
+  /* Custom Animations */
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-pulse-glow: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-fade-up: fade-up 0.8s ease-out forwards;
+  
+  @keyframes shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+    }
+    50% {
+      opacity: .8;
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.7);
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 html {

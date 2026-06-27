@@ -91,14 +91,14 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-brand-500 to-brand-700 p-8 rounded-3xl shadow-lg text-white relative overflow-hidden">
+            <div className="bg-gradient-to-br from-[#0a174f] to-[#1e3ca6] p-8 rounded-3xl shadow-lg text-white relative overflow-hidden">
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold mb-4">ส่งแบบแปลนมาให้เรา</h3>
-                <p className="mb-6 text-brand-50 leading-relaxed">
+                <p className="mb-6 text-brand-100 leading-relaxed">
                   หากคุณมีแบบแปลนก่อสร้างแล้ว ส่งเข้ามาทาง LINE ให้วิศวกรของเราช่วยประเมินราคาเบื้องต้นได้ทันที!
                 </p>
-                <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="inline-flex w-full bg-white text-brand-700 px-6 py-3 rounded-xl font-bold justify-center items-center gap-2 hover:bg-gray-50 transition-colors">
-                  <MessageCircle size={20} className="text-[#06C755]" />
+                <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="inline-flex w-full bg-accent-500 text-white px-6 py-4 rounded-xl font-bold justify-center items-center gap-2 hover:bg-accent-600 transition-all animate-pulse-glow">
+                  <MessageCircle size={24} />
                   คลิกแอด LINE เลย
                 </a>
               </div>

@@ -43,12 +43,12 @@ export default async function PortfolioPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent transition-opacity duration-500 opacity-80 group-hover:opacity-90"></div>
                 
                 {/* Category Badge */}
-                <div className="absolute top-4 left-4 bg-brand-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                <div className="absolute top-4 left-4 bg-accent-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
                   {item.category}
                 </div>
 
                 <div className="absolute bottom-6 left-6 right-6">
-                  <h3 className="text-2xl font-bold text-white mb-2 leading-tight group-hover:text-brand-300 transition-colors">
+                  <h3 className="text-2xl font-bold text-white mb-2 leading-tight group-hover:text-accent-400 transition-colors">
                     {item.title}
                   </h3>
                 </div>

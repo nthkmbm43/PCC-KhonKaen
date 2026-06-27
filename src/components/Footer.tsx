@@ -26,8 +26,8 @@ function FooterHeading({
   eyebrow: string;
 }) {
   return (
-    <div className="mb-5 border-l-4 border-brand-500 pl-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-300">
+    <div className="mb-5 border-l-4 border-accent-500 pl-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent-400">
         {eyebrow}
       </p>
       <h4 className="mt-1 text-xl font-bold text-white">{children}</h4>
@@ -46,13 +46,13 @@ function FooterLinkList({
         <li key={link.label}>
           <Link
             href={link.href}
-            className="group flex items-center justify-between gap-4 py-3 text-slate-300 transition-colors hover:text-brand-300"
+            className="group flex items-center justify-between gap-4 py-3 text-slate-300 transition-colors hover:text-brand-400"
             target={link.external ? "_blank" : undefined}
           >
             <span className="flex items-center gap-2">
               <ChevronRight
                 size={16}
-                className="text-brand-400 transition-transform group-hover:translate-x-1"
+                className="text-accent-500 transition-transform group-hover:translate-x-1"
               />
               {link.label}
             </span>

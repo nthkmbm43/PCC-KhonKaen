@@ -37,20 +37,20 @@ export default async function ProductsPage() {
           </p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <a
+              href={`tel:${siteConfig.phoneRaw}`}
+              className="inline-flex bg-accent-500 hover:bg-accent-600 text-white px-7 py-4 font-bold rounded-xl items-center justify-center gap-3 transition-all animate-pulse-glow hover:-translate-y-1 group"
+            >
+              <Phone size={22} className="group-hover:rotate-12 transition-transform" />
+              ขอใบเสนอราคาฟรี
+            </a>
+            <a
               href={lineUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 bg-[#06C755] px-7 py-4 font-bold text-white transition-all hover:bg-[#05b34c]"
+              className="inline-flex bg-[#06C755]/10 border border-[#06C755]/50 hover:bg-[#06C755]/20 text-[#06C755] backdrop-blur-md px-7 py-4 font-bold rounded-xl transition-all hover:shadow-[0_10px_30px_rgba(6,199,85,0.2)] hover:-translate-y-1 items-center justify-center gap-3 group"
             >
-              <MessageCircle size={22} />
+              <MessageCircle size={22} className="group-hover:animate-bounce" />
               ส่งแบบให้ฝ่ายขายประเมิน
-            </a>
-            <a
-              href={`tel:${siteConfig.phoneRaw}`}
-              className="inline-flex items-center justify-center gap-3 border border-gray-200 bg-white px-7 py-4 font-bold text-gray-900 transition-all hover:border-brand-300 hover:text-brand-700"
-            >
-              <Phone size={22} />
-              โทร {siteConfig.phone}
             </a>
           </div>
         </div>
