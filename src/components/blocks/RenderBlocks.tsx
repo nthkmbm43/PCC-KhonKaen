@@ -2,11 +2,13 @@ import React from 'react'
 import HeroBlock from './HeroBlock'
 import ContentBlock from './ContentBlock'
 import CallToActionBlock from './CallToActionBlock'
+import { MediaBlock } from './MediaBlock'
 
 const blockComponents = {
   hero: HeroBlock,
   content: ContentBlock,
   callToAction: CallToActionBlock,
+  mediaBlock: MediaBlock,
 }
 
 export default function RenderBlocks({ layout }: { layout: any[] }) {

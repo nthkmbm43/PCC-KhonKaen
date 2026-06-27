@@ -1,4 +1,5 @@
 import { Block } from 'payload'
+import { link } from '../fields/link'
 
 export const CallToActionBlock: Block = {
   slug: 'callToAction',
@@ -30,11 +31,26 @@ export const CallToActionBlock: Block = {
       required: true,
     },
     {
-      name: 'buttons',
+      name: 'links',
       type: 'array',
-      label: 'Buttons',
+      label: 'Links (New Format)',
       minRows: 1,
       maxRows: 2,
+      fields: [
+        link({
+          appearances: ['primary', 'secondary'],
+        }),
+      ],
+    },
+    {
+      name: 'buttons',
+      type: 'array',
+      label: 'Buttons (Legacy)',
+      minRows: 1,
+      maxRows: 2,
+      admin: {
+        condition: (data: any, siblingData: any) => !data?.links || data.links.length === 0,
+      },
       fields: [
         {
           name: 'label',

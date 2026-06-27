@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import RenderBlocks from '@/components/blocks/RenderBlocks'
+import HeroBlock from '@/components/blocks/HeroBlock'
 import { createSeoMetadata, JsonLd } from '@/lib/seo'
 
 // Avoid conflicts with static pages: Next.js will match static routes first (e.g. /about, /contact, /portfolio, /products).
@@ -79,6 +80,11 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* New Hero Tab Support */}
+      {page.hero && page.hero.heading && (
+        <HeroBlock {...page.hero} />
+      )}
+      
       <RenderBlocks layout={page.layout} />
     </div>
   )

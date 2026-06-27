@@ -10,9 +10,19 @@ type HeroBlockProps = {
     url: string
     style: 'primary' | 'secondary'
   }[]
+  links?: {
+    link: {
+      type: 'reference' | 'custom'
+      reference?: { value: any, relationTo: string }
+      url?: string
+      label: string
+      newTab?: boolean
+      appearance?: 'primary' | 'secondary' | 'outline'
+    }
+  }[]
 }
 
-export default function HeroBlock({ heading, subheading, backgroundImage, buttons }: HeroBlockProps) {
+export default function HeroBlock({ heading, subheading, backgroundImage, buttons, links }: HeroBlockProps) {
   const imageUrl = backgroundImage?.url || '/images/hero-banner.webp'
 
   return (
@@ -36,9 +46,30 @@ export default function HeroBlock({ heading, subheading, backgroundImage, button
           </p>
         )}
         
-        {buttons && buttons.length > 0 && (
-          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-            {buttons.map((btn, index) => {
+        <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+          {links && links.length > 0 ? (
+            links.map(({ link }, index) => {
+              const href = link.type === 'reference' && link.reference?.value?.slug 
+                ? `/${link.reference.value.slug}` 
+                : link.url || '#';
+              
+              if (link.appearance === 'primary') {
+                return (
+                  <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className="relative overflow-hidden bg-accent-500 hover:bg-accent-600 text-white px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all animate-pulse-glow sm:px-8 sm:text-lg group">
+                    <Phone size={24} className="group-hover:rotate-12 transition-transform" />
+                    {link.label}
+                  </Link>
+                )
+              }
+              return (
+                <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className="bg-brand-50/10 hover:bg-brand-50/20 text-white backdrop-blur-md border border-white/30 px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all hover:-translate-y-1 hover:shadow-lg sm:px-8 sm:text-lg">
+                  <MessageCircle size={24} />
+                  {link.label}
+                </Link>
+              )
+            })
+          ) : buttons && buttons.length > 0 ? (
+            buttons.map((btn, index) => {
               if (btn.style === 'primary') {
                 return (
                   <Link key={index} href={btn.url} className="relative overflow-hidden bg-accent-500 hover:bg-accent-600 text-white px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all animate-pulse-glow sm:px-8 sm:text-lg group">
@@ -53,9 +84,9 @@ export default function HeroBlock({ heading, subheading, backgroundImage, button
                   {btn.label}
                 </Link>
               )
-            })}
-          </div>
-        )}
+            })
+          ) : null}
+        </div>
       </div>
     </section>
   )

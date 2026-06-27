@@ -1,4 +1,5 @@
 import { Block } from 'payload'
+import { link } from '../fields/link'
 
 export const HeroBlock: Block = {
   slug: 'hero',
@@ -26,11 +27,26 @@ export const HeroBlock: Block = {
       required: true,
     },
     {
-      name: 'buttons',
+      name: 'links',
       type: 'array',
-      label: 'Call to Action Buttons',
+      label: 'Call to Action Links (New Format)',
       minRows: 0,
       maxRows: 2,
+      fields: [
+        link({
+          appearances: ['primary', 'secondary'],
+        }),
+      ],
+    },
+    {
+      name: 'buttons',
+      type: 'array',
+      label: 'Call to Action Buttons (Legacy)',
+      minRows: 0,
+      maxRows: 2,
+      admin: {
+        condition: (data: any, siblingData: any) => !data?.links || data.links.length === 0,
+      },
       fields: [
         {
           name: 'label',
