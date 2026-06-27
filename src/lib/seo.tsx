@@ -71,7 +71,7 @@ export function createSeoMetadata({
   };
 }
 
-export function organizationJsonLd() {
+export function organizationJsonLd(contact?: any) {
   return {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -82,7 +82,7 @@ export function organizationJsonLd() {
     logo: absoluteUrl("/images/logo.png"),
     image: absoluteUrl(defaultImage),
     description: siteConfig.description,
-    telephone: siteConfig.phone,
+    telephone: contact?.mainPhone || siteConfig.phone,
     email: siteConfig.email,
     taxID: siteConfig.taxId,
     address: {
@@ -98,9 +98,9 @@ export function organizationJsonLd() {
       name: area,
     })),
     sameAs: [
-      siteConfig.social.facebook.url,
+      contact?.facebookUrl || siteConfig.social.facebook.url,
       siteConfig.social.tiktok.url,
-      siteConfig.social.line.url,
+      contact?.lineUrl || siteConfig.social.line.url,
     ],
   };
 }

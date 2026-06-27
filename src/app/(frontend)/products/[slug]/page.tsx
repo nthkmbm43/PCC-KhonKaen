@@ -1,8 +1,9 @@
 import { getProductBySlug, getAllProducts } from "@/data/products";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2, MessageCircle, Phone, ArrowLeft, ArrowRight } from "lucide-react";
+import { CheckCircle2, MessageCircle, Phone, ArrowLeft, ArrowRight, ChevronRight, ArrowUpRight } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 import { absoluteUrl, createSeoMetadata, JsonLd } from "@/lib/seo";
 import type { Metadata } from "next";
 
@@ -46,8 +47,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
-  const lineUrl = siteConfig.social.line.url;
-  const phoneNo = siteConfig.phoneRaw;
+  const settings = await getSiteSettings();
+  const lineUrl = settings.contact.lineUrl;
+  const phoneNo = settings.contact.mainPhone.replace(/\D/g, "");
+  const displayPhone = settings.contact.mainPhone;
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -207,7 +210,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 </a>
                 <a href={`tel:${phoneNo}`} className="w-full bg-slate-100 hover:bg-slate-200 text-gray-800 px-6 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-all hover:-translate-y-1">
                   <Phone size={24} />
-                  โทรศัพท์: {siteConfig.phone}
+                  โทรศัพท์: {displayPhone}
                 </a>
               </div>
             </div>

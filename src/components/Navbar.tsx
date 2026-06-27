@@ -3,13 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Phone, MessageCircle, ChevronDown, Menu, X } from "lucide-react";
-import { siteConfig } from "@/data/site-config";
 import { Product } from "@/data/products";
 
-export default function Navbar({ products }: { products: Product[] }) {
-  const lineUrl = "https://lin.ee/5O8rHvD";
-  const phoneNo = siteConfig.phoneRaw;
-  const displayPhone = siteConfig.phone;
+interface NavbarProps {
+  products: Product[];
+  contact: {
+    lineUrl: string;
+    mainPhone: string;
+  };
+}
+
+export default function Navbar({ products, contact }: NavbarProps) {
+  const lineUrl = contact.lineUrl;
+  const displayPhone = contact.mainPhone;
+  // Remove non-digits for tel link
+  const phoneNo = displayPhone.replace(/\D/g, "");
+  
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
 

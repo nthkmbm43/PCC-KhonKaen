@@ -8,6 +8,7 @@ import { Users } from './collections/Users'
 import { Media } from './collections/Media'
 import { Products } from './collections/Products'
 import { Portfolio } from './collections/Portfolio'
+import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -16,8 +17,19 @@ export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)),
   admin: {
     user: Users.slug,
+    meta: {
+      titleSuffix: '- PCC Post-Tension CMS',
+      icons: [{ rel: 'icon', type: 'image/x-icon', url: '/favicon.ico' }],
+    },
+    components: {
+      graphics: {
+        Logo: '@/components/AdminLogo#AdminLogo',
+        Icon: '@/components/AdminLogo#AdminLogo',
+      }
+    }
   },
   collections: [Users, Media, Products, Portfolio],
+  globals: [SiteSettings],
   editor: lexicalEditor({}),
   secret: process.env.PAYLOAD_SECRET || 'fallback-secret-key-replace-in-production',
   db: postgresAdapter({

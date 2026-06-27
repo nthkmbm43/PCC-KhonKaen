@@ -1,9 +1,6 @@
 import { MessageCircle } from "lucide-react";
-import { siteConfig } from "@/data/site-config";
 
-export default function StickyFloatingLineBtn() {
-  const lineUrl = siteConfig.social.line.url;
-
+export default function StickyFloatingLineBtn({ lineUrl }: { lineUrl: string }) {
   return (
     <a 
       href={lineUrl} 

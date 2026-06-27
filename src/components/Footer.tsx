@@ -67,7 +67,7 @@ function FooterLinkList({
   );
 }
 
-export default function Footer() {
+export default function Footer({ contact }: { contact: any }) {
   return (
     <footer className="bg-slate-950 pt-16 text-slate-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -128,10 +128,10 @@ export default function Footer() {
                   className="absolute inset-0"
                 />
               </div>
-              <p className="mt-4 flex items-start gap-2 border-t border-white/10 pt-4 text-sm leading-6 text-slate-400">
+              <a href={contact.googleMapsUrl || "#"} target="_blank" className="mt-4 flex items-start gap-2 border-t border-white/10 pt-4 text-sm leading-6 text-slate-400 hover:text-brand-300 transition-colors">
                 <MapPin size={17} className="mt-1 shrink-0 text-brand-400" />
                 {siteConfig.offices[0].address}
-              </p>
+              </a>
             </section>
 
             <section className={`${sectionBase} flex flex-col md:col-span-2 lg:col-span-3 lg:col-start-2`}>
@@ -161,19 +161,19 @@ export default function Footer() {
               {siteConfig.email}
             </a>
             <a
-              href={`tel:${siteConfig.phoneRaw}`}
+              href={`tel:${contact.mainPhone.replace(/\D/g, "")}`}
               className="flex items-center gap-3 border border-white/10 bg-white/[0.03] px-5 py-4 font-semibold text-white transition-colors hover:border-brand-400/50"
             >
               <Phone size={20} className="text-brand-300" />
-              {siteConfig.phone}
+              {contact.mainPhone}
             </a>
             <a
-              href={siteConfig.social.line.url}
+              href={contact.lineUrl}
               target="_blank"
               className="flex items-center gap-3 border border-line-app/40 bg-line-app/10 px-5 py-4 font-semibold text-white transition-colors hover:border-line-app"
             >
               <MessageCircle size={20} className="text-line-app" />
-              {siteConfig.social.line.label}
+              แอดไลน์สอบถาม
             </a>
           </div>
         </div>

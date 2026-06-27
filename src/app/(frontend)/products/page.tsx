@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { getAllProducts } from "@/data/products";
 import { createSeoMetadata } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 import Link from "next/link";
 import { ChevronRight, ArrowUpRight, MessageCircle, Phone } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
@@ -20,7 +21,9 @@ export const metadata: Metadata = createSeoMetadata({
 });
 
 export default async function ProductsPage() {
-  const lineUrl = siteConfig.social.line.url;
+  const settings = await getSiteSettings();
+  const lineUrl = settings.contact.lineUrl;
+  const phoneRaw = settings.contact.mainPhone.replace(/\D/g, "");
   const products = await getAllProducts();
 
   return (
@@ -37,7 +40,7 @@ export default async function ProductsPage() {
           </p>
           <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <a
-              href={`tel:${siteConfig.phoneRaw}`}
+              href={`tel:${phoneRaw}`}
               className="inline-flex bg-accent-500 hover:bg-accent-600 text-white px-7 py-4 font-bold rounded-xl items-center justify-center gap-3 transition-all animate-pulse-glow hover:-translate-y-1 group"
             >
               <Phone size={22} className="group-hover:rotate-12 transition-transform" />

@@ -1,0 +1,101 @@
+/* custom.scss */
+
+/* Base Theme Overrides */
+:root {
+  /* Corporate Navy Primary */
+  --theme-primary-50: #f0f6ff;
+  --theme-primary-100: #e0edff;
+  --theme-primary-200: #c7dfff;
+  --theme-primary-300: #9ec6ff;
+  --theme-primary-400: #6ea3ff;
+  --theme-primary-500: #427bf4;
+  --theme-primary-600: #265be6;
+  --theme-primary-700: #1d46cc;
+  --theme-primary-800: #1e3ca6;
+  --theme-primary-900: #0f277a;
+  --theme-primary-950: #0a174f;
+
+  /* Amber/Orange Accent */
+  --theme-accent-400: #fbbf24;
+  --theme-accent-500: #f59e0b;
+  --theme-accent-600: #d97706;
+
+  /* Payload Specific Variable Overrides (Light Mode by default) */
+  --theme-bg: #f8fafc;
+  --theme-elevation-50: #ffffff;
+  --theme-elevation-100: #f1f5f9;
+  --theme-elevation-150: #e2e8f0;
+  --theme-elevation-200: #cbd5e1;
+
+  --theme-success-500: #10b981;
+  --theme-error-500: #ef4444;
+
+  /* Fast Animations */
+  --transition-speed: 0.15s;
+}
+
+[data-theme='dark'] {
+  --theme-bg: var(--theme-primary-950);
+  --theme-elevation-50: var(--theme-primary-900);
+  --theme-elevation-100: var(--theme-primary-800);
+  --theme-elevation-150: var(--theme-primary-700);
+  --theme-elevation-200: var(--theme-primary-600);
+
+  --theme-text: #f8fafc;
+}
+
+/* Make buttons pop with Amber */
+.btn--style-primary {
+  background-color: var(--theme-accent-500) !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  border: none !important;
+  transition: all var(--transition-speed) ease-in-out !important;
+  box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.1), 0 2px 4px -1px rgba(245, 158, 11, 0.06) !important;
+}
+
+.btn--style-primary:hover {
+  background-color: var(--theme-accent-600) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.2), 0 4px 6px -2px rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Sidebar styling for Corporate Navy */
+.app-header {
+  background-color: var(--theme-primary-950) !important;
+  border-right: 1px solid var(--theme-primary-800) !important;
+}
+
+.app-header .nav__link {
+  color: var(--theme-primary-200) !important;
+  border-radius: 8px !important;
+  transition: all var(--transition-speed) ease !important;
+  margin: 2px 8px !important;
+}
+
+.app-header .nav__link:hover {
+  background-color: var(--theme-primary-800) !important;
+  color: #fff !important;
+}
+
+.app-header .nav__link.active {
+  background-color: var(--theme-primary-800) !important;
+  color: var(--theme-accent-400) !important;
+  font-weight: 600 !important;
+}
+
+/* Global rounded corners for inputs and cards */
+.card, .form-field, input, select, textarea {
+  border-radius: 8px !important;
+  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--theme-primary-500) !important;
+  box-shadow: 0 0 0 3px rgba(66, 123, 244, 0.1) !important;
+}
+
+/* Dashboard styling */
+.dashboard__wrap {
+  padding-top: 2rem !important;
+}

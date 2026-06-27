@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getAllProducts } from "@/data/products";
 import { getAllPortfolios } from "@/data/portfolio";
 import { faqs as homeFAQ } from "@/data/faq";
-import { siteConfig } from "@/data/site-config";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 import { createSeoMetadata, faqJsonLd, JsonLd } from "@/lib/seo";
 
 export const metadata = createSeoMetadata({
@@ -15,8 +15,10 @@ export const metadata = createSeoMetadata({
 });
 
 export default async function Home() {
-  const lineUrl = siteConfig.social.line.url;
-  const phoneNo = siteConfig.phoneRaw;
+  const settings = await getSiteSettings();
+  const lineUrl = settings.contact.lineUrl;
+  // Replace non-digits for tel link
+  const phoneNo = settings.contact.mainPhone.replace(/\D/g, "");
 
   // Show all products instead of just 3
   const allProducts = await getAllProducts();

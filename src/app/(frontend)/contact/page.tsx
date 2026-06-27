@@ -1,20 +1,22 @@
-import { Phone, MessageCircle, MapPin, Clock, HelpCircle } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, MessageCircle, HelpCircle } from "lucide-react";
 import { Metadata } from "next";
 import { faqs as contactFAQ } from "@/data/faq";
 import { siteConfig } from "@/data/site-config";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 import { createSeoMetadata, faqJsonLd, JsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = createSeoMetadata({
-  title: "ติดต่อฝ่ายขาย PCC Post-Tension | ขอราคาและประเมินหน้างาน ขอนแก่น",
+  title: "ติดต่อเรา | บริษัท พีซีซี โพสเทนชั่น จำกัด ขอนแก่น",
   description:
-    "ติดต่อ พีซีซี โพสเทนชั่น เพื่อประเมินราคาหน้างานฟรี ส่งแบบทาง LINE สอบถามงานโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป และแผ่นพื้นสำเร็จรูป",
+    "ติดต่อสอบถามรายละเอียด ขอใบเสนอราคางานโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป พร้อมแผนที่ตั้งโรงงานขอนแก่น",
   path: "/contact",
 });
 
-export default function ContactPage() {
-  const lineUrl = siteConfig.social.line.url;
-  const phoneNo = siteConfig.phoneRaw;
-  const displayPhone = siteConfig.phone;
+export default async function ContactPage() {
+  const settings = await getSiteSettings();
+  const lineUrl = settings.contact.lineUrl;
+  const phoneNo = settings.contact.mainPhone.replace(/\D/g, "");
+  const displayPhone = settings.contact.mainPhone;
 
   return (
     <div className="bg-zinc-50 pt-24 pb-32">

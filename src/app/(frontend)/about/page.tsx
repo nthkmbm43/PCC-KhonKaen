@@ -1,19 +1,20 @@
 import Link from "next/link";
-import { CheckCircle2, Award, Clock, Users, Building2, MessageCircle, Phone } from "lucide-react";
+import { CheckCircle2, Award, Clock, Users, Building2, MessageCircle, Phone, Target, ShieldCheck, Factory, ChevronRight } from "lucide-react";
 import { Metadata } from "next";
-import { siteConfig } from "@/data/site-config";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 import { createSeoMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createSeoMetadata({
-  title: "เกี่ยวกับ พีซีซี โพสเทนชั่น | โรงงานคอนกรีตและทีมวิศวกร ขอนแก่น",
+  title: "เกี่ยวกับเรา | ประวัติและความเป็นมา",
   description:
-    "รู้จักบริษัท พีซีซี โพสเทนชั่น จำกัด ผู้เชี่ยวชาญงานพื้นโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป และผลิตภัณฑ์คอนกรีตสำเร็จรูป ขอนแก่น",
+    "พีซีซี โพสเทนชั่น ก่อตั้งขึ้นด้วยความมุ่งมั่นที่จะยกระดับมาตรฐานงานก่อสร้างไทย เราคือผู้เชี่ยวชาญด้านงานคอนกรีตอัดแรงที่มีประสบการณ์ยาวนานกว่า 15 ปี",
   path: "/about",
-  image: "/images/about-factory.jpg",
 });
 
-export default function AboutPage() {
-  const lineUrl = siteConfig.social.line.url;
+export default async function AboutPage() {
+  const settings = await getSiteSettings();
+  const lineUrl = settings.contact.lineUrl;
+  const phoneNo = settings.contact.mainPhone.replace(/\D/g, "");
 
   return (
     <div className="bg-white">

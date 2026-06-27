@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import StickyFloatingLineBtn from "@/components/ui/StickyFloatingLineBtn";
 import { createSeoMetadata, JsonLd, organizationJsonLd } from "@/lib/seo";
 import { getAllProducts } from "@/data/products";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 import "../globals.css";
 
 const prompt = Prompt({
@@ -13,25 +14,28 @@ const prompt = Prompt({
   subsets: ["latin", "thai"],
 });
 
-export const metadata: Metadata = {
-  ...createSeoMetadata({
-    title:
-      "PCC Post-Tension ขอนแก่น | รับเหมาโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป",
-    description:
-      "รับเหมางานโพสเทนชั่น ผลิตและติดตั้งแผ่นพื้นสำเร็จรูป กำแพงกันดินตัว L รั้วสำเร็จรูป ขอนแก่น ภาคอีสาน และเชียงใหม่ โดยทีมวิศวกร",
-  }),
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pcc-posttension.com"),
-  applicationName: "PCC Post-Tension",
-  authors: [{ name: "PCC Post-Tension" }],
-  creator: "PCC Post-Tension",
-  publisher: "PCC Post-Tension",
-  category: "construction",
-  icons: {
-    icon: "/images/logo.png",
-    shortcut: "/images/logo.png",
-    apple: "/images/logo.png",
-  }
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  
+  return {
+    ...createSeoMetadata({
+      title: settings.seo.title,
+      description: settings.seo.description,
+      keywords: settings.seo.keywords ? settings.seo.keywords.split(',').map((k: string) => k.trim()) : undefined,
+    }),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pcc-posttension.com"),
+    applicationName: "PCC Post-Tension",
+    authors: [{ name: "PCC Post-Tension" }],
+    creator: "PCC Post-Tension",
+    publisher: "PCC Post-Tension",
+    category: "construction",
+    icons: {
+      icon: "/images/logo.png",
+      shortcut: "/images/logo.png",
+      apple: "/images/logo.png",
+    }
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -39,15 +43,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const products = await getAllProducts();
+  const settings = await getSiteSettings();
   
   return (
     <html lang="th" className={`${prompt.variable} antialiased scroll-smooth`}>
       <body className="min-h-screen flex flex-col">
-        <JsonLd data={organizationJsonLd()} />
-        <Navbar products={products} />
+        <JsonLd data={organizationJsonLd(settings.contact)} />
+        <Navbar products={products} contact={settings.contact} />
         <main className="flex-grow flex flex-col">{children}</main>
-        <Footer />
-        <StickyFloatingLineBtn />
+        <Footer contact={settings.contact} />
+        <StickyFloatingLineBtn lineUrl={settings.contact.lineUrl} />
       </body>
     </html>
   );
