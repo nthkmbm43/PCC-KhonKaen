@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2, ArrowLeft, GripVertical, Settings, FileText, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, ArrowLeft, GripVertical, Settings, FileText, Image as ImageIcon, Unlock } from "lucide-react";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import {
@@ -22,6 +22,17 @@ import {
 import { RichTextEditor } from "./RichTextEditor";
 import { ImageUpload } from "./ImageUpload";
 import toast from "react-hot-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const pageSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -51,6 +62,7 @@ type PageFormValues = z.infer<typeof pageSchema>;
 export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: string }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const form = useForm<PageFormValues>({
     resolver: zodResolver(pageSchema),
@@ -103,16 +115,57 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
               </Button>
             </Link>
             <h1 className="text-2xl font-bold tracking-tight">
-              {pageId ? "Edit Page" : "Create New Page"}
+              {pageId ? "แก้ไขเพจ" : "สร้างเพจใหม่"}
             </h1>
           </div>
-          <Button type="submit" disabled={isSaving} className="bg-blue-600 hover:bg-blue-700">
-            <Save className="w-4 h-4 mr-2 hidden sm:block" />
-            {isSaving ? "Saving..." : "Save Page"}
-          </Button>
+          <div className="flex items-center gap-3">
+            {!isEditMode ? (
+              <Button
+                type="button"
+                onClick={() => setIsEditMode(true)}
+                className="shrink-0 bg-slate-800 hover:bg-slate-700 text-white shadow-sm rounded-xl px-5"
+              >
+                <Unlock className="w-4 h-4 mr-2" />
+                ปลดล็อคเพื่อแก้ไข
+              </Button>
+            ) : (
+              <>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsEditMode(false)}
+                  className="rounded-xl"
+                >
+                  ยกเลิก
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger render={
+                    <Button type="button" disabled={isSaving || !form.formState.isValid} className="bg-blue-600 hover:bg-blue-700 rounded-xl px-5 shadow-sm shadow-blue-200">
+                      <Save className="w-4 h-4 mr-2 hidden sm:block" />
+                      {isSaving ? "กำลังบันทึก..." : "บันทึกเพจ"}
+                    </Button>
+                  } />
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>ยืนยันการบันทึกเพจ?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        ข้อมูลที่คุณแก้ไขทั้งหมดจะถูกบันทึกเข้าสู่ระบบ และอาจส่งผลต่อการแสดงผลบนหน้าเว็บไซต์
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+                      <AlertDialogAction onClick={form.handleSubmit(onSubmit)} className="bg-blue-600 hover:bg-blue-700">
+                        ยืนยันการบันทึก
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
+            )}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-300 ${!isEditMode ? "opacity-60 pointer-events-none grayscale-[0.2]" : ""}`}>
           <div className="md:col-span-2 space-y-8">
             <Card>
               <CardHeader>
@@ -143,7 +196,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                   <CardDescription>Drag and drop blocks to build your page.</CardDescription>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Select onValueChange={(val) => {
+                  <Select disabled={!isEditMode} onValueChange={(val) => {
                     if(val) {
                       append({ blockType: val } as any);
                     }
@@ -193,18 +246,33 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                               </div>
                             </div>
                           </AccordionTrigger>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="mr-4 text-red-500 hover:text-red-600 hover:bg-red-50 h-8 w-8 rounded-full transition-colors"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if(confirm('Delete this block?')) remove(index);
-                            }}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger render={
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="mr-4 text-red-500 hover:text-red-600 hover:bg-red-50 h-8 w-8 rounded-full transition-colors"
+                                disabled={!isEditMode}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            } />
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>ลบ Block นี้?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  คุณแน่ใจหรือไม่ที่จะลบ Block นี้ออกจากเพจ? ข้อมูลใน Block นี้จะสูญหาย
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => remove(index)} className="bg-red-600 hover:bg-red-700">
+                                  ลบเลย
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </div>
                         <AccordionContent className="pt-2 pb-6 px-6 border-t bg-slate-50/30">
                           {["hero", "aboutHero", "aboutContent", "aboutFeatureGrid", "contactInfo", "contactSocial", "portfolioFullGrid"].includes(blockType) && (
