@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Phone, MessageCircle, ChevronDown, Menu, X } from "lucide-react";
 import { Product } from "@/data/products";
 
@@ -30,12 +31,21 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
         <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 h-16 md:h-20 lg:h-24 xl:h-28 flex items-center justify-between gap-3">
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center group py-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            src={contact.logoUrl || "/images/logo-full-dark.png"} 
-            alt="PCC Post-Tension Logo" 
-            className="w-[180px] md:w-[240px] lg:w-[320px] max-h-16 h-auto object-contain transition-transform group-hover:scale-105" 
-          />
+          {contact.logoUrl ? (
+            <div className="relative w-[180px] md:w-[240px] lg:w-[320px] h-10 md:h-12 lg:h-16">
+              <Image 
+                src={contact.logoUrl} 
+                alt="PCC Post-Tension Logo" 
+                fill
+                className="object-contain object-left transition-transform group-hover:scale-105"
+                sizes="(max-width: 768px) 180px, (max-width: 1024px) 240px, 320px"
+              />
+            </div>
+          ) : (
+            <span className="text-xl md:text-2xl font-bold text-brand-800 tracking-tight transition-transform group-hover:scale-105">
+              PCC Post-Tension
+            </span>
+          )}
           <div className="hidden lg:flex items-center">
             <div className="h-10 w-px bg-slate-300 mx-3 xl:mx-5"></div>
             <span className="text-sm bg-brand-50 text-brand-700 px-4 py-2 rounded-full font-bold border border-brand-200 shadow-sm group-hover:bg-brand-100 group-hover:border-brand-300 transition-all whitespace-nowrap">สาขาขอนแก่น</span>

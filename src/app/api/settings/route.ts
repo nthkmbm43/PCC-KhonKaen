@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { siteSettings } from "@/db/schema";
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
   try {
@@ -41,6 +42,9 @@ export async function PUT(req: Request) {
         .update(siteSettings)
         .set({ ...data, updatedAt: new Date() })
         .returning();
+      
+      revalidatePath('/', 'layout');
+      
       return NextResponse.json(updatedSettings[0]);
     }
   } catch (error) {
