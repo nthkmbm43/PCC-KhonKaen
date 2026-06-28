@@ -14,6 +14,8 @@ import {
 import { FileEdit, Plus } from "lucide-react";
 import { DeletePageButton } from "@/components/admin/DeletePageButton";
 
+export const dynamic = 'force-dynamic';
+
 export default async function PagesList() {
   const allPages = await db.select().from(pages).orderBy(desc(pages.createdAt));
 
@@ -21,54 +23,61 @@ export default async function PagesList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Pages</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage your website pages and content.
-          </p>
+          <h1 className="text-2xl font-bold text-slate-900">จัดการเพจ</h1>
+          <p className="text-slate-500 text-sm mt-1">สร้าง แก้ไข หรือลบเพจเนื้อหาของเว็บไซต์</p>
         </div>
         <Link href="/admin/pages/new">
-          <Button className="bg-blue-600 hover:bg-blue-700">
+          <Button className="bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm shadow-blue-200">
             <Plus className="w-4 h-4 mr-2" />
-            New Page
+            สร้างเพจใหม่
           </Button>
         </Link>
       </div>
 
-      <div className="bg-white border rounded-md shadow-sm">
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Slug</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Last Updated</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+            <TableRow className="bg-slate-50 border-b border-slate-200">
+              <TableHead className="font-semibold text-slate-700">ชื่อเพจ</TableHead>
+              <TableHead className="font-semibold text-slate-700">Slug (URL)</TableHead>
+              <TableHead className="font-semibold text-slate-700">สถานะ</TableHead>
+              <TableHead className="font-semibold text-slate-700">อัปเดตล่าสุด</TableHead>
+              <TableHead className="text-right font-semibold text-slate-700">จัดการ</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {allPages.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                  No pages found. Create one to get started.
+                <TableCell colSpan={5} className="text-center py-12 text-slate-400">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center">
+                      <FileEdit className="w-6 h-6 text-slate-300" />
+                    </div>
+                    <p>ยังไม่มีเพจ กด &quot;สร้างเพจใหม่&quot; เพื่อเริ่มต้น</p>
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
               allPages.map((page) => (
-                <TableRow key={page.id}>
-                  <TableCell className="font-medium">{page.title}</TableCell>
-                  <TableCell className="text-muted-foreground">/{page.slug}</TableCell>
+                <TableRow key={page.id} className="hover:bg-slate-50 transition-colors">
+                  <TableCell className="font-semibold text-slate-800">{page.title}</TableCell>
+                  <TableCell className="text-slate-400 font-mono text-xs">/{page.slug}</TableCell>
                   <TableCell>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${page.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                      {page.status}
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold ${
+                      page.status === 'published' 
+                        ? 'bg-emerald-100 text-emerald-700' 
+                        : 'bg-amber-100 text-amber-700'
+                    }`}>
+                      {page.status === 'published' ? '✓ เผยแพร่' : '✎ ร่าง'}
                     </span>
                   </TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
+                  <TableCell className="text-slate-400 text-sm">
                     {new Date(page.updatedAt || '').toLocaleDateString('th-TH')}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Link href={`/admin/pages/${page.id}`}>
-                        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg">
                           <FileEdit className="w-4 h-4" />
                         </Button>
                       </Link>

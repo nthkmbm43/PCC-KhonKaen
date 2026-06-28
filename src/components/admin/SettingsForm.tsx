@@ -39,6 +39,7 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
+    mode: 'onChange',
     defaultValues: {
       logoUrl: initialData?.logoUrl || "",
       faviconUrl: initialData?.faviconUrl || "",
