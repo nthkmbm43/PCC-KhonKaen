@@ -15,6 +15,7 @@ export const pages = pgTable('pages', {
 export const siteSettings = pgTable('site_settings', {
   id: uuid('id').defaultRandom().primaryKey(),
   logoUrl: text('logo_url'),
+  faviconUrl: text('favicon_url'),
   navbarLinks: jsonb('navbar_links').default('[]'),
   footerData: jsonb('footer_data').default('{}'),
   mainPhone: text('main_phone'),

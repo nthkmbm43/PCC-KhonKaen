@@ -30,9 +30,9 @@ export async function generateMetadata(): Promise<Metadata> {
     publisher: "PCC Post-Tension",
     category: "construction",
     icons: {
-      icon: settings.contact.logoUrl || "/images/logo.png",
-      shortcut: settings.contact.logoUrl || "/images/logo.png",
-      apple: settings.contact.logoUrl || "/images/logo.png",
+      icon: settings.contact.faviconUrl || settings.contact.logoUrl || "/images/logo.png",
+      shortcut: settings.contact.faviconUrl || settings.contact.logoUrl || "/images/logo.png",
+      apple: settings.contact.faviconUrl || settings.contact.logoUrl || "/images/logo.png",
     }
   };
 }

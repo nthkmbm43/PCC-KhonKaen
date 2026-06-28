@@ -20,6 +20,7 @@ const navLinkSchema = z.object({
 
 const settingsSchema = z.object({
   logoUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+  faviconUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   navbarLinks: z.array(navLinkSchema).optional(),
   footerData: z.object({
     description: z.string().optional(),
@@ -41,6 +42,7 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
     resolver: zodResolver(settingsSchema),
     defaultValues: {
       logoUrl: initialData?.logoUrl || "",
+      faviconUrl: initialData?.faviconUrl || "",
       navbarLinks: initialData?.navbarLinks || [],
       footerData: initialData?.footerData || { description: "", copyright: "" },
       mainPhone: initialData?.mainPhone || "",
@@ -96,11 +98,11 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
         <Card>
           <CardHeader>
             <CardTitle>Branding</CardTitle>
-            <CardDescription>Upload or link your company logo.</CardDescription>
+            <CardDescription>Upload or link your company logo and site icon.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="space-y-2">
-              <Label>Logo URL</Label>
+              <Label>Main Logo (Navbar)</Label>
               <ImageUpload 
                 value={form.watch("logoUrl") || ""} 
                 onChange={(val) => form.setValue("logoUrl", val, { shouldDirty: true })} 
@@ -108,6 +110,19 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
               />
               {form.formState.errors.logoUrl && (
                 <p className="text-sm text-red-500">{form.formState.errors.logoUrl.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label>Site Icon / Favicon (Browser Tab)</Label>
+              <ImageUpload 
+                value={form.watch("faviconUrl") || ""} 
+                onChange={(val) => form.setValue("faviconUrl", val, { shouldDirty: true })} 
+                disabled={isSaving} 
+              />
+              <p className="text-sm text-muted-foreground">Recommend a square image (e.g. 512x512 PNG).</p>
+              {form.formState.errors.faviconUrl && (
+                <p className="text-sm text-red-500">{form.formState.errors.faviconUrl.message}</p>
               )}
             </div>
           </CardContent>

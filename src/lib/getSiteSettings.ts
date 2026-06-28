@@ -18,6 +18,7 @@ export async function getSiteSettings() {
       footerData: settings?.footerData || {},
       contact: {
         logoUrl: settings?.logoUrl || '',
+        faviconUrl: settings?.faviconUrl || '',
         mainPhone: settings?.mainPhone || siteConfig.phone,
         secondaryPhone: '',
         lineUrl: settings?.lineUrl || siteConfig.social.line.url,

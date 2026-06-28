@@ -15,9 +15,9 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "Admin Dashboard - Custom CMS",
     description: "Manage your website content",
     icons: {
-      icon: settings?.logoUrl || "/images/logo.png",
-      shortcut: settings?.logoUrl || "/images/logo.png",
-      apple: settings?.logoUrl || "/images/logo.png",
+      icon: settings?.faviconUrl || settings?.logoUrl || "/images/logo.png",
+      shortcut: settings?.faviconUrl || settings?.logoUrl || "/images/logo.png",
+      apple: settings?.faviconUrl || settings?.logoUrl || "/images/logo.png",
     }
   };
 }
