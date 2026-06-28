@@ -5,10 +5,22 @@ import "../globals.css";
 import { db } from "@/db";
 import { siteSettings } from "@/db/schema";
 
-export const metadata = {
-  title: "Admin Dashboard - Custom CMS",
-  description: "Manage your website content",
-};
+import type { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settingsArray = await db.select().from(siteSettings).limit(1);
+  const settings = settingsArray[0];
+
+  return {
+    title: "Admin Dashboard - Custom CMS",
+    description: "Manage your website content",
+    icons: {
+      icon: settings?.logoUrl || "/images/logo.png",
+      shortcut: settings?.logoUrl || "/images/logo.png",
+      apple: settings?.logoUrl || "/images/logo.png",
+    }
+  };
+}
 
 import { Toaster } from 'react-hot-toast';
 
