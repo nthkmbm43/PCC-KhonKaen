@@ -75,8 +75,9 @@ export default function Footer({ contact }: { contact: any }) {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-[1.15fr_0.85fr_0.85fr_1.08fr]">
             <section className={`${sectionBase} md:row-span-2 lg:row-span-2`}>
               <div className="border-b border-white/10 pb-6">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/images/logo-full-light.png"
+                  src={contact.logoUrl || "/images/logo-full-light.png"}
                   alt="PCC Post-Tension Logo"
                   className="h-24 w-auto max-w-full object-contain sm:h-28"
                 />

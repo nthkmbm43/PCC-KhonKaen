@@ -1,23 +1,33 @@
 import Link from "next/link";
 import { LayoutDashboard, FileText, Settings, LogOut } from "lucide-react";
 import "../globals.css";
+import { db } from "@/db";
+import { siteSettings } from "@/db/schema";
 
 export const metadata = {
   title: "Admin Dashboard - Custom CMS",
   description: "Manage your website content",
 };
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const settingsArray = await db.select().from(siteSettings).limit(1);
+  const settings = settingsArray[0];
+
   return (
     <html lang="en">
       <body className="antialiased text-gray-900 bg-gray-50">
         <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
           {/* Sidebar */}
-          <aside className="w-full md:w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-black text-gray-900 tracking-tight">
-                Custom<span className="text-blue-600">CMS</span>
-              </h2>
+          <aside className="w-full md:w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm shrink-0">
+            <div className="p-6 border-b border-gray-200 flex items-center justify-center min-h-[88px]">
+              {settings?.logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={settings.logoUrl} alt="Logo" className="max-h-12 w-auto object-contain" />
+              ) : (
+                <h2 className="text-2xl font-black text-gray-900 tracking-tight">
+                  Custom<span className="text-blue-600">CMS</span>
+                </h2>
+              )}
             </div>
             <nav className="flex-1 p-4 space-y-2">
               <Link
@@ -49,7 +59,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Main Content */}
           <main className="flex-1 flex flex-col min-w-0">
             {/* Topbar */}
-            <header className="h-16 bg-white border-b border-gray-200 flex items-center px-6 shadow-sm sticky top-0 z-10">
+            <header className="h-16 bg-white border-b border-gray-200 flex items-center px-6 shadow-sm sticky top-0 z-20 shrink-0">
               <div className="flex-1"></div>
               <div className="flex items-center gap-4">
                 <div className="text-sm font-medium text-gray-700">Admin User</div>

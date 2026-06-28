@@ -8,6 +8,7 @@ import { Product } from "@/data/products";
 interface NavbarProps {
   products: Product[];
   contact: {
+    logoUrl?: string;
     lineUrl: string;
     mainPhone: string;
   };
@@ -29,15 +30,18 @@ export default function Navbar({ products, contact }: NavbarProps) {
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center group py-2">
           {/* ใช้ความกว้าง (width) ในการกำหนดขนาด 3 ระดับ (Mobile, Tablet, PC) เพื่อแก้ปัญหาโลโก้เล็กจาก padding ของรูปภาพ */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
-            src="/images/logo-full-dark.png" 
+            src={contact.logoUrl || "/images/logo-full-dark.png"} 
             alt="PCC Post-Tension Logo" 
-            className="w-[180px] md:w-[240px] lg:w-[320px] h-auto object-contain transition-transform group-hover:scale-105" 
+            className="w-[180px] md:w-[240px] lg:w-[320px] max-h-16 h-auto object-contain transition-transform group-hover:scale-105" 
           />
-          <div className="hidden lg:flex items-center">
-            <div className="h-10 w-px bg-slate-300 mx-3 xl:mx-5"></div>
-            <span className="text-sm bg-brand-50 text-brand-700 px-4 py-2 rounded-full font-bold border border-brand-200 shadow-sm group-hover:bg-brand-100 group-hover:border-brand-300 transition-all whitespace-nowrap">สาขาขอนแก่น</span>
-          </div>
+          {!contact.logoUrl && (
+            <div className="hidden lg:flex items-center">
+              <div className="h-10 w-px bg-slate-300 mx-3 xl:mx-5"></div>
+              <span className="text-sm bg-brand-50 text-brand-700 px-4 py-2 rounded-full font-bold border border-brand-200 shadow-sm group-hover:bg-brand-100 group-hover:border-brand-300 transition-all whitespace-nowrap">สาขาขอนแก่น</span>
+            </div>
+          )}
         </Link>
         
         {/* Desktop Menu */}

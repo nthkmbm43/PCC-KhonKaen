@@ -8,11 +8,18 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2, ArrowLeft, GripVertical } from "lucide-react";
+import { Plus, Trash2, ArrowLeft, GripVertical, Settings, FileText, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { RichTextEditor } from "./RichTextEditor";
 
 const pageSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -27,7 +34,7 @@ const pageSchema = z.object({
       description: z.string().optional(),
       columns: z.array(
         z.object({
-          width: z.string(),
+          size: z.string().optional(),
           content: z.string().optional(),
         })
       ).optional(),
@@ -80,7 +87,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between sticky top-16 bg-gray-50 z-10 py-4 -my-4 border-b">
           <div className="flex items-center gap-4">
             <Link href="/admin/pages">
               <Button variant="outline" size="icon" type="button">
@@ -92,6 +99,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
             </h1>
           </div>
           <Button type="submit" disabled={isSaving} className="bg-blue-600 hover:bg-blue-700">
+            <Save className="w-4 h-4 mr-2 hidden sm:block" />
             {isSaving ? "Saving..." : "Save Page"}
           </Button>
         </div>
@@ -121,8 +129,11 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Page Content (Blocks)</CardTitle>
+              <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
+                <div>
+                  <CardTitle>Page Builder</CardTitle>
+                  <CardDescription>Drag and drop blocks to build your page.</CardDescription>
+                </div>
                 <div className="flex gap-2">
                   <Button
                     type="button"
@@ -136,55 +147,103 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => append({ blockType: "content", columns: [{ width: "full", content: "" }] })}
+                    onClick={() => append({ blockType: "content", columns: [{ size: "full", content: "" }] })}
                   >
                     <Plus className="w-4 h-4 mr-1" /> Content
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {fields.map((field, index) => (
-                  <div key={field.id} className="relative border rounded-lg p-4 bg-gray-50 group">
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => remove(index)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
+              <CardContent className="space-y-4 pt-6 bg-slate-50/50">
+                <Accordion className="w-full space-y-4" defaultValue={fields.map(f => f.id)}>
+                  {fields.map((field, index) => {
+                    const blockType = form.watch(`content.${index}.blockType`);
+                    const blockTitle = blockType === "hero" ? form.watch(`content.${index}.headline`) || "Hero Block" : "Content Block";
                     
-                    <div className="flex items-center gap-2 mb-4">
-                      <GripVertical className="w-5 h-5 text-gray-400 cursor-move" />
-                      <h3 className="font-semibold text-gray-700 capitalize">{form.watch(`content.${index}.blockType`)} Block</h3>
-                    </div>
-
-                    {form.watch(`content.${index}.blockType`) === "hero" && (
-                      <div className="space-y-4 pl-7">
-                        <div className="space-y-2">
-                          <Label>Headline</Label>
-                          <Input {...form.register(`content.${index}.headline` as const)} />
+                    return (
+                      <AccordionItem key={field.id} value={field.id} className="bg-white border rounded-lg shadow-sm px-2">
+                        <div className="flex items-center">
+                          <div className="p-3 cursor-move text-slate-400 hover:text-slate-600 transition-colors">
+                            <GripVertical className="w-5 h-5" />
+                          </div>
+                          <AccordionTrigger className="flex-1 hover:no-underline py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-md bg-blue-50 flex items-center justify-center text-blue-600">
+                                {blockType === "hero" ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                              </div>
+                              <div className="text-left">
+                                <p className="font-semibold text-slate-700 capitalize">{blockType}</p>
+                                <p className="text-sm text-slate-400 truncate max-w-[200px] sm:max-w-xs">{blockTitle}</p>
+                              </div>
+                            </div>
+                          </AccordionTrigger>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="mr-4 text-red-500 hover:text-red-600 hover:bg-red-50 h-8 w-8 rounded-full transition-colors"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if(confirm('Delete this block?')) remove(index);
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
                         </div>
-                        <div className="space-y-2">
-                          <Label>Description</Label>
-                          <Textarea {...form.register(`content.${index}.description` as const)} />
-                        </div>
-                      </div>
-                    )}
+                        <AccordionContent className="pt-2 pb-6 px-6 border-t bg-slate-50/30">
+                          {blockType === "hero" && (
+                            <div className="space-y-6 pt-4">
+                              <div className="space-y-2">
+                                <Label className="text-slate-600">Headline</Label>
+                                <Input className="bg-white" {...form.register(`content.${index}.headline` as const)} />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-slate-600">Description</Label>
+                                <Textarea className="bg-white h-24" {...form.register(`content.${index}.description` as const)} />
+                              </div>
+                            </div>
+                          )}
 
-                    {form.watch(`content.${index}.blockType`) === "content" && (
-                      <div className="space-y-4 pl-7">
-                        <p className="text-sm text-gray-500">Content columns configuration goes here...</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                          {blockType === "content" && (
+                            <div className="space-y-6 pt-4">
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between mb-2">
+                                  <Label className="text-slate-600">Rich Text Content</Label>
+                                </div>
+                                <RichTextEditor 
+                                  value={form.watch(`content.${index}.columns.0.content`) || ""} 
+                                  onChange={(val) => {
+                                    form.setValue(`content.${index}.columns.0.content`, val, { shouldDirty: true });
+                                  }} 
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label className="text-slate-600">Column Size</Label>
+                                <Select 
+                                  onValueChange={(val) => form.setValue(`content.${index}.columns.0.size`, val || "full")} 
+                                  defaultValue={form.watch(`content.${index}.columns.0.size`) || "full"}
+                                >
+                                  <SelectTrigger className="bg-white">
+                                    <SelectValue placeholder="Select size" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="full">Full Width</SelectItem>
+                                    <SelectItem value="half">Half (50%)</SelectItem>
+                                    <SelectItem value="twoThirds">Two Thirds (66%)</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                          )}
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  })}
+                </Accordion>
                 {fields.length === 0 && (
-                  <div className="text-center py-8 text-gray-500 border-2 border-dashed rounded-lg">
-                    No blocks added yet. Click the buttons above to add content.
+                  <div className="text-center py-16 text-gray-500 border-2 border-dashed rounded-lg bg-white">
+                    <FileText className="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                    <p className="text-lg font-medium text-gray-900">No blocks added yet</p>
+                    <p className="text-sm">Click the buttons above to add content to this page.</p>
                   </div>
                 )}
               </CardContent>
@@ -194,7 +253,10 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
           <div className="space-y-8">
             <Card>
               <CardHeader>
-                <CardTitle>Publishing</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-gray-500" />
+                  Publishing
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
@@ -226,7 +288,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                 </div>
                 <div className="space-y-2">
                   <Label>Meta Description</Label>
-                  <Textarea {...form.register("seoDescription")} />
+                  <Textarea className="h-24" {...form.register("seoDescription")} />
                 </div>
               </CardContent>
             </Card>
@@ -236,3 +298,12 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
     </FormProvider>
   );
 }
+
+// Dummy icon for save button
+const Save = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+    <polyline points="17 21 17 13 7 13 7 21" />
+    <polyline points="7 3 7 8 15 8" />
+  </svg>
+);

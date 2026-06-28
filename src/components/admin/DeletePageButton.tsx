@@ -36,12 +36,16 @@ export function DeletePageButton({ pageId, pageTitle }: { pageId: string, pageTi
     <Button 
       variant="ghost" 
       size="sm" 
-      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+      className="text-red-600 hover:text-red-700 hover:bg-red-50 relative"
       onClick={handleDelete}
       disabled={isDeleting}
       title="Delete Page"
     >
-      <Trash2 className="w-4 h-4" />
+      {isDeleting ? (
+        <div className="w-4 h-4 rounded-full border-2 border-red-200 border-t-red-600 animate-spin" />
+      ) : (
+        <Trash2 className="w-4 h-4" />
+      )}
     </Button>
   );
 }

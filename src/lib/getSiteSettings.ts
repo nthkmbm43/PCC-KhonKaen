@@ -15,12 +15,14 @@ export async function getSiteSettings() {
         keywords: '',
       },
       contact: {
+        logoUrl: settings?.logoUrl || '',
         mainPhone: settings?.mainPhone || siteConfig.phone,
         secondaryPhone: '',
         lineUrl: settings?.lineUrl || siteConfig.social.line.url,
         facebookUrl: settings?.facebookUrl || siteConfig.social.facebook?.url || '',
         googleMapsUrl: settings?.googleMapsUrl || '',
-      }
+      },
+      rawSettings: settings
     }
   } catch (error) {
     console.error('Error fetching site settings from DB:', error)
@@ -32,12 +34,14 @@ export async function getSiteSettings() {
         keywords: '',
       },
       contact: {
+        logoUrl: '',
         mainPhone: siteConfig.phone,
         secondaryPhone: '',
         lineUrl: siteConfig.social.line.url,
         facebookUrl: siteConfig.social.facebook?.url || '',
         googleMapsUrl: '',
-      }
+      },
+      rawSettings: null
     }
   }
 }
