@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Save, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "./ImageUpload";
+import toast from "react-hot-toast";
 
 const navLinkSchema = z.object({
   label: z.string().min(1, "Label is required"),
@@ -63,12 +64,14 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
         body: JSON.stringify(data),
       });
       if (res.ok) {
-        alert("Settings saved successfully!");
+        toast.success("Settings saved successfully!");
         router.refresh();
+      } else {
+        toast.error("Failed to save settings.");
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to save settings.");
+      toast.error("An unexpected error occurred.");
     } finally {
       setIsSaving(false);
     }

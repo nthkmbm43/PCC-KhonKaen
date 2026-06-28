@@ -10,6 +10,8 @@ export const metadata = {
   description: "Manage your website content",
 };
 
+import { Toaster } from 'react-hot-toast';
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const settingsArray = await db.select().from(siteSettings).limit(1);
   const settings = settingsArray[0];
@@ -17,6 +19,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <html lang="en">
       <body className="antialiased text-gray-900 bg-gray-50">
+        <Toaster position="top-right" />
         <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
           {/* Sidebar */}
           <AdminSidebar logoUrl={settings?.logoUrl || undefined} />

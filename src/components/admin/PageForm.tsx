@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/accordion";
 import { RichTextEditor } from "./RichTextEditor";
 import { ImageUpload } from "./ImageUpload";
+import toast from "react-hot-toast";
 
 const pageSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -77,11 +78,15 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
         body: JSON.stringify(data),
       });
       if (res.ok) {
+        toast.success("Page saved successfully!");
         router.push("/admin/pages");
         router.refresh();
+      } else {
+        toast.error("Failed to save page.");
       }
     } catch (error) {
       console.error(error);
+      toast.error("An unexpected error occurred.");
     } finally {
       setIsSaving(false);
     }

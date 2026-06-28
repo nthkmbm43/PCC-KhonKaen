@@ -36,7 +36,8 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
     setError(null);
 
     try {
-      const newBlob = await upload(file.name, file, {
+      const uniqueFilename = `${Date.now()}-${file.name}`;
+      const newBlob = await upload(uniqueFilename, file, {
         access: "public",
         handleUploadUrl: "/api/upload",
       });
