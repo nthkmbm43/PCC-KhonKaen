@@ -11,7 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FileEdit, Plus, Trash2 } from "lucide-react";
+import { FileEdit, Plus } from "lucide-react";
+import { DeletePageButton } from "@/components/admin/DeletePageButton";
 
 export default async function PagesList() {
   const allPages = await db.select().from(pages).orderBy(desc(pages.createdAt));
@@ -71,9 +72,7 @@ export default async function PagesList() {
                           <FileEdit className="w-4 h-4" />
                         </Button>
                       </Link>
-                      <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <DeletePageButton pageId={page.id} pageTitle={page.title} />
                     </div>
                   </TableCell>
                 </TableRow>
