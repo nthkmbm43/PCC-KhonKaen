@@ -3,12 +3,24 @@ import HeroBlock from './HeroBlock'
 import ContentBlock from './ContentBlock'
 import CallToActionBlock from './CallToActionBlock'
 import { MediaBlock } from './MediaBlock'
+import HomeHeroBlock from './HomeHeroBlock'
+import TrustBannerBlock from './TrustBannerBlock'
+import ServicesGridBlock from './ServicesGridBlock'
+import PortfolioGridBlock from './PortfolioGridBlock'
+import FAQBlock from './FAQBlock'
+import CTABannerBlock from './CTABannerBlock'
 
 const blockComponents = {
   hero: HeroBlock,
   content: ContentBlock,
   callToAction: CallToActionBlock,
   mediaBlock: MediaBlock,
+  homeHero: HomeHeroBlock,
+  trustBanner: TrustBannerBlock,
+  servicesGrid: ServicesGridBlock,
+  portfolioGrid: PortfolioGridBlock,
+  faqSection: FAQBlock,
+  ctaBanner: CTABannerBlock,
 }
 
 export default function RenderBlocks({ layout }: { layout: any[] }) {

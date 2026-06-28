@@ -134,14 +134,14 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                   <CardTitle>Page Builder</CardTitle>
                   <CardDescription>Drag and drop blocks to build your page.</CardDescription>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => append({ blockType: "hero", headline: "", description: "" })}
                   >
-                    <Plus className="w-4 h-4 mr-1" /> Hero
+                    <Plus className="w-4 h-4 mr-1" /> Custom Hero
                   </Button>
                   <Button
                     type="button"
@@ -150,6 +150,24 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                     onClick={() => append({ blockType: "content", columns: [{ size: "full", content: "" }] })}
                   >
                     <Plus className="w-4 h-4 mr-1" /> Content
+                  </Button>
+                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "homeHero" })}>
+                    <Plus className="w-4 h-4 mr-1" /> Home Hero
+                  </Button>
+                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "trustBanner" })}>
+                    <Plus className="w-4 h-4 mr-1" /> Trust Banner
+                  </Button>
+                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "servicesGrid" })}>
+                    <Plus className="w-4 h-4 mr-1" /> Services Grid
+                  </Button>
+                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "portfolioGrid" })}>
+                    <Plus className="w-4 h-4 mr-1" /> Portfolio Grid
+                  </Button>
+                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "faqSection" })}>
+                    <Plus className="w-4 h-4 mr-1" /> FAQ
+                  </Button>
+                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "ctaBanner" })}>
+                    <Plus className="w-4 h-4 mr-1" /> CTA Banner
                   </Button>
                 </div>
               </CardHeader>
