@@ -24,3 +24,12 @@ export const siteSettings = pgTable('site_settings', {
   facebookUrl: text('facebook_url'),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
+
+export const users = pgTable('users', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  password: text('password').notNull(),
+  role: text('role').default('admin'),
+  createdAt: timestamp('created_at').defaultNow(),
+});

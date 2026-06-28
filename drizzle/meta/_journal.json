@@ -8,6 +8,13 @@
       "when": 1782639390088,
       "tag": "0000_square_red_skull",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782659256416,
+      "tag": "0001_motionless_grandmaster",
+      "breakpoints": true
     }
   ]
 }
