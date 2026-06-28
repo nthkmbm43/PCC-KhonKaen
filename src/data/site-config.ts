@@ -116,7 +116,6 @@ export const mainNavigation: NavItem[] = [
   },
   { label: "ผลงาน", href: "/portfolio" },
   { label: "เกี่ยวกับเรา", href: "/about" },
-  { label: "บทความ", href: "/blog" },
   { label: "ติดต่อเรา", href: "/contact" },
 ];
 
@@ -136,8 +135,7 @@ export const footerQuickLinks = [
 
 export const footerSecondaryLinks = [
   { label: "ดาวน์โหลดเอกสาร", href: "/contact", external: false },
-  { label: "บทความน่ารู้", href: "/blog", external: false },
-  { label: "E-BOOKS", href: "/blog", external: false },
+  { label: "ติดต่อเรา", href: "/contact", external: false },
 ] as const;
 
 export const orderStatuses = {
