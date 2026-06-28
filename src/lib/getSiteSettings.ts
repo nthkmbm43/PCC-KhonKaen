@@ -1,29 +1,29 @@
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import { db } from '@/db'
+import { siteSettings } from '@/db/schema'
 import { siteConfig } from '@/data/site-config'
 
 export async function getSiteSettings() {
   try {
-    const payload = await getPayload({ config })
-    const settings = await payload.findGlobal({ slug: 'site-settings' })
+    const settingsArray = await db.select().from(siteSettings).limit(1)
+    const settings = settingsArray[0]
 
-    // Use payload data if available, otherwise fallback to siteConfig
+    // Use DB data if available, otherwise fallback to siteConfig
     return {
       seo: {
-        title: settings.defaultMetaTitle || siteConfig.name,
-        description: settings.defaultMetaDescription || siteConfig.description,
-        keywords: settings.defaultKeywords || '',
+        title: siteConfig.name,
+        description: siteConfig.description,
+        keywords: '',
       },
       contact: {
-        mainPhone: settings.mainPhoneNumber || siteConfig.phone,
-        secondaryPhone: settings.secondaryPhoneNumber || '',
-        lineUrl: settings.lineUrl || siteConfig.social.line.url,
-        facebookUrl: settings.facebookUrl || siteConfig.social.facebook?.url || '',
-        googleMapsUrl: settings.googleMapsUrl || '',
+        mainPhone: settings?.mainPhone || siteConfig.phone,
+        secondaryPhone: '',
+        lineUrl: settings?.lineUrl || siteConfig.social.line.url,
+        facebookUrl: settings?.facebookUrl || siteConfig.social.facebook?.url || '',
+        googleMapsUrl: settings?.googleMapsUrl || '',
       }
     }
   } catch (error) {
-    console.error('Error fetching site settings from Payload:', error instanceof Error ? error.message : String(error))
+    console.error('Error fetching site settings from DB:', error)
     // Absolute fallback
     return {
       seo: {

@@ -1,27 +1,19 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getPayload } from 'payload'
-import config from '@/payload.config'
+import { db } from '@/db'
+import { pages } from '@/db/schema'
+import { eq } from 'drizzle-orm'
 import RenderBlocks from '@/components/blocks/RenderBlocks'
-import HeroBlock from '@/components/blocks/HeroBlock'
-import { createSeoMetadata, JsonLd } from '@/lib/seo'
-
-// Avoid conflicts with static pages: Next.js will match static routes first (e.g. /about, /contact, /portfolio, /products).
-// If none match, this catch-all route [slug] is invoked.
+import { createSeoMetadata } from '@/lib/seo'
 
 export async function generateStaticParams() {
   try {
-    const payload = await getPayload({ config })
-    const pages = await payload.find({
-      collection: 'pages',
-      limit: 100,
-    })
-
-    return pages.docs.map((doc) => ({
+    const allPages = await db.select({ slug: pages.slug }).from(pages)
+    return allPages.map((doc) => ({
       slug: doc.slug,
     }))
   } catch (error) {
-    console.error('Error in generateStaticParams:', error instanceof Error ? error.message : String(error))
+    console.error('Error in generateStaticParams:', error)
     return []
   }
 }
@@ -30,15 +22,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params
   let docs: any[] = [];
   try {
-    const payload = await getPayload({ config })
-    const result = await payload.find({
-      collection: 'pages',
-      where: { slug: { equals: slug } },
-      limit: 1,
-    })
-    docs = result.docs;
+    docs = await db.select().from(pages).where(eq(pages.slug, slug)).limit(1)
   } catch (error) {
-    console.error('Error in generateMetadata from Payload:', error instanceof Error ? error.message : String(error));
+    console.error('Error in generateMetadata from DB:', error);
   }
 
   const page = docs[0]
@@ -51,8 +37,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return createSeoMetadata({
-    title: page.meta?.title || `${page.title} | PCC Post-Tension`,
-    description: page.meta?.description || '',
+    title: page.seoTitle || `${page.title} | PCC Post-Tension`,
+    description: page.seoDescription || '',
     path: `/${page.slug}`,
   })
 }
@@ -61,15 +47,9 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params
   let docs: any[] = [];
   try {
-    const payload = await getPayload({ config })
-    const result = await payload.find({
-      collection: 'pages',
-      where: { slug: { equals: slug } },
-      limit: 1,
-    })
-    docs = result.docs;
+    docs = await db.select().from(pages).where(eq(pages.slug, slug)).limit(1)
   } catch (error) {
-    console.error('Error fetching page from Payload:', error instanceof Error ? error.message : String(error));
+    console.error('Error fetching page from DB:', error);
   }
 
   const page = docs[0]
@@ -78,14 +58,12 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
     notFound()
   }
 
+  // Parse the content JSONB as the layout array for RenderBlocks
+  const layout = Array.isArray(page.content) ? page.content : []
+
   return (
     <div className="flex flex-col min-h-screen">
-      {/* New Hero Tab Support */}
-      {page.hero && page.hero.heading && (
-        <HeroBlock {...page.hero} />
-      )}
-      
-      <RenderBlocks layout={page.layout} />
+      <RenderBlocks layout={layout} />
     </div>
   )
 }

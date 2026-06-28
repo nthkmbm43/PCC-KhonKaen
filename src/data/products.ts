@@ -1,5 +1,3 @@
-import { getPayload } from 'payload'
-import configPromise from '@/payload.config'
 
 export type ProductSection = {
   id?: string;
@@ -100,42 +98,9 @@ const fallbackProducts: Product[] = [
 ];
 
 export async function getAllProducts(): Promise<Product[]> {
-  try {
-    const payload = await getPayload({ config: configPromise });
-    const result = await payload.find({
-      collection: 'products',
-      depth: 1,
-      limit: 100,
-    });
-    if (result.docs.length > 0) {
-      return result.docs.map(mapProduct);
-    }
-  } catch (error) {
-    console.error('Error fetching products from Payload:', error instanceof Error ? error.message : String(error));
-  }
-  // Fallback data
   return fallbackProducts;
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | undefined> {
-  try {
-    const payload = await getPayload({ config: configPromise });
-    const result = await payload.find({
-      collection: 'products',
-      where: {
-        slug: {
-          equals: slug,
-        },
-      },
-      depth: 1,
-      limit: 1,
-    });
-    if (result.docs.length > 0) {
-      return mapProduct(result.docs[0]);
-    }
-  } catch (error) {
-    console.error('Error fetching product by slug from Payload:', error instanceof Error ? error.message : String(error));
-  }
-  // Fallback
   return fallbackProducts.find(p => p.slug === slug);
 }
