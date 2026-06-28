@@ -1,0 +1,67 @@
+import React from 'react';
+import { siteConfig } from "@/data/site-config";
+import { getSiteSettings } from "@/lib/getSiteSettings";
+
+interface ContactSocialBlockProps {
+  headline?: string;
+  description?: string;
+}
+
+export default async function ContactSocialBlock({ headline, description }: ContactSocialBlockProps) {
+  const settings = await getSiteSettings();
+  const lineUrl = settings.contact.lineUrl;
+  const facebookUrl = settings.contact.facebookUrl || siteConfig.social?.facebook?.url || "#";
+
+  const title = headline || "ติดตามและติดต่อผ่านช่องทางออนไลน์";
+  const desc = description || "ช่องทางติดต่อหลักของ พีซีซี โพสเทนชั่น ขอนแก่น พร้อมลิงก์จริงและไอคอน SVG ฝังในหน้า";
+
+  return (
+    <section className="mb-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-center mb-12">
+        <span className="inline-block bg-brand-50 text-brand-600 font-bold px-4 py-1.5 rounded-full text-sm mb-4">
+          Social & Map
+        </span>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          {title}
+        </h2>
+        <p className="text-gray-600">
+          {desc}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-[#06C755] hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group">
+          <img src="/images/social/line.svg" alt="LINE" className="w-14 h-14 mb-5 group-hover:scale-110 transition-transform" />
+          <h3 className="text-xl font-bold text-gray-900 mb-3">LINE</h3>
+          <p className="text-gray-600 text-sm leading-relaxed">
+            ส่งรูปหน้างาน ขอใบเสนอราคา และสอบถามรายละเอียดสินค้าได้รวดเร็ว
+          </p>
+        </a>
+
+        <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-[#1877F2] hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group">
+          <img src="/images/social/facebook.svg" alt="Facebook" className="w-14 h-14 mb-5 group-hover:scale-110 transition-transform" />
+          <h3 className="text-xl font-bold text-gray-900 mb-3">Facebook</h3>
+          <p className="text-gray-600 text-sm leading-relaxed">
+            ติดตามผลงานจริง ข่าวสาร งานจัดส่ง และภาพหน้างานจาก พีซีซี โพสเทนชั่น ขอนแก่น
+          </p>
+        </a>
+
+        <a href={siteConfig.social?.tiktok?.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-black hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group">
+          <img src="/images/social/tiktok.svg" alt="TikTok" className="w-14 h-14 mb-5 group-hover:scale-110 transition-transform" />
+          <h3 className="text-xl font-bold text-gray-900 mb-3">TikTok</h3>
+          <p className="text-gray-600 text-sm leading-relaxed">
+            ชมวิดีโอผลงานติดตั้ง การยกวาง การจัดส่ง และบรรยากาศหน้างานจริง
+          </p>
+        </a>
+
+        <a href="https://www.google.com/maps/place/16.476942,102.774184" target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-[#FFC107] hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group">
+          <img src="/images/social/google-map.svg" alt="Google Map" className="w-14 h-14 mb-5 group-hover:scale-110 transition-transform" />
+          <h3 className="text-xl font-bold text-gray-900 mb-3">Google Map</h3>
+          <p className="text-gray-600 text-sm leading-relaxed">
+            เปิดแผนที่เพื่อดูเส้นทางมายังสำนักงานสาขาขอนแก่น
+          </p>
+        </a>
+      </div>
+    </section>
+  );
+}

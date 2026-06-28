@@ -29,6 +29,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const page = docs[0]
   if (!page) {
+    // Failsafe metadata
+    if (slug === 'about') return createSeoMetadata({ title: 'เกี่ยวกับเรา | PCC Post-Tension', description: 'ข้อมูลบริษัท พีซีซี โพสเทนชั่น', path: '/about' });
+    if (slug === 'contact') return createSeoMetadata({ title: 'ติดต่อเรา | PCC Post-Tension', description: 'ติดต่อสอบถามราคาและบริการ', path: '/contact' });
+    if (slug === 'portfolio') return createSeoMetadata({ title: 'ผลงานของเรา | PCC Post-Tension', description: 'รวมผลงานคุณภาพของเรา', path: '/portfolio' });
+    
     return createSeoMetadata({
       title: 'ไม่พบหน้า | PCC Post-Tension',
       description: 'ไม่พบหน้าที่คุณต้องการ',
@@ -54,12 +59,23 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
   const page = docs[0]
   
-  if (!page) {
-    notFound()
+  // Parse the content JSONB as the layout array for RenderBlocks
+  let layout = page && Array.isArray(page.content) ? page.content : []
+
+  // Failsafe layouts
+  if (layout.length === 0) {
+    if (slug === 'about') {
+      layout = [{ blockType: 'aboutHero' }, { blockType: 'aboutContent' }, { blockType: 'aboutFeatureGrid' }];
+    } else if (slug === 'contact') {
+      layout = [{ blockType: 'contactInfo' }, { blockType: 'contactSocial' }];
+    } else if (slug === 'portfolio') {
+      layout = [{ blockType: 'portfolioFullGrid' }];
+    }
   }
 
-  // Parse the content JSONB as the layout array for RenderBlocks
-  const layout = Array.isArray(page.content) ? page.content : []
+  if (!page && layout.length === 0) {
+    notFound()
+  }
 
   return (
     <div className="flex flex-col min-h-screen">

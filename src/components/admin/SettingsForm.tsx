@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Label } from "@/components/ui/label";
 import { Save, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { ImageUpload } from "./ImageUpload";
 
 const navLinkSchema = z.object({
   label: z.string().min(1, "Label is required"),
@@ -97,13 +98,11 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Logo URL</Label>
-              <Input placeholder="https://example.com/logo.png" {...form.register("logoUrl")} />
-              {form.watch("logoUrl") && (
-                <div className="mt-4 p-4 border rounded-lg bg-gray-50 flex items-center justify-center h-32 w-auto max-w-xs mx-auto">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={form.watch("logoUrl")} alt="Logo Preview" className="max-h-full max-w-full object-contain" onError={(e) => (e.currentTarget.style.display = 'none')} />
-                </div>
-              )}
+              <ImageUpload 
+                value={form.watch("logoUrl") || ""} 
+                onChange={(val) => form.setValue("logoUrl", val, { shouldDirty: true })} 
+                disabled={isSaving} 
+              />
               {form.formState.errors.logoUrl && (
                 <p className="text-sm text-red-500">{form.formState.errors.logoUrl.message}</p>
               )}

@@ -10,6 +10,13 @@ import PortfolioGridBlock from './PortfolioGridBlock'
 import FAQBlock from './FAQBlock'
 import CTABannerBlock from './CTABannerBlock'
 
+import AboutHeroBlock from './AboutHeroBlock'
+import AboutContentBlock from './AboutContentBlock'
+import AboutFeatureGridBlock from './AboutFeatureGridBlock'
+import ContactInfoBlock from './ContactInfoBlock'
+import ContactSocialBlock from './ContactSocialBlock'
+import PortfolioFullGridBlock from './PortfolioFullGridBlock'
+
 const blockComponents = {
   hero: HeroBlock,
   content: ContentBlock,
@@ -21,6 +28,12 @@ const blockComponents = {
   portfolioGrid: PortfolioGridBlock,
   faqSection: FAQBlock,
   ctaBanner: CTABannerBlock,
+  aboutHero: AboutHeroBlock,
+  aboutContent: AboutContentBlock,
+  aboutFeatureGrid: AboutFeatureGridBlock,
+  contactInfo: ContactInfoBlock,
+  contactSocial: ContactSocialBlock,
+  portfolioFullGrid: PortfolioFullGridBlock,
 }
 
 export default function RenderBlocks({ layout }: { layout: any[] }) {

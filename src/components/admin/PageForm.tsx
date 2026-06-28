@@ -20,6 +20,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { RichTextEditor } from "./RichTextEditor";
+import { ImageUpload } from "./ImageUpload";
 
 const pageSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -32,6 +33,8 @@ const pageSchema = z.object({
       blockType: z.string(),
       headline: z.string().optional(),
       description: z.string().optional(),
+      image: z.string().optional(),
+      backgroundImage: z.string().optional(),
       columns: z.array(
         z.object({
           size: z.string().optional(),
@@ -135,40 +138,31 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                   <CardDescription>Drag and drop blocks to build your page.</CardDescription>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => append({ blockType: "hero", headline: "", description: "" })}
-                  >
-                    <Plus className="w-4 h-4 mr-1" /> Custom Hero
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => append({ blockType: "content", columns: [{ size: "full", content: "" }] })}
-                  >
-                    <Plus className="w-4 h-4 mr-1" /> Content
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "homeHero" })}>
-                    <Plus className="w-4 h-4 mr-1" /> Home Hero
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "trustBanner" })}>
-                    <Plus className="w-4 h-4 mr-1" /> Trust Banner
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "servicesGrid" })}>
-                    <Plus className="w-4 h-4 mr-1" /> Services Grid
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "portfolioGrid" })}>
-                    <Plus className="w-4 h-4 mr-1" /> Portfolio Grid
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "faqSection" })}>
-                    <Plus className="w-4 h-4 mr-1" /> FAQ
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: "ctaBanner" })}>
-                    <Plus className="w-4 h-4 mr-1" /> CTA Banner
-                  </Button>
+                  <Select onValueChange={(val) => {
+                    if(val) {
+                      append({ blockType: val } as any);
+                    }
+                  }}>
+                    <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="Add Block..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="hero">Custom Hero</SelectItem>
+                      <SelectItem value="content">Rich Text Content</SelectItem>
+                      <SelectItem value="homeHero">Home Hero</SelectItem>
+                      <SelectItem value="trustBanner">Trust Banner</SelectItem>
+                      <SelectItem value="servicesGrid">Services Grid</SelectItem>
+                      <SelectItem value="portfolioGrid">Portfolio Grid (6 items)</SelectItem>
+                      <SelectItem value="faqSection">FAQ Section</SelectItem>
+                      <SelectItem value="ctaBanner">CTA Banner</SelectItem>
+                      <SelectItem value="aboutHero">About Hero</SelectItem>
+                      <SelectItem value="aboutContent">About Content</SelectItem>
+                      <SelectItem value="aboutFeatureGrid">About Feature Grid</SelectItem>
+                      <SelectItem value="contactInfo">Contact Info</SelectItem>
+                      <SelectItem value="contactSocial">Contact Social</SelectItem>
+                      <SelectItem value="portfolioFullGrid">Portfolio Full Grid</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4 pt-6 bg-slate-50/50">
@@ -208,7 +202,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                           </Button>
                         </div>
                         <AccordionContent className="pt-2 pb-6 px-6 border-t bg-slate-50/30">
-                          {blockType === "hero" && (
+                          {["hero", "aboutHero", "aboutContent", "aboutFeatureGrid", "contactInfo", "contactSocial", "portfolioFullGrid"].includes(blockType) && (
                             <div className="space-y-6 pt-4">
                               <div className="space-y-2">
                                 <Label className="text-slate-600">Headline</Label>
@@ -217,6 +211,30 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                               <div className="space-y-2">
                                 <Label className="text-slate-600">Description</Label>
                                 <Textarea className="bg-white h-24" {...form.register(`content.${index}.description` as const)} />
+                              </div>
+                            </div>
+                          )}
+
+                          {["hero", "aboutContent"].includes(blockType) && (
+                            <div className="space-y-6 pt-4">
+                              <div className="space-y-2">
+                                <Label className="text-slate-600">Image</Label>
+                                <ImageUpload 
+                                  value={form.watch(`content.${index}.image`) || ""}
+                                  onChange={(val) => form.setValue(`content.${index}.image`, val, { shouldDirty: true })}
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          {["hero", "aboutHero"].includes(blockType) && (
+                            <div className="space-y-6 pt-4">
+                              <div className="space-y-2">
+                                <Label className="text-slate-600">Background Image</Label>
+                                <ImageUpload 
+                                  value={form.watch(`content.${index}.backgroundImage`) || ""}
+                                  onChange={(val) => form.setValue(`content.${index}.backgroundImage`, val, { shouldDirty: true })}
+                                />
                               </div>
                             </div>
                           )}
