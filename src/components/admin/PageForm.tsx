@@ -87,7 +87,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex items-center justify-between sticky top-16 bg-gray-50 z-10 py-4 -my-4 border-b">
+        <div className="flex items-center justify-between pb-6 mb-6 border-b">
           <div className="flex items-center gap-4">
             <Link href="/admin/pages">
               <Button variant="outline" size="icon" type="button">
