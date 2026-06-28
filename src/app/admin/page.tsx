@@ -2,107 +2,180 @@ import { db } from "@/db";
 import { pages, siteSettings } from "@/db/schema";
 import { sql } from "drizzle-orm";
 import Link from "next/link";
-import { FileText, Settings, Plus, AlertCircle, CheckCircle2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import {
+  FileText,
+  Settings,
+  Plus,
+  AlertCircle,
+  CheckCircle2,
+  ExternalLink,
+  TrendingUp,
+  Globe,
+} from "lucide-react";
 
 export default async function AdminDashboard() {
   const pagesCountRes = await db.select({ count: sql<number>`count(*)` }).from(pages);
-  const pagesCount = pagesCountRes[0]?.count || 0;
+  const pagesCount = Number(pagesCountRes[0]?.count || 0);
 
   const settingsArray = await db.select().from(siteSettings).limit(1);
   const settings = settingsArray[0];
 
   const hasLogo = !!settings?.logoUrl;
+  const hasFavicon = !!settings?.faviconUrl;
   const hasPhone = !!settings?.mainPhone;
-  const hasNavbarLinks = settings?.navbarLinks && Array.isArray(settings.navbarLinks) && settings.navbarLinks.length > 0;
-  
-  const setupScore = [hasLogo, hasPhone, hasNavbarLinks].filter(Boolean).length;
-  const totalSetupSteps = 3;
+  const hasNavbarLinks =
+    settings?.navbarLinks && Array.isArray(settings.navbarLinks) && settings.navbarLinks.length > 0;
+
+  const checks = [
+    { label: "โลโก้หลัก (Navbar)", done: hasLogo },
+    { label: "ไอคอนเว็บ (Favicon)", done: hasFavicon },
+    { label: "เบอร์โทรติดต่อ", done: hasPhone },
+    { label: "เมนูนำทาง (Navbar Links)", done: hasNavbarLinks },
+  ];
+  const setupScore = checks.filter((c) => c.done).length;
+  const totalSetupSteps = checks.length;
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
-        <p className="text-gray-500 mt-2">Welcome to your custom Content Management System.</p>
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+          <p className="text-slate-500 mt-1 text-sm">ยินดีต้อนรับ — จัดการเนื้อหาเว็บไซต์ของคุณ</p>
+        </div>
+        <Link
+          href="/"
+          target="_blank"
+          className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-xl transition-all"
+        >
+          <Globe className="w-4 h-4" />
+          ดูหน้าเว็บไซต์
+          <ExternalLink className="w-3.5 h-3.5" />
+        </Link>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* Pages Summary Card */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Pages</CardTitle>
-            <FileText className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{pagesCount}</div>
-            <p className="text-xs text-gray-500 mt-1">Published and draft pages</p>
-            <div className="mt-4">
-              <Link href="/admin/pages/new">
-                <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create New Page
-                </Button>
-              </Link>
+      {/* Stat Cards */}
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Total Pages */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">จำนวนเพจทั้งหมด</p>
+              <p className="text-4xl font-bold text-slate-900 mt-2">{pagesCount}</p>
+              <p className="text-xs text-slate-400 mt-1">Published & Draft</p>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Site Health Card */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Site Setup</CardTitle>
-            <Settings className="h-4 w-4 text-gray-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{setupScore}/{totalSetupSteps}</div>
-            <p className="text-xs text-gray-500 mt-1">Basic configurations</p>
-            
-            <div className="mt-4 space-y-2">
-              <div className="flex items-center text-sm">
-                {hasLogo ? <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" /> : <AlertCircle className="w-4 h-4 text-amber-500 mr-2" />}
-                <span className={hasLogo ? "text-gray-700" : "text-amber-700 font-medium"}>Logo Configuration</span>
-              </div>
-              <div className="flex items-center text-sm">
-                {hasPhone ? <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" /> : <AlertCircle className="w-4 h-4 text-amber-500 mr-2" />}
-                <span className={hasPhone ? "text-gray-700" : "text-amber-700 font-medium"}>Contact Phone</span>
-              </div>
-              <div className="flex items-center text-sm">
-                {hasNavbarLinks ? <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" /> : <AlertCircle className="w-4 h-4 text-amber-500 mr-2" />}
-                <span className={hasNavbarLinks ? "text-gray-700" : "text-amber-700 font-medium"}>Navigation Menu</span>
-              </div>
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center">
+              <FileText className="w-6 h-6 text-blue-600" />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="mt-5 pt-5 border-t border-slate-100">
+            <Link
+              href="/admin/pages/new"
+              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm shadow-blue-200 hover:shadow-md hover:shadow-blue-300"
+            >
+              <Plus className="w-4 h-4" />
+              สร้างเพจใหม่
+            </Link>
+          </div>
+        </div>
 
-        {/* Quick Links Card */}
-        <Card className="md:col-span-2 lg:col-span-1">
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-gray-600">Quick Links</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Link href="/admin/pages" className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors group">
-              <div className="flex items-center gap-3 text-gray-700 font-medium group-hover:text-blue-700 transition-colors">
-                <div className="p-2 bg-blue-50 text-blue-600 rounded-md">
-                  <FileText className="w-4 h-4" />
-                </div>
-                Manage Pages
+        {/* Setup Progress */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">ความครบถ้วนของระบบ</p>
+              <p className="text-4xl font-bold text-slate-900 mt-2">
+                {setupScore}
+                <span className="text-2xl text-slate-400">/{totalSetupSteps}</span>
+              </p>
+              <p className="text-xs text-slate-400 mt-1">การตั้งค่าพื้นฐาน</p>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-emerald-600" />
+            </div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mt-3 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all duration-700"
+              style={{ width: `${(setupScore / totalSetupSteps) * 100}%` }}
+            />
+          </div>
+
+          <div className="mt-4 space-y-2">
+            {checks.map((check) => (
+              <div key={check.label} className="flex items-center gap-2 text-sm">
+                {check.done ? (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                ) : (
+                  <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+                )}
+                <span className={check.done ? "text-slate-600" : "text-amber-600 font-medium"}>
+                  {check.label}
+                </span>
               </div>
-              <span className="text-gray-400 group-hover:text-blue-600">&rarr;</span>
-            </Link>
-            
-            <Link href="/admin/settings" className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors group">
-              <div className="flex items-center gap-3 text-gray-700 font-medium group-hover:text-blue-700 transition-colors">
-                <div className="p-2 bg-gray-100 text-gray-600 rounded-md">
-                  <Settings className="w-4 h-4" />
+            ))}
+          </div>
+        </div>
+
+        {/* Quick Links */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">ทางลัด</p>
+          <div className="space-y-3">
+            <Link
+              href="/admin/pages"
+              className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/50 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-100 flex items-center justify-center">
+                  <FileText className="w-4 h-4 text-blue-600" />
                 </div>
-                Site Settings
+                <div>
+                  <p className="text-sm font-semibold text-slate-800 group-hover:text-blue-700 transition-colors">จัดการเพจ</p>
+                  <p className="text-xs text-slate-400">เพิ่ม / แก้ไข / ลบ</p>
+                </div>
               </div>
-              <span className="text-gray-400 group-hover:text-blue-600">&rarr;</span>
+              <span className="text-slate-300 group-hover:text-blue-400 transition-colors text-lg">→</span>
             </Link>
-          </CardContent>
-        </Card>
+
+            <Link
+              href="/admin/settings"
+              className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-violet-200 hover:bg-violet-50/50 transition-all group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-violet-100 flex items-center justify-center">
+                  <Settings className="w-4 h-4 text-violet-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-slate-800 group-hover:text-violet-700 transition-colors">ตั้งค่าเว็บไซต์</p>
+                  <p className="text-xs text-slate-400">โลโก้ / เมนู / ข้อมูลติดต่อ</p>
+                </div>
+              </div>
+              <span className="text-slate-300 group-hover:text-violet-400 transition-colors text-lg">→</span>
+            </Link>
+          </div>
+        </div>
       </div>
+
+      {/* Info Banner */}
+      {setupScore < totalSetupSteps && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4">
+          <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0 mt-0.5">
+            <AlertCircle className="w-5 h-5 text-amber-500" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-amber-800">การตั้งค่ายังไม่ครบถ้วน</p>
+            <p className="text-xs text-amber-600 mt-1">
+              เหลืออีก {totalSetupSteps - setupScore} รายการ — ไปที่{" "}
+              <Link href="/admin/settings" className="underline underline-offset-2 font-semibold">
+                ตั้งค่าเว็บไซต์
+              </Link>{" "}
+              เพื่อดำเนินการต่อ
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
