@@ -49,9 +49,9 @@ export default async function RootLayout({
     <html lang="th" className={`${prompt.variable} antialiased scroll-smooth`}>
       <body className="min-h-screen flex flex-col">
         <JsonLd data={organizationJsonLd(settings.contact)} />
-        <Navbar products={products} contact={settings.contact} />
+        <Navbar products={products} contact={settings.contact} navbarLinks={settings.navbarLinks} />
         <main className="flex-grow flex flex-col">{children}</main>
-        <Footer contact={settings.contact} />
+        <Footer contact={settings.contact} footerData={settings.footerData} />
         <StickyFloatingLineBtn lineUrl={settings.contact.lineUrl} />
       </body>
     </html>

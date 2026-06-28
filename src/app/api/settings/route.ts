@@ -5,7 +5,18 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const settingsArray = await db.select().from(siteSettings).limit(1);
-    const settings = settingsArray[0] || {};
+    let settings = settingsArray[0];
+
+    // Failsafe: if no settings exist, create a default row
+    if (!settings) {
+      const newSettings = await db.insert(siteSettings).values({
+        logoUrl: "",
+        navbarLinks: [],
+        footerData: {},
+      }).returning();
+      settings = newSettings[0];
+    }
+
     return NextResponse.json(settings);
   } catch (error) {
     console.error("Error fetching site settings:", error);

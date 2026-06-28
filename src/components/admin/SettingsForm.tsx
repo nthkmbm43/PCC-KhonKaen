@@ -1,18 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Save } from "lucide-react";
+import { Save, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+const navLinkSchema = z.object({
+  label: z.string().min(1, "Label is required"),
+  url: z.string().min(1, "URL is required"),
+});
 
 const settingsSchema = z.object({
   logoUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+  navbarLinks: z.array(navLinkSchema).optional(),
+  footerData: z.object({
+    description: z.string().optional(),
+    copyright: z.string().optional(),
+  }).optional(),
   mainPhone: z.string().optional(),
   lineUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   googleMapsUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
@@ -29,11 +39,18 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
     resolver: zodResolver(settingsSchema),
     defaultValues: {
       logoUrl: initialData?.logoUrl || "",
+      navbarLinks: initialData?.navbarLinks || [],
+      footerData: initialData?.footerData || { description: "", copyright: "" },
       mainPhone: initialData?.mainPhone || "",
       lineUrl: initialData?.lineUrl || "",
       googleMapsUrl: initialData?.googleMapsUrl || "",
       facebookUrl: initialData?.facebookUrl || "",
     },
+  });
+
+  const { fields: navFields, append: appendNav, remove: removeNav } = useFieldArray({
+    control: form.control,
+    name: "navbarLinks",
   });
 
   async function onSubmit(data: SettingsFormValues) {
@@ -90,6 +107,68 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
               {form.formState.errors.logoUrl && (
                 <p className="text-sm text-red-500">{form.formState.errors.logoUrl.message}</p>
               )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Navigation Menu</CardTitle>
+            <CardDescription>Manage links in the top navigation bar.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {navFields.map((field, index) => (
+              <div key={field.id} className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                <div className="flex-1 space-y-2">
+                  <Label>Link Label</Label>
+                  <Input placeholder="e.g. Promotions" {...form.register(`navbarLinks.${index}.label`)} />
+                  {form.formState.errors.navbarLinks?.[index]?.label && (
+                    <p className="text-sm text-red-500">{form.formState.errors.navbarLinks[index]?.label?.message}</p>
+                  )}
+                </div>
+                <div className="flex-1 space-y-2">
+                  <Label>URL / Path</Label>
+                  <Input placeholder="e.g. /promotions" {...form.register(`navbarLinks.${index}.url`)} />
+                  {form.formState.errors.navbarLinks?.[index]?.url && (
+                    <p className="text-sm text-red-500">{form.formState.errors.navbarLinks[index]?.url?.message}</p>
+                  )}
+                </div>
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  size="icon" 
+                  className="mt-6 text-red-500 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => removeNav(index)}
+                >
+                  <Trash2 className="w-5 h-5" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full border-dashed"
+              onClick={() => appendNav({ label: "", url: "" })}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Menu Link
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Footer Information</CardTitle>
+            <CardDescription>Manage content displayed in the footer area.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Company Description</Label>
+              <Input placeholder="Brief description of your company..." {...form.register("footerData.description")} />
+            </div>
+            <div className="space-y-2">
+              <Label>Copyright Text</Label>
+              <Input placeholder="© 2026 Company Name. All rights reserved." {...form.register("footerData.copyright")} />
             </div>
           </CardContent>
         </Card>

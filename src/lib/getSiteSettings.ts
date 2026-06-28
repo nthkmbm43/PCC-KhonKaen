@@ -14,6 +14,8 @@ export async function getSiteSettings() {
         description: siteConfig.description,
         keywords: '',
       },
+      navbarLinks: (settings?.navbarLinks as any[]) || [],
+      footerData: settings?.footerData || {},
       contact: {
         logoUrl: settings?.logoUrl || '',
         mainPhone: settings?.mainPhone || siteConfig.phone,
@@ -33,6 +35,8 @@ export async function getSiteSettings() {
         description: siteConfig.description,
         keywords: '',
       },
+      navbarLinks: [],
+      footerData: {},
       contact: {
         logoUrl: '',
         mainPhone: siteConfig.phone,

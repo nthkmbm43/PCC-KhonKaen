@@ -67,7 +67,8 @@ function FooterLinkList({
   );
 }
 
-export default function Footer({ contact }: { contact: any }) {
+export default function Footer({ contact, footerData }: { contact: any, footerData?: any }) {
+  const currentYear = new Date().getFullYear();
   return (
     <footer className="bg-slate-950 pt-16 text-slate-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -85,6 +86,11 @@ export default function Footer({ contact }: { contact: any }) {
                   <Building2 size={16} />
                   สำนักงานขอนแก่น
                 </div>
+                {footerData?.description && (
+                  <p className="mt-4 text-sm leading-relaxed text-slate-400">
+                    {footerData.description}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-6 pt-6">
@@ -180,7 +186,7 @@ export default function Footer({ contact }: { contact: any }) {
         </div>
 
         <div className="flex flex-col gap-4 py-8 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
-          <p>&copy; {new Date().getFullYear()} {siteConfig.legalName}</p>
+          <p>{footerData?.copyright || `© ${currentYear} ${siteConfig.legalName}. All rights reserved.`}</p>
           <div className="flex flex-wrap gap-x-6 gap-y-2 font-semibold text-slate-400">
             <Link href="/contact" className="hover:text-brand-300">
               TERMS
