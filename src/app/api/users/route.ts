@@ -13,12 +13,12 @@ export async function GET() {
 
   try {
     const allUsers = await db.select({
-      id: users.id,
-      name: users.name,
-      email: users.email,
-      role: users.role,
-      createdAt: users.createdAt,
-    }).from(users);
+      id: admins.id,
+      name: admins.name,
+      email: admins.email,
+      role: admins.role,
+      createdAt: admins.createdAt,
+    }).from(admins);
     
     return NextResponse.json(allUsers);
   } catch (error) {
@@ -56,9 +56,9 @@ export async function POST(req: Request) {
       password: hashedPassword,
       role: "admin",
     }).returning({
-      id: users.id,
-      name: users.name,
-      email: users.email,
+      id: admins.id,
+      name: admins.name,
+      email: admins.email,
     });
 
     return NextResponse.json(newUser[0], { status: 201 });
