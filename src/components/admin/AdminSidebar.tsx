@@ -51,7 +51,7 @@ export function AdminSidebar({ logoUrl }: { logoUrl?: string }) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-5 space-y-1">
+      <nav className="px-3 py-5 space-y-1">
         <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 mb-3">เมนูหลัก</p>
         {navItems.map((item) => {
           const active = isActive(item);
