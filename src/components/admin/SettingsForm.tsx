@@ -138,11 +138,11 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
                 </Button>
                 <AlertDialog>
                   <AlertDialogTrigger render={
-                    <Button
-                      type="button"
-                      disabled={isSaving || !form.formState.isValid}
-                      className="shrink-0 bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-200 rounded-xl px-5"
-                    >
+                      <Button
+                        type="button"
+                        disabled={isSaving}
+                        className="shrink-0 bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-200 rounded-xl px-5"
+                      >
                       <Save className="w-4 h-4 mr-2" />
                       {isSaving ? "กำลังบันทึก..." : "บันทึกการตั้งค่า"}
                     </Button>
@@ -156,7 +156,10 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                      <AlertDialogAction onClick={form.handleSubmit(onSubmit)} className="bg-blue-600 hover:bg-blue-700">
+                      <AlertDialogAction onClick={form.handleSubmit(onSubmit, (errors) => {
+                          console.log("Validation Errors:", errors);
+                          toast.error("กรุณาตรวจสอบข้อมูลช่องที่มีสีแดง (ข้อมูลไม่ถูกต้อง)");
+                        })} className="bg-blue-600 hover:bg-blue-700">
                         ยืนยันการบันทึก
                       </AlertDialogAction>
                     </AlertDialogFooter>
