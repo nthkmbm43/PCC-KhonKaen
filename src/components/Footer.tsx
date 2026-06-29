@@ -78,7 +78,7 @@ export default function Footer({ contact, footerData }: { contact: any, footerDa
               <div className="border-b border-white/10 pb-6">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={contact.logoUrl || "/images/logo-full-light.png"}
+                  src={footerData?.footerLogoUrl || contact.logoUrl || "/images/logo-full-light.png"}
                   alt="PCC Post-Tension Logo"
                   className="h-24 w-auto max-w-full object-contain sm:h-28"
                 />

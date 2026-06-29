@@ -33,6 +33,7 @@ const settingsSchema = z.object({
   faviconUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   navbarLinks: z.array(navLinkSchema).optional(),
   footerData: z.object({
+    footerLogoUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
     description: z.string().optional(),
     copyright: z.string().optional(),
   }).optional(),
@@ -59,7 +60,11 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
       logoUrl: initialData?.logoUrl || "",
       faviconUrl: initialData?.faviconUrl || "",
       navbarLinks: initialData?.navbarLinks || [],
-      footerData: initialData?.footerData || { description: "", copyright: "" },
+      footerData: { 
+        footerLogoUrl: initialData?.footerData?.footerLogoUrl || "",
+        description: initialData?.footerData?.description || "", 
+        copyright: initialData?.footerData?.copyright || "" 
+      },
       mainPhone: initialData?.mainPhone || "",
       lineUrl: initialData?.lineUrl || "",
       googleMapsUrl: initialData?.googleMapsUrl || "",
@@ -306,6 +311,18 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
               </div>
             </div>
             <div className="px-6 py-6 space-y-4">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-slate-700">โลโก้ Footer (แสดงที่ส่วนล่างของเว็บ)</Label>
+                <ImageUpload
+                  value={form.watch("footerData.footerLogoUrl") || ""}
+                  onChange={(val) => form.setValue("footerData.footerLogoUrl", val, { shouldDirty: true })}
+                  disabled={isSaving || !isEditMode}
+                />
+                <p className="text-xs text-slate-400">หากไม่ใส่ จะใช้โลโก้หลักของ Navbar แทน</p>
+                {form.formState.errors.footerData?.footerLogoUrl && (
+                  <p className="text-sm text-red-500">{form.formState.errors.footerData.footerLogoUrl.message}</p>
+                )}
+              </div>
               <div className="space-y-1.5">
                 <Label className="text-sm font-semibold text-slate-700">คำอธิบายบริษัท</Label>
                 <Input
