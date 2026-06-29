@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import Image from "next/image";
+
 
 export function ProductsClient({ initialProducts }: { initialProducts: any[] }) {
   const router = useRouter();
@@ -103,7 +103,7 @@ export function ProductsClient({ initialProducts }: { initialProducts: any[] }) 
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden shrink-0">
                           {product.image ? (
-                            <Image src={product.image} alt={product.title} width={40} height={40} className="object-cover w-full h-full" />
+                            <img src={product.image} alt={product.title} className="object-cover w-full h-full" />
                           ) : (
                             <Tag className="w-4 h-4 text-slate-400" />
                           )}

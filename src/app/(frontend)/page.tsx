@@ -6,13 +6,24 @@ import { createSeoMetadata, faqJsonLd, JsonLd } from "@/lib/seo";
 import RenderBlocks from "@/components/blocks/RenderBlocks";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 
-export const metadata = createSeoMetadata({
-  title:
-    "รับเหมาโพสเทนชั่น ขอนแก่น | กำแพงกันดิน รั้วสำเร็จรูป แผ่นพื้นสำเร็จรูป",
-  description:
-    "พีซีซี โพสเทนชั่น รับออกแบบ ผลิต และติดตั้งงานโพสเทนชั่น กำแพงกันดินตัว L รั้วสำเร็จรูป และแผ่นพื้นสำเร็จรูป ขอนแก่น ภาคอีสาน และเชียงใหม่",
-  path: "/",
-});
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  let docs: any[] = [];
+  try {
+    docs = await db.select().from(pages).where(eq(pages.slug, "home")).limit(1);
+  } catch (error) {
+    console.error("Error fetching home page metadata from DB:", error);
+  }
+
+  const page = docs[0];
+
+  return createSeoMetadata({
+    title: page?.seoTitle || "รับเหมาโพสเทนชั่น ขอนแก่น | กำแพงกันดิน รั้วสำเร็จรูป แผ่นพื้นสำเร็จรูป",
+    description: page?.seoDescription || "พีซีซี โพสเทนชั่น รับออกแบบ ผลิต และติดตั้งงานโพสเทนชั่น กำแพงกันดินตัว L รั้วสำเร็จรูป และแผ่นพื้นสำเร็จรูป ขอนแก่น ภาคอีสาน และเชียงใหม่",
+    path: "/",
+  });
+}
 
 export default async function Home() {
   // Fetch home page from DB

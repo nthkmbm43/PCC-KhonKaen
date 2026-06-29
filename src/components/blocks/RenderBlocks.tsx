@@ -16,6 +16,10 @@ import AboutFeatureGridBlock from './AboutFeatureGridBlock'
 import ContactInfoBlock from './ContactInfoBlock'
 import ContactSocialBlock from './ContactSocialBlock'
 import PortfolioFullGridBlock from './PortfolioFullGridBlock'
+import CustomCodeBlock from './CustomCodeBlock'
+import TextBlock from './TextBlock'
+import ImageBlock from './ImageBlock'
+import CtaBlock from './CtaBlock'
 
 const blockComponents = {
   hero: HeroBlock,
@@ -34,6 +38,10 @@ const blockComponents = {
   contactInfo: ContactInfoBlock,
   contactSocial: ContactSocialBlock,
   portfolioFullGrid: PortfolioFullGridBlock,
+  customCode: CustomCodeBlock,
+  text: TextBlock,
+  image: ImageBlock,
+  cta: CtaBlock,
 }
 
 export default function RenderBlocks({ layout }: { layout: any[] }) {

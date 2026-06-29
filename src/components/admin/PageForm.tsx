@@ -205,20 +205,11 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                       <SelectValue placeholder="Add Block..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="hero">Custom Hero</SelectItem>
-                      <SelectItem value="content">Rich Text Content</SelectItem>
-                      <SelectItem value="homeHero">Home Hero</SelectItem>
-                      <SelectItem value="trustBanner">Trust Banner</SelectItem>
-                      <SelectItem value="servicesGrid">Services Grid</SelectItem>
-                      <SelectItem value="portfolioGrid">Portfolio Grid (6 items)</SelectItem>
-                      <SelectItem value="faqSection">FAQ Section</SelectItem>
-                      <SelectItem value="ctaBanner">CTA Banner</SelectItem>
-                      <SelectItem value="aboutHero">About Hero</SelectItem>
-                      <SelectItem value="aboutContent">About Content</SelectItem>
-                      <SelectItem value="aboutFeatureGrid">About Feature Grid</SelectItem>
-                      <SelectItem value="contactInfo">Contact Info</SelectItem>
-                      <SelectItem value="contactSocial">Contact Social</SelectItem>
-                      <SelectItem value="portfolioFullGrid">Portfolio Full Grid</SelectItem>
+                      <SelectItem value="hero">Hero / Header</SelectItem>
+                      <SelectItem value="text">Rich Text (Editor)</SelectItem>
+                      <SelectItem value="image">Single Image</SelectItem>
+                      <SelectItem value="cta">CTA Banner</SelectItem>
+                      <SelectItem value="customCode">Custom Code (HTML/CSS)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -238,7 +229,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                           <AccordionTrigger className="flex-1 hover:no-underline py-4">
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 rounded-md bg-blue-50 flex items-center justify-center text-blue-600">
-                                {blockType === "hero" ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                                {blockType === "hero" ? <ImageIcon className="w-4 h-4" /> : blockType === "customCode" ? <span className="font-mono font-bold text-xs">{"</>"}</span> : <FileText className="w-4 h-4" />}
                               </div>
                               <div className="text-left">
                                 <p className="font-semibold text-slate-700 capitalize">{blockType}</p>
@@ -275,7 +266,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                           </AlertDialog>
                         </div>
                         <AccordionContent className="pt-2 pb-6 px-6 border-t bg-slate-50/30">
-                          {["hero", "aboutHero", "aboutContent", "aboutFeatureGrid", "contactInfo", "contactSocial", "portfolioFullGrid"].includes(blockType) && (
+                          {["hero", "cta"].includes(blockType) && (
                             <div className="space-y-6 pt-4">
                               <div className="space-y-2">
                                 <Label className="text-slate-600">Headline</Label>
@@ -288,7 +279,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                             </div>
                           )}
 
-                          {["hero", "aboutContent"].includes(blockType) && (
+                          {["image"].includes(blockType) && (
                             <div className="space-y-6 pt-4">
                               <div className="space-y-2">
                                 <Label className="text-slate-600">Image</Label>
@@ -300,7 +291,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                             </div>
                           )}
 
-                          {["hero", "aboutHero"].includes(blockType) && (
+                          {["hero", "cta"].includes(blockType) && (
                             <div className="space-y-6 pt-4">
                               <div className="space-y-2">
                                 <Label className="text-slate-600">Background Image</Label>
@@ -312,37 +303,39 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                             </div>
                           )}
 
-                          {blockType === "content" && (
+                          {blockType === "text" && (
                             <div className="space-y-6 pt-4">
                               <div className="space-y-2">
                                 <div className="flex items-center justify-between mb-2">
                                   <Label className="text-slate-600">Rich Text Content</Label>
                                 </div>
                                 <RichTextEditor 
-                                  value={form.watch(`content.${index}.columns.0.content`) || ""} 
+                                  value={form.watch(`content.${index}.description`) || ""} 
                                   onChange={(val) => {
-                                    form.setValue(`content.${index}.columns.0.content`, val, { shouldDirty: true });
+                                    form.setValue(`content.${index}.description`, val, { shouldDirty: true });
                                   }} 
                                 />
                               </div>
+                            </div>
+                          )}
+
+                          {blockType === "customCode" && (
+                            <div className="space-y-6 pt-4">
                               <div className="space-y-2">
-                                <Label className="text-slate-600">Column Size</Label>
-                                <Select 
-                                  onValueChange={(val) => form.setValue(`content.${index}.columns.0.size`, val || "full")} 
-                                  defaultValue={form.watch(`content.${index}.columns.0.size`) || "full"}
-                                >
-                                  <SelectTrigger className="bg-white">
-                                    <SelectValue placeholder="Select size" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="full">Full Width</SelectItem>
-                                    <SelectItem value="half">Half (50%)</SelectItem>
-                                    <SelectItem value="twoThirds">Two Thirds (66%)</SelectItem>
-                                  </SelectContent>
-                                </Select>
+                                <div className="flex items-center justify-between mb-2">
+                                  <Label className="text-slate-600">Custom Code (HTML / CSS / JS)</Label>
+                                </div>
+                                <Textarea 
+                                  className="bg-slate-900 text-green-400 font-mono text-sm h-64 p-4 border-slate-700 focus:ring-slate-500" 
+                                  placeholder="<div class='custom-box'>...</div>"
+                                  {...form.register(`content.${index}.description` as const)} 
+                                />
+                                <p className="text-xs text-slate-500">คุณสามารถเขียน HTML หรือ &lt;style&gt; และ &lt;script&gt; ได้ที่นี่</p>
                               </div>
                             </div>
                           )}
+
+
                         </AccordionContent>
                       </AccordionItem>
                     );

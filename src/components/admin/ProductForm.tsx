@@ -296,7 +296,7 @@ export function ProductForm({ initialData, productId }: { initialData?: any, pro
                     className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
                     <option value="general">ทั่วไป (General)</option>
-                    <option value="precast">พรีคาสท์ (Precast)</option>
+                    <option value="precast">พรีแคสท์ (Precast)</option>
                     <option value="service">บริการ (Service)</option>
                   </select>
                 </div>

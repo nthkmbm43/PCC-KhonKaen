@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, FileText, Settings, ExternalLink, Sparkles, Users, ShoppingBag } from "lucide-react";
+import { DeployButton } from "./DeployButton";
 
 interface NavItem {
   href: string;
@@ -74,8 +75,8 @@ export function AdminSidebar({ logoUrl }: { logoUrl?: string }) {
         })}
       </nav>
 
-      {/* Bottom */}
-      <div className="px-3 py-4 border-t border-slate-700/60 space-y-1">
+      <div className="px-3 py-4 border-t border-slate-700/60 space-y-3">
+        <DeployButton />
         <Link
           href="/"
           target="_blank"
