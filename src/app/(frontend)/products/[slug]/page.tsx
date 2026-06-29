@@ -27,11 +27,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   return createSeoMetadata({
-    title: `${product.title} | PCC Post-Tension ขอนแก่น`,
-    description: product.metaDescription,
-    keywords: product.keywords,
+    title: product.seoTitle || `${product.title} | PCC Post-Tension ขอนแก่น`,
+    description: product.seoDescription || product.description,
+    keywords: product.seoKeywords ? product.seoKeywords.split(',').map((k: string) => k.trim()) : (product.keywords || []),
     path: `/products/${product.slug}`,
-    image: product.image,
+    image: product.ogImage || product.image,
   });
 }
 
@@ -66,17 +66,17 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       "@type": "AdministrativeArea",
       name: area,
     })),
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: product.shortTitle,
-      itemListElement: product.features.map((feature) => ({
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: feature,
-        },
-      })),
-    },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: product.shortTitle,
+        itemListElement: (product.features || []).map((feature) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: feature,
+          },
+        })),
+      },
   };
 
   return (
@@ -118,30 +118,53 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
 
             <div className="space-y-20">
-              {product.sections.map((section, idx) => (
-                <div key={idx} id={section.id} className="relative">
-                  <div className="absolute -left-8 top-2 w-2 h-full bg-gradient-to-b from-brand-500 to-transparent rounded-full opacity-20"></div>
-                  <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 tracking-tight">{section.title}</h2>
-                  <p className="text-xl text-gray-700 leading-relaxed mb-8">{section.content}</p>
-                  
-                  {section.image && (
-                    <div className="mb-10 rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                      <img src={section.image} alt={section.title} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
+              {(product.sections || []).map((section, idx) => {
+                if (section.type === 'text') {
+                  return (
+                    <div key={idx} id={section.id} className="relative">
+                      <div className="absolute -left-8 top-2 w-2 h-full bg-gradient-to-b from-brand-500 to-transparent rounded-full opacity-20"></div>
+                      {section.title && <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 tracking-tight">{section.title}</h2>}
+                      {section.content && <p className="text-xl text-gray-700 leading-relaxed mb-8">{section.content}</p>}
                     </div>
-                  )}
-
-                  {section.bullets && (
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {section.bullets.map((bullet, i) => (
-                        <li key={i} className="flex items-start gap-4 bg-zinc-50 p-6 rounded-2xl border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group hover:-translate-y-1">
-                          <CheckCircle2 size={24} className="text-brand-500 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                          <span className="text-gray-800 text-lg">{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
+                  );
+                } else if (section.type === 'image') {
+                  return (
+                    <div key={idx} className="mb-10 rounded-3xl overflow-hidden shadow-lg border-4 border-white">
+                      <img src={section.image} alt={section.title || product.title} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
+                    </div>
+                  );
+                } else if (section.type === 'html') {
+                  return (
+                    <div key={idx} className="w-full" dangerouslySetInnerHTML={{ __html: section.content || '' }} />
+                  );
+                } else {
+                  // Fallback for old data
+                  return (
+                    <div key={idx} id={section.id} className="relative">
+                      <div className="absolute -left-8 top-2 w-2 h-full bg-gradient-to-b from-brand-500 to-transparent rounded-full opacity-20"></div>
+                      <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 tracking-tight">{section.title}</h2>
+                      <p className="text-xl text-gray-700 leading-relaxed mb-8">{section.content}</p>
+                      
+                      {section.image && (
+                        <div className="mb-10 rounded-3xl overflow-hidden shadow-lg border-4 border-white">
+                          <img src={section.image} alt={section.title} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
+                        </div>
+                      )}
+                      
+                      {section.bullets && section.bullets.length > 0 && (
+                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {section.bullets.map((bullet, i) => (
+                            <li key={i} className="flex items-start gap-4 bg-zinc-50 p-6 rounded-2xl border border-gray-100 hover:border-brand-300 hover:shadow-md transition-all group hover:-translate-y-1">
+                              <CheckCircle2 size={24} className="text-brand-500 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                              <span className="text-gray-800 text-lg">{bullet}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  );
+                }
+              })}
             </div>
 
             {/* Engineering Standards Box */}
@@ -177,7 +200,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </h3>
               
               <ul className="space-y-5 mb-12 relative z-10">
-                {product.features.map((feature, idx) => (
+                {(product.features || []).map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-3 group">
                     <CheckCircle2 size={24} className="text-[#06C755] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                     <span className="text-gray-700 font-medium text-lg group-hover:text-gray-900 transition-colors">{feature}</span>

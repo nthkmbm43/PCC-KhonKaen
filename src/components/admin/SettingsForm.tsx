@@ -40,6 +40,9 @@ const settingsSchema = z.object({
   lineUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   googleMapsUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   facebookUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+  vercelDeployHookUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+  customHeadCode: z.string().optional(),
+  customBodyCode: z.string().optional(),
 });
 
 type SettingsFormValues = z.infer<typeof settingsSchema>;
@@ -61,6 +64,9 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
       lineUrl: initialData?.lineUrl || "",
       googleMapsUrl: initialData?.googleMapsUrl || "",
       facebookUrl: initialData?.facebookUrl || "",
+      vercelDeployHookUrl: initialData?.vercelDeployHookUrl || "",
+      customHeadCode: initialData?.customHeadCode || "",
+      customBodyCode: initialData?.customBodyCode || "",
     },
   });
 
@@ -378,6 +384,59 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
               </div>
             </div>
           </div>
+
+          {/* Section: Advanced (Auto-Deploy & Custom Scripts) */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/70 flex items-center gap-3">
+              <div className="w-7 h-7 rounded-lg bg-orange-100 flex items-center justify-center">
+                <span className="text-orange-600 text-sm">⚙️</span>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-800">การตั้งค่าขั้นสูง (Advanced)</p>
+                <p className="text-xs text-slate-400">ระบบ Auto-Deploy และฝังโค้ด (Scripts)</p>
+              </div>
+            </div>
+            <div className="px-6 py-6 space-y-6">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-slate-700">Vercel Deploy Hook URL</Label>
+                <Input
+                  placeholder="https://api.vercel.com/v1/integrations/deploy/..."
+                  {...form.register("vercelDeployHookUrl")}
+                  className="bg-white"
+                  readOnly={!isEditMode}
+                />
+                <p className="text-xs text-slate-400">สำหรับทำระบบปุ่มกด Auto-Deploy ผ่านหน้าแอดมินโดยตรง</p>
+                {form.formState.errors.vercelDeployHookUrl && (
+                  <p className="text-sm text-red-500">{form.formState.errors.vercelDeployHookUrl.message}</p>
+                )}
+              </div>
+
+              <div className="h-px bg-slate-100" />
+
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-slate-700">Custom Head Code</Label>
+                <textarea
+                  className="flex min-h-[120px] w-full rounded-lg border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-mono"
+                  placeholder="<script>...</script>"
+                  {...form.register("customHeadCode")}
+                  readOnly={!isEditMode}
+                />
+                <p className="text-xs text-slate-400">โค้ดที่จะถูกฝังในแท็ก &lt;head&gt; ของทุกหน้า (เช่น Google Analytics)</p>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-slate-700">Custom Body Code</Label>
+                <textarea
+                  className="flex min-h-[120px] w-full rounded-lg border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-mono"
+                  placeholder="<script>...</script>"
+                  {...form.register("customBodyCode")}
+                  readOnly={!isEditMode}
+                />
+                <p className="text-xs text-slate-400">โค้ดที่จะถูกฝังในตอนท้ายของแท็ก &lt;body&gt;</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </form>
     </FormProvider>

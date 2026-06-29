@@ -47,12 +47,20 @@ export default async function RootLayout({
   
   return (
     <html lang="th" className={`${prompt.variable} antialiased scroll-smooth`}>
+      <head>
+        {settings.rawSettings?.customHeadCode && (
+          <script dangerouslySetInnerHTML={{ __html: settings.rawSettings.customHeadCode.replace(/<script[^>]*>|<\/script>/gi, '') }} />
+        )}
+      </head>
       <body className="min-h-screen flex flex-col">
         <JsonLd data={organizationJsonLd(settings.contact)} />
         <Navbar products={products} contact={settings.contact} navbarLinks={settings.navbarLinks} />
         <main className="flex-grow flex flex-col">{children}</main>
         <Footer contact={settings.contact} footerData={settings.footerData} />
         <StickyFloatingLineBtn lineUrl={settings.contact.lineUrl} />
+        {settings.rawSettings?.customBodyCode && (
+          <script dangerouslySetInnerHTML={{ __html: settings.rawSettings.customBodyCode.replace(/<script[^>]*>|<\/script>/gi, '') }} />
+        )}
       </body>
     </html>
   );

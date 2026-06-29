@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, Settings, ExternalLink, Sparkles, Users } from "lucide-react";
+import { LayoutDashboard, FileText, Settings, ExternalLink, Sparkles, Users, ShoppingBag } from "lucide-react";
 
 interface NavItem {
   href: string;
@@ -14,6 +14,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: <LayoutDashboard className="w-4.5 h-4.5" />, exact: true },
   { href: "/admin/pages", label: "จัดการเพจ", icon: <FileText className="w-4.5 h-4.5" /> },
+  { href: "/admin/products", label: "จัดการสินค้า", icon: <ShoppingBag className="w-4.5 h-4.5" /> },
   { href: "/admin/users", label: "ผู้ดูแลระบบ", icon: <Users className="w-4.5 h-4.5" /> },
   { href: "/admin/settings", label: "ตั้งค่าเว็บไซต์", icon: <Settings className="w-4.5 h-4.5" /> },
 ];
