@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx tsx migrate.ts && next build",
     "start": "next start",
     "lint": "eslint"
   },

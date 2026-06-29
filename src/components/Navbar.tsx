@@ -55,11 +55,44 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex items-center gap-8 xl:gap-14 font-bold text-slate-700 h-full text-[15px] xl:text-base tracking-wide">
           {navbarLinks && navbarLinks.length > 0 ? (
-            navbarLinks.map((link: any, index: number) => (
-              <Link key={index} href={link.url} className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
-                {link.label}
-              </Link>
-            ))
+            navbarLinks.map((link: any, index: number) => {
+              if (link.url === "/products" || link.label === "สินค้าและบริการ") {
+                return (
+                  <div key={index} className="relative group/nav h-full flex items-center">
+                    <Link href={link.url} className="relative flex items-center gap-1 hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 group-hover/nav:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
+                      {link.label} <ChevronDown size={16} className="group-hover/nav:rotate-180 transition-transform duration-300" />
+                    </Link>
+                    
+                    {/* Mega Menu Dropdown */}
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-[min(650px,calc(100vw-2rem))] opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-4 group-hover/nav:translate-y-0">
+                      <div className="bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-2xl p-6 -mt-2">
+                        <div className="grid grid-cols-2 gap-3">
+                          {products.map(product => (
+                            <Link key={product.slug} href={`/products/${product.slug}`} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 hover:shadow-md transition-all group/item border border-transparent hover:border-brand-100">
+                              <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-gray-100">
+                                <img src={product.image} alt={product.title} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-gray-900 group-hover/item:text-brand-700 transition-colors leading-tight">{product.shortTitle}</h4>
+                                <p className="text-xs text-gray-500 line-clamp-1 mt-1.5">{product.description}</p>
+                              </div>
+                            </Link>
+                          ))}
+                          <Link href="/products" className="flex items-center justify-center gap-2 p-3 rounded-2xl bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold transition-all border border-dashed border-brand-200 hover:border-brand-400">
+                            ดูสินค้าทั้งหมด
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <Link key={index} href={link.url} className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
+                  {link.label}
+                </Link>
+              );
+            })
           ) : (
             <>
               <Link href="/" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">หน้าแรก</Link>
@@ -131,9 +164,43 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
     <div className={`fixed top-16 sm:top-20 right-0 bottom-0 w-[300px] bg-white z-50 shadow-2xl border-l border-gray-100 transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
       <div className="flex flex-col p-6 gap-2">
         {navbarLinks && navbarLinks.length > 0 ? (
-          navbarLinks.map((link: any, index: number) => (
-            <Link key={index} href={link.url} className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</Link>
-          ))
+            navbarLinks.map((link: any, index: number) => {
+              if (link.url === "/products" || link.label === "สินค้าและบริการ") {
+                return (
+                  <div key={index} className="flex flex-col">
+                    <button 
+                      className="flex items-center justify-between p-4 text-lg font-bold text-gray-800 hover:bg-slate-50 hover:text-brand-700 rounded-xl transition-colors w-full"
+                      onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+                    >
+                      {link.label} <ChevronDown size={20} className={`transition-transform duration-300 ${isMobileProductsOpen ? 'rotate-180 text-brand-700' : ''}`} />
+                    </button>
+                    <div className={`flex flex-col gap-1 overflow-hidden transition-all duration-300 ${isMobileProductsOpen ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+                      {products.map(product => (
+                        <Link 
+                          key={product.slug} 
+                          href={`/products/${product.slug}`} 
+                          className="pl-8 pr-4 py-3 text-base text-gray-600 hover:text-brand-700 hover:bg-slate-50 rounded-lg transition-colors flex items-center gap-3"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-accent-500"></div>
+                          {product.shortTitle}
+                        </Link>
+                      ))}
+                      <Link 
+                        href="/products" 
+                        className="pl-8 pr-4 py-3 mt-1 text-base text-brand-700 font-bold hover:bg-brand-50 rounded-lg transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        ดูสินค้าทั้งหมด &rarr;
+                      </Link>
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <Link key={index} href={link.url} className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{link.label}</Link>
+              );
+            })
         ) : (
           <>
             <Link href="/" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>หน้าแรก</Link>
