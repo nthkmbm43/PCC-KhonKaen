@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { admins } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 
@@ -16,7 +16,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
     }
 
-    await db.delete(users).where(eq(users.id, id));
+    await db.delete(admins).where(eq(admins.id, id));
     
     return NextResponse.json({ success: true });
   } catch (error) {

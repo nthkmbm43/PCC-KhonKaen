@@ -25,7 +25,7 @@ export const siteSettings = pgTable('site_settings', {
   updatedAt: timestamp('updated_at').defaultNow(),
 });
 
-export const users = pgTable('users', {
+export const admins = pgTable('admins', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: text('name').notNull(),
   email: text('email').notNull().unique(),

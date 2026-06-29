@@ -3,7 +3,7 @@ import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { db } from '@/db';
-import { users } from '@/db/schema';
+import { admins } from './db/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 
@@ -27,8 +27,8 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
              return { id: "master_admin", name: "Master Admin", email: username, role: "superuser" };
           }
 
-          // 2. Check Database for Team Members
-          const userResult = await db.select().from(users).where(eq(users.email, username)).limit(1);
+          // 2. Fallback to admins table in Database
+          const userResult = await db.select().from(admins).where(eq(admins.email, username)).limit(1);
           const dbUser = userResult[0];
 
           if (dbUser) {

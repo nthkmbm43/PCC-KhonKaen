@@ -1,17 +1,17 @@
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { admins } from "@/db/schema";
 import { UsersClient } from "@/components/admin/UsersClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function UsersPage() {
   const allUsers = await db.select({
-    id: users.id,
-    name: users.name,
-    email: users.email,
-    role: users.role,
-    createdAt: users.createdAt,
-  }).from(users);
+    id: admins.id,
+    name: admins.name,
+    email: admins.email,
+    role: admins.role,
+    createdAt: admins.createdAt,
+  }).from(admins);
 
   return (
     <div className="space-y-6">

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { admins } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
@@ -41,8 +41,8 @@ export async function POST(req: Request) {
     }
 
     // Check if user already exists
-    const existing = await db.select().from(users).where(eq(users.email, email)).limit(1);
-    if (existing.length > 0) {
+    const existingUser = await db.select().from(admins).where(eq(admins.email, email)).limit(1);
+    if (existingUser.length > 0) {
       return NextResponse.json({ error: "Email already exists" }, { status: 400 });
     }
 
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = await db.insert(users).values({
+    const newUser = await db.insert(admins).values({
       name,
       email,
       password: hashedPassword,
