@@ -107,7 +107,7 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
     <FormProvider {...form}>
       <form className="space-y-6 max-w-3xl">
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">ตั้งค่าเว็บไซต์</h1>
             <p className="text-slate-500 text-sm mt-1">จัดการโลโก้ เมนูนำทาง และข้อมูลติดต่อของเว็บไซต์</p>

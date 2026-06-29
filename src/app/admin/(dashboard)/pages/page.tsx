@@ -21,7 +21,7 @@ export default async function PagesList() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">จัดการเพจ</h1>
           <p className="text-slate-500 text-sm mt-1">สร้าง แก้ไข หรือลบเพจเนื้อหาของเว็บไซต์</p>

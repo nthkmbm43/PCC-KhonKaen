@@ -107,7 +107,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
   return (
     <FormProvider {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex items-center justify-between pb-6 mb-6 border-b">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
           <div className="flex items-center gap-4">
             <Link href="/admin/pages">
               <Button variant="outline" size="icon" type="button">

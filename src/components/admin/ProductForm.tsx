@@ -130,7 +130,7 @@ export function ProductForm({ initialData, productId }: { initialData?: any, pro
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-4xl mx-auto pb-20">
         
         {/* Header Actions */}
-        <div className="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-200 sticky top-4 z-10">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
           <div className="flex items-center gap-4">
             <Link href="/admin/products">
               <Button type="button" variant="ghost" size="icon" className="rounded-xl">
