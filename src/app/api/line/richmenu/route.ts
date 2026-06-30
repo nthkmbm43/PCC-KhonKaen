@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { lineRichMenus } from "@/db/schema";
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 
 export async function GET() {
   try {
@@ -89,14 +90,18 @@ export async function POST(req: Request) {
 
     const { richMenuId } = await createRes.json();
 
-    // 3. Download image from our Blob and upload to LINE
-    let contentType = "image/png";
-    if (data.imageUrl.toLowerCase().endsWith('.jpg') || data.imageUrl.toLowerCase().endsWith('.jpeg')) {
-      contentType = "image/jpeg";
-    }
-
+    // 3. Download image from our Blob, compress it to < 1MB, and upload to LINE
+    const contentType = "image/jpeg";
+    
     const imageRes = await fetch(data.imageUrl);
-    const imageBuffer = await imageRes.arrayBuffer();
+    const arrayBuffer = await imageRes.arrayBuffer();
+    const imageBuffer = Buffer.from(arrayBuffer);
+
+    // Compress with sharp to ensure it's under 1MB
+    const compressedBuffer = await sharp(imageBuffer)
+      .resize({ width: 2500, withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer();
 
     const uploadRes = await fetch(`https://api-data.line.me/v2/bot/richmenu/${richMenuId}/content`, {
       method: "POST",
@@ -104,7 +109,7 @@ export async function POST(req: Request) {
         "Authorization": `Bearer ${token}`,
         "Content-Type": contentType
       },
-      body: imageBuffer
+      body: compressedBuffer
     });
 
     if (!uploadRes.ok) {
