@@ -103,13 +103,17 @@ export async function POST(req: Request) {
       .jpeg({ quality: 80 })
       .toBuffer();
 
+    // Create a pure Web Uint8Array to avoid "SharedArrayBuffer is not allowed" in Next.js fetch
+    const webArray = new Uint8Array(compressedBuffer.length);
+    webArray.set(compressedBuffer);
+
     const uploadRes = await fetch(`https://api-data.line.me/v2/bot/richmenu/${richMenuId}/content`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": contentType
       },
-      body: new Blob([compressedBuffer], { type: contentType })
+      body: webArray
     });
 
     if (!uploadRes.ok) {
