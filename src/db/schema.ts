@@ -57,3 +57,17 @@ export const products = pgTable('products', {
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
 });
+
+export const lineRichMenus = pgTable('line_rich_menus', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  imageUrl: text('image_url').notNull(),
+  actionA: text('action_a'),
+  actionB: text('action_b'),
+  actionC: text('action_c'),
+  actionD: text('action_d'),
+  actionE: text('action_e'),
+  actionF: text('action_f'),
+  richMenuId: text('rich_menu_id'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
