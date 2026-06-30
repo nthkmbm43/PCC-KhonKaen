@@ -93,7 +93,7 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
     <div className="space-y-2">
       <Label>{label}</Label>
       <Select 
-        onValueChange={(val) => form.setValue(fieldName, val)} 
+        onValueChange={(val) => form.setValue(fieldName, val || "")} 
         value={form.watch(fieldName) || ""}
       >
         <SelectTrigger className="w-full bg-slate-50 border-slate-200">
