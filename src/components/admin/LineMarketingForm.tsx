@@ -138,7 +138,7 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
               <div className="bg-emerald-50 text-emerald-800 text-xs p-3 rounded-lg mb-6 border border-emerald-100 flex items-start gap-2">
                 <span className="text-lg leading-none">💡</span>
                 <div>
-                  <p><strong>ขนาดที่แนะนำ:</strong> 2500 x 1686 px (แบบใหญ่ 6 ช่อง)</p>
+                  <p><strong>ขนาดที่แนะนำ:</strong> 2500 x 1686 px (ขนาดไฟล์ห้ามเกิน 1 MB)</p>
                   <p className="mt-0.5">ภาพที่อัปโหลดจะถูกนำไปใช้อัปเดตเป็นเมนูหลักใน LINE OA ทันที</p>
                 </div>
               </div>
