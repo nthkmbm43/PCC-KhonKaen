@@ -51,7 +51,9 @@ export async function POST(req: Request) {
         // Ensure absolute URL if it's a relative path from our DB
         let uri = item.action;
         if (uri.startsWith("/")) {
-          const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-website.com";
+          const host = req.headers.get("host") || "pcc-khon-kaen.vercel.app";
+          const protocol = host.includes("localhost") ? "http" : "https";
+          const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`;
           uri = `${baseUrl}${uri}`;
         }
         
