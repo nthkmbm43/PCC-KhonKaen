@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Save, RefreshCw } from "lucide-react";
 import { ImageUpload } from "./ImageUpload";
 import toast from "react-hot-toast";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
@@ -25,6 +26,7 @@ type LineFormValues = z.infer<typeof lineSchema>;
 
 export function LineMarketingForm({ linkOptions }: { linkOptions: { label: string, value: string }[] }) {
   const [isSaving, setIsSaving] = useState(false);
+  const [customFields, setCustomFields] = useState<Record<string, boolean>>({});
   
   const form = useForm<LineFormValues>({
     resolver: zodResolver(lineSchema),
@@ -47,6 +49,15 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
         if (res.ok) {
           const data = await res.json();
           if (data && data.imageUrl) {
+            const checkCustom = (val: string) => !!(val && val !== "none" && !val.startsWith("/"));
+            setCustomFields({
+              actionA: checkCustom(data.actionA),
+              actionB: checkCustom(data.actionB),
+              actionC: checkCustom(data.actionC),
+              actionD: checkCustom(data.actionD),
+              actionE: checkCustom(data.actionE),
+              actionF: checkCustom(data.actionF),
+            });
             form.reset({
               imageUrl: data.imageUrl || "",
               actionA: data.actionA || "",
@@ -89,27 +100,50 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
     }
   }
 
-  const renderDropdown = (fieldName: keyof LineFormValues, label: string) => (
-    <div className="space-y-2">
-      <Label>{label}</Label>
-      <Select 
-        onValueChange={(val) => form.setValue(fieldName, val || "")} 
-        value={form.watch(fieldName) || ""}
-      >
-        <SelectTrigger className="w-full bg-slate-50 border-slate-200">
-          <SelectValue placeholder="เลือกหน้า..." />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="none">-- ไม่เลือก (ปิดปุ่ม) --</SelectItem>
-          {linkOptions.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
+  const renderDropdown = (fieldName: keyof LineFormValues, label: string) => {
+    const isCustom = customFields[fieldName];
+    const toggleCustom = () => {
+      setCustomFields(prev => ({ ...prev, [fieldName]: !prev[fieldName] }));
+      form.setValue(fieldName, "none");
+    };
+
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <Label>{label}</Label>
+          <button type="button" onClick={toggleCustom} className="text-[10.5px] font-medium text-emerald-600 hover:text-emerald-700 hover:underline">
+            {isCustom ? "เลือกหน้าในระบบ" : "+ ใส่ลิงก์เอง (แผนที่/โทรด่วน)"}
+          </button>
+        </div>
+        
+        {isCustom ? (
+          <Input 
+            placeholder="tel:0812345678 หรือ https://goo.gl/..."
+            value={form.watch(fieldName) || ""}
+            onChange={(e) => form.setValue(fieldName, e.target.value)}
+            className="w-full bg-slate-50 border-slate-200"
+          />
+        ) : (
+          <Select 
+            onValueChange={(val) => form.setValue(fieldName, val || "")} 
+            value={form.watch(fieldName) || ""}
+          >
+            <SelectTrigger className="w-full bg-slate-50 border-slate-200">
+              <SelectValue placeholder="เลือกหน้า..." />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="none">-- ไม่เลือก (ปิดปุ่ม) --</SelectItem>
+              {linkOptions.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      </div>
+    );
+  };
 
   return (
     <FormProvider {...form}>
