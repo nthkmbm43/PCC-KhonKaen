@@ -109,7 +109,7 @@ export async function POST(req: Request) {
         "Authorization": `Bearer ${token}`,
         "Content-Type": contentType
       },
-      body: compressedBuffer as any
+      body: new Blob([compressedBuffer], { type: contentType })
     });
 
     if (!uploadRes.ok) {
