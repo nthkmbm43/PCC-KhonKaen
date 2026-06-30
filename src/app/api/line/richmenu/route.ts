@@ -49,12 +49,18 @@ export async function POST(req: Request) {
     for (const item of mapping) {
       if (item.action && item.action !== "none") {
         // Ensure absolute URL if it's a relative path from our DB
-        let uri = item.action;
+        let uri = item.action.trim();
         if (uri.startsWith("/")) {
           const host = req.headers.get("host") || "pcc-khon-kaen.vercel.app";
           const protocol = host.includes("localhost") ? "http" : "https";
           const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`;
           uri = `${baseUrl}${uri}`;
+        } else if (/^[0-9\- \+]+$/.test(uri) && uri.length >= 9) {
+          // Auto-format phone numbers if user just typed the numbers
+          uri = `tel:${uri.replace(/[\- ]/g, "")}`;
+        } else if (!uri.startsWith("http") && !uri.startsWith("tel:") && !uri.startsWith("line:")) {
+          // If it's missing https:// but looks like a link
+          uri = `https://${uri}`;
         }
         
         areas.push({
@@ -87,7 +93,8 @@ export async function POST(req: Request) {
     if (!createRes.ok) {
       const err = await createRes.json();
       console.error("LINE Create Rich Menu Error:", err);
-      return NextResponse.json({ error: "สร้าง Rich Menu ไม่สำเร็จ ตรวจสอบ API Token" }, { status: 400 });
+      const detail = err.details ? err.details[0]?.message : err.message;
+      return NextResponse.json({ error: `รูปแบบลิงก์ไม่ถูกต้อง: ${detail || 'กรุณาตรวจสอบลิงก์หรือเบอร์โทร'}` }, { status: 400 });
     }
 
     const { richMenuId } = await createRes.json();
