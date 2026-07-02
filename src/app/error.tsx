@@ -16,7 +16,6 @@ export default function ErrorPage({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-internal-log-secret': process.env.NEXT_PUBLIC_LOG_INTERNAL_SECRET || '',
       },
       body: JSON.stringify({
         message: error.message,

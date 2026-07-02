@@ -23,8 +23,10 @@ We implement a robust, Framework Agnostic Structured Logging system with the fol
    - Error objects are normalized (`type`, `name`, `message`, `code`, `digest`). Stack traces are aggressively stripped in `production` environments to prevent secret leakage.
 6. **Log Event Enums**
    - Log tracking uses strict Event Enums (e.g., `PRODUCT_UPDATED`) instead of free-text messages for machine readability and robust dashboard querying.
-7. **Client Error Boundary Protection**
-   - Client runtime errors are logged via an internal API (`/api/internal/log`), strictly guarded by a Secret Header (`x-internal-log-secret`) and Rate Limiting to prevent log spamming attacks.
+7. **Client Error Boundary Protection & Rate Limiting**
+   - Client runtime errors are logged via an internal API (`/api/internal/log`), strictly guarded by Same-Origin/Host checks (preventing the need for exposed `NEXT_PUBLIC_` secrets).
+   - Rate Limiting (30 req/min) via Upstash Redis prevents log spamming.
+   - **Fail-Open Policy:** If the Redis rate limiter goes down, we allow logs to pass through rather than blocking them (fail-open) and log a `WARN`. This prioritizes system observability and traceability over strict rate limit enforcement.
 
 ## Log Level Policy
 - **TRACE:** Deep debugging (Sampling 0% in Prod)

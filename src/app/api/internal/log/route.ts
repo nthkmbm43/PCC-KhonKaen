@@ -21,10 +21,17 @@ const rateLimit = redis
 
 export async function POST(req: Request) {
   try {
-    // 1. Secret Authentication
-    const authHeader = req.headers.get('x-internal-log-secret');
-    if (!authHeader || authHeader !== process.env.LOG_INTERNAL_SECRET) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // 1. Same-Origin / Host Verification (Security)
+    // We do not use NEXT_PUBLIC_ secrets as they are exposed to the browser.
+    // Instead, we verify that the request originates from our own application.
+    const origin = req.headers.get('origin');
+    const host = req.headers.get('host');
+    
+    // In production, you would strictly match against process.env.NEXT_PUBLIC_APP_URL
+    // For this CMS, we enforce that either origin matches host, or origin is omitted (same-origin policy)
+    if (origin && host && !origin.includes(host)) {
+      logger.warn({ event: 'CLIENT_ERROR', ip: req.headers.get('x-forwarded-for') }, 'Rejected log request from untrusted origin');
+      return NextResponse.json({ error: 'Unauthorized origin' }, { status: 403 });
     }
 
     // 2. Rate Limiting (Fail-open)
@@ -37,7 +44,7 @@ export async function POST(req: Request) {
         }
       } catch (err) {
         // Fail-open: allow request to proceed if Upstash is down
-        console.error('Rate limit check failed (fail-open):', err);
+        logger.warn({ event: 'CLIENT_ERROR', error: err }, 'Upstash Rate limit check failed (fail-open mode active). Allowing log through.');
       }
     }
 
