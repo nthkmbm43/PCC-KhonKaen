@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     // In production, you would strictly match against process.env.NEXT_PUBLIC_APP_URL
     // For this CMS, we enforce that either origin matches host, or origin is omitted (same-origin policy)
     if (origin && host && !origin.includes(host)) {
-      logger.warn({ event: 'CLIENT_ERROR', ip: req.headers.get('x-forwarded-for') }, 'Rejected log request from untrusted origin');
+      logger.warn({ event: 'CLIENT_ERROR', ip: req.headers.get('x-forwarded-for') ?? undefined }, 'Rejected log request from untrusted origin');
       return NextResponse.json({ error: 'Unauthorized origin' }, { status: 403 });
     }
 
