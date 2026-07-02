@@ -6,12 +6,39 @@ import { db } from '@/db';
 import { admins } from './db/schema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
+import { headers } from 'next/headers';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+
+const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN 
+  ? new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    })
+  : null;
+
+const ratelimit = redis ? new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(5, '1 m'),
+  analytics: true,
+}) : null;
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
+        if (ratelimit) {
+          const headersList = await headers();
+          const ip = headersList.get('x-forwarded-for') ?? '127.0.0.1';
+          const { success } = await ratelimit.limit(`login_ratelimit_${ip}`);
+          if (!success) {
+            throw new Error('Rate limit exceeded. Please try again later.');
+          }
+        } else {
+          console.warn('⚠️ Rate limiting is bypassed because UPSTASH_REDIS env vars are missing.');
+        }
+
         const parsedCredentials = z
           .object({ username: z.string(), password: z.string() })
           .safeParse(credentials);
