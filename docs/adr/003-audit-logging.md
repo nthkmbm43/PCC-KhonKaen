@@ -1,38 +1,42 @@
 # ADR-003: Comprehensive Audit Logging System
 
-## Status
-Accepted
-
 ## Context
-As an Enterprise CMS, it is critical to maintain a secure and immutable record of all business data changes. We need an Audit Logging system that provides high traceability, debugging capabilities, and compliance tracking, without causing data loss or massive storage overhead for irrelevant fields.
+As an Enterprise CMS, it is critical to maintain a secure and immutable record of all business data changes. We need an Audit Logging system that provides high traceability, debugging capabilities, and compliance tracking, without causing data loss or massive storage overhead for irrelevant fields. However, we must balance data integrity with business continuity.
 
 ## Decision
 We implement a central `audit_logs` table and a `logAudit` utility function. The system enforces the following architectural rules:
 
 1. **Synchronous Execution (await over Fire-and-Forget)**
-   - Audit logs must be explicitly awaited (`await logAudit(...)`).
-   - In Next.js Serverless environments (Lambda), returning a response terminates the function execution context. Promises that are not awaited (Fire-and-Forget) risk being dropped silently. Audit data is treated as Security Evidence; we prioritize `Audit Success` immediately after `Business Success` before returning the `Return Response`.
-2. **Database Transactions (`db.transaction`)**
-   - Both the business data mutation and the audit log insertion MUST occur within the same database transaction. If the audit log fails to insert, the business data mutation is rolled back to prevent state mismatches (where data changes without a trace).
-3. **Before-State Retrieval**
-   - The `before_state` must be retrieved via a `SELECT` query *before* the `UPDATE` or `DELETE` executes, ensuring an accurate snapshot of the data.
-4. **JSONB for State Storage**
-   - `before_state` and `after_state` are stored as `jsonb`. This allows flexible schema evolution of business entities (e.g., adding columns to `products` or `pages`) without needing to migrate the `audit_logs` table schema.
-5. **Sensitive Data Masking**
-   - Fields containing sensitive data (e.g., `password`, `accessToken`, `refreshToken`, `secret`, `apiKey`) will be automatically masked (`"***MASKED***"`) before being serialized into the JSONB state.
-6. **Field Filtering**
-   - System auto-updated fields like `createdAt` and `updatedAt` are stripped from the state payloads to prevent the JSON objects from inflating the database with non-business changes.
-7. **Request ID and Traceability**
-   - Every log includes a `request_id` (either from Next.js headers or generated on the fly) to allow correlation across Application Logs, Error Logs, and Audit Logs.
-8. **Enums and Indexes**
-   - `action` (e.g., `CREATE`, `UPDATE`, `DELETE`) and `resource` (e.g., `product`, `page`) are strongly typed as Enums in the database.
-   - Indexes on `user_id`, `resource`, `resource_id`, `action`, and `created_at` are enforced from Day 1 to support fast querying as the table grows.
+   - Audit logs must be explicitly awaited (`await logAudit(...)`). In Next.js Serverless environments, returning a response terminates the execution context.
+2. **Failure Policy: Business Continuity over Audit Strictness (Policy B)**
+   - If the business mutation (UPDATE/DELETE) succeeds but the Audit Log insertion fails (e.g., Disk Full, Deadlock), the system will **NOT** rollback the business transaction. Instead, it will log the audit failure to the Application Error Log and allow the business transaction to commit. This is standard for CMS systems where content publishing availability out-prioritizes strict financial audit compliance.
+3. **Database Transactions (`db.transaction`)**
+   - Both the business data mutation and the audit log insertion occur within the same transaction scope, but the audit log failure is caught and suppressed to prevent a global rollback.
+4. **Before-State Retrieval**
+   - The `before_state` must be retrieved via a `SELECT` query *before* the `UPDATE` or `DELETE` executes, ensuring an accurate snapshot.
+5. **JSONB for State Storage**
+   - `before_state` and `after_state` are stored as `jsonb` to allow flexible schema evolution without migrating the `audit_logs` table.
+6. **Sensitive Data Masking**
+   - Fields containing sensitive data (`password`, `accessToken`, `secret`, `apiKey`) will be automatically masked (`"***MASKED***"`).
+7. **Phased Rollout**
+   - Implemented initially only on Products and Pages API routes (Sprint A) to prevent system-wide regression.
 
-## Retention Policy
-- Audit Logs will be kept in the active PostgreSQL database for **1 to 3 years**.
-- Logs older than 3 years will be archived to cold storage (e.g., AWS S3 or equivalent) and pruned from the primary database to maintain query performance.
+## Alternatives Considered
+- **Fire-and-Forget Audit Logs:** Rejected due to high risk of log dropping in Serverless.
+- **Strict Audit Compliance (Rollback on Audit Fail - Policy A):** Rejected. While suitable for banking, rejecting a CMS content update because the audit table is full creates unacceptable business friction.
 
 ## Consequences
 - Requires refactoring API mutation endpoints to use `db.transaction`.
-- Slight increase in latency for write operations due to the synchronous `SELECT`, transaction overhead, and the `await logAudit` call.
-- Provides absolute certainty that no business mutation occurs without a corresponding audit trail.
+- Slight latency increase for write operations due to the synchronous `SELECT`.
+- Potential for a business mutation to exist without an audit log in rare edge cases (e.g., DB crash during the audit insert), which is an accepted tradeoff for business continuity.
+
+## Rollback Plan
+`git revert 3db54df` (or current commit). The database schema changes (`audit_logs` table and enums) can remain untouched as they will not interfere with legacy code.
+
+## Future Improvements
+- **Correlation ID (X-Request-ID):** Implement a global tracer ID from middleware to audit logs (P1).
+- **Diff Logging:** Transition from storing full JSONB objects to only storing changed fields (P2).
+- **Composite Indexes & Storage:** Implement composite indexing and a strict 1-3 year Retention/Archival policy (P2).
+- **Audit Viewer Dashboard:** Build a UI to search and filter logs for administrators (P2).
+- **JSONB Size Limits:** Implement truncation for large fields like `content` to control table size growth (P2).
+- **Soft Delete Handling:** Define audit behavior when soft deletes are introduced (P3).

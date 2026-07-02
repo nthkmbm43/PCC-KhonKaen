@@ -88,9 +88,9 @@ export async function logAudit({
     
     await dbContext.insert(auditLogs).values(logEntry);
   } catch (error) {
-    console.error("Failed to insert audit log:", error);
-    // Depending on strictness, we might throw the error to abort the transaction.
-    // In this Enterprise setting, an audit log failure MUST abort the business transaction.
-    throw new Error("Audit log insertion failed");
+    // Policy B: CMS Business Continuity over Audit Strictness.
+    // We log the audit failure to the Application Error Log but DO NOT throw,
+    // ensuring the parent transaction (Business Logic) can still commit successfully.
+    console.error("[AUDIT FAILURE] Failed to insert audit log. Policy B enforced (allowing business transaction to proceed):", error);
   }
 }
