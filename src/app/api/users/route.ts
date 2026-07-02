@@ -4,11 +4,17 @@ import { admins } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
+import { canAccessRoute } from "@/lib/auth/rbac";
 
-export async function GET() {
+export async function GET(req: Request) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const url = new URL(req.url);
+  if (!canAccessRoute(session.user.role, url.pathname)) {
+    return NextResponse.json({ error: "Forbidden: Insufficient permissions" }, { status: 403 });
   }
 
   try {
@@ -31,6 +37,11 @@ export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const url = new URL(req.url);
+  if (!canAccessRoute(session.user.role, url.pathname)) {
+    return NextResponse.json({ error: "Forbidden: Insufficient permissions" }, { status: 403 });
   }
 
   try {

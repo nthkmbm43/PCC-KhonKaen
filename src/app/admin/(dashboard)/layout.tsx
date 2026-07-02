@@ -2,15 +2,17 @@ import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { db } from "@/db";
 import { siteSettings } from "@/db/schema";
 import { SignOutButton } from "@/components/admin/SignOutButton";
+import { auth } from "@/auth";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const settingsArray = await db.select().from(siteSettings).limit(1);
   const settings = settingsArray[0];
+  const session = await auth();
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Sidebar */}
-      <AdminSidebar logoUrl={settings?.logoUrl || undefined} />
+      <AdminSidebar logoUrl={settings?.logoUrl || undefined} role={session?.user?.role} />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0">
