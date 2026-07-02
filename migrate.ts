@@ -43,6 +43,41 @@ async function runMigrate() {
     `);
     console.log('Products table ensured.');
 
+    await db.execute(sql`
+      DO $$ BEGIN
+        CREATE TYPE audit_action AS ENUM ('CREATE', 'UPDATE', 'DELETE', 'LOGIN', 'LOGOUT', 'DEPLOY', 'UPLOAD');
+      EXCEPTION
+        WHEN duplicate_object THEN null;
+      END $$;
+
+      DO $$ BEGIN
+        CREATE TYPE audit_resource AS ENUM ('product', 'page', 'user', 'setting', 'upload', 'richmenu', 'deploy');
+      EXCEPTION
+        WHEN duplicate_object THEN null;
+      END $$;
+
+      CREATE TABLE IF NOT EXISTS "audit_logs" (
+        "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+        "user_id" text,
+        "action" audit_action NOT NULL,
+        "resource" audit_resource NOT NULL,
+        "resource_id" text,
+        "before_state" jsonb,
+        "after_state" jsonb,
+        "ip_address" text,
+        "user_agent" text,
+        "request_id" text,
+        "created_at" timestamp with time zone DEFAULT now()
+      );
+
+      CREATE INDEX IF NOT EXISTS "audit_user_id_idx" ON "audit_logs" ("user_id");
+      CREATE INDEX IF NOT EXISTS "audit_resource_idx" ON "audit_logs" ("resource");
+      CREATE INDEX IF NOT EXISTS "audit_resource_id_idx" ON "audit_logs" ("resource_id");
+      CREATE INDEX IF NOT EXISTS "audit_action_idx" ON "audit_logs" ("action");
+      CREATE INDEX IF NOT EXISTS "audit_created_at_idx" ON "audit_logs" ("created_at");
+    `);
+    console.log('Audit logs table ensured.');
+
     // Add new columns to existing tables using DO blocks to avoid errors if they already exist
     await db.execute(sql`
       DO $$

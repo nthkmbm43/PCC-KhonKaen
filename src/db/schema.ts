@@ -1,4 +1,29 @@
-import { pgTable, text, timestamp, jsonb, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, jsonb, uuid, pgEnum, index } from 'drizzle-orm/pg-core';
+
+export const auditActionEnum = pgEnum('audit_action', ['CREATE', 'UPDATE', 'DELETE', 'LOGIN', 'LOGOUT', 'DEPLOY', 'UPLOAD']);
+export const auditResourceEnum = pgEnum('audit_resource', ['product', 'page', 'user', 'setting', 'upload', 'richmenu', 'deploy']);
+
+export const auditLogs = pgTable('audit_logs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: text('user_id'),
+  action: auditActionEnum('action').notNull(),
+  resource: auditResourceEnum('resource').notNull(),
+  resourceId: text('resource_id'),
+  beforeState: jsonb('before_state'),
+  afterState: jsonb('after_state'),
+  ipAddress: text('ip_address'),
+  userAgent: text('user_agent'),
+  requestId: text('request_id'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+}, (table) => {
+  return {
+    userIdIdx: index('audit_user_id_idx').on(table.userId),
+    resourceIdx: index('audit_resource_idx').on(table.resource),
+    resourceIdIdx: index('audit_resource_id_idx').on(table.resourceId),
+    actionIdx: index('audit_action_idx').on(table.action),
+    createdAtIdx: index('audit_created_at_idx').on(table.createdAt),
+  };
+});
 
 export const pages = pgTable('pages', {
   id: uuid('id').defaultRandom().primaryKey(),

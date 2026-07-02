@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { products } from "@/db/schema";
 import { auth } from "@/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function GET() {
   try {
@@ -26,10 +27,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Title and Slug are required" }, { status: 400 });
     }
 
-    const newProduct = await db.insert(products).values({
-      ...data,
-      isFeatured: data.isFeatured ? 'true' : 'false',
-    }).returning();
+    const newProduct = await db.transaction(async (tx) => {
+      const inserted = await tx.insert(products).values({
+        ...data,
+        isFeatured: data.isFeatured ? 'true' : 'false',
+      }).returning();
+
+      await logAudit({
+        tx,
+        session,
+        action: 'CREATE',
+        resource: 'product',
+        resourceId: inserted[0].id,
+        afterState: inserted[0],
+      });
+
+      return inserted;
+    });
 
     return NextResponse.json(newProduct[0], { status: 201 });
   } catch (error) {
