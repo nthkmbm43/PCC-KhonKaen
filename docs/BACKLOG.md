@@ -15,5 +15,9 @@
 | AUDIT-005 | P2 | Todo | ⬜ | ⬜ | Low | v1.2.0 | JSONB Size Limit | AUDIT-001 | 1h | - | - | Truncate large fields like content/images |
 | AUDIT-006 | P3 | Todo | ⬜ | ⬜ | Low | v1.3.0 | Soft Delete Audit Handling | AUDIT-001 | 1h | - | - | Handle soft delete audits in ADR |
 | AUDIT-007 | P2 | Todo | ⬜ | ⬜ | High | v1.3.0 | Audit Viewer Dashboard | AUDIT-001 | 4h | - | - | UI for Search/Filter/Export logs |
+| OBS-001 | P1 | Todo | ✅ | ⬜ | High | v1.2.0 | Observability Foundation | AUDIT-001 | 3h | AI Agent | - | Structured JSON Logger, Correlation ID, Internal Log API |
+| OBS-002 | P2 | Todo | ⬜ | ⬜ | Medium | v1.2.0 | Health Check API | OBS-001 | 1h | - | - | /health, /ready, /live |
+| OBS-003 | P2 | Todo | ⬜ | ⬜ | High | v1.2.0 | Metrics & Telemetry | OBS-001 | 4h | - | - | Prometheus, OpenTelemetry, Histogram |
+| OBS-004 | P2 | Todo | ⬜ | ⬜ | Medium | v1.2.0 | Log Sampling | OBS-001 | 2h | - | - | Adaptive Sampling (e.g. INFO 20%, ERROR 100%) |
 | TECH-001 | P3 | Todo | ⬜ | ⬜ | Low | v1.2.0 | Review Existing ESLint Issues | - | 2h | - | - | 41 Pre-existing warnings |
 | OPS-001 | P2 | Todo | ⬜ | ⬜ | Medium | v1.1.0 | Monitoring Rate Limit | SEC-003 | 1h | - | - | Setup alert for Rate Limit fail-open |

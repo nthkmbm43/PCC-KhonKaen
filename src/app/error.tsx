@@ -11,8 +11,20 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Optionally log the error to an error reporting service
-    console.error(error);
+    // Send client error to the central observability API
+    fetch('/api/internal/log', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-internal-log-secret': process.env.NEXT_PUBLIC_LOG_INTERNAL_SECRET || '',
+      },
+      body: JSON.stringify({
+        message: error.message,
+        name: error.name,
+        digest: error.digest,
+        url: window.location.href,
+      }),
+    }).catch(console.error);
   }, [error]);
 
   return (

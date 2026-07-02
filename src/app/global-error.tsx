@@ -10,7 +10,21 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error('Global Error:', error);
+    // Send client error to the central observability API
+    fetch('/api/internal/log', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-internal-log-secret': process.env.NEXT_PUBLIC_LOG_INTERNAL_SECRET || '',
+      },
+      body: JSON.stringify({
+        message: error.message,
+        name: error.name,
+        digest: error.digest,
+        url: window.location.href,
+        global: true,
+      }),
+    }).catch(console.error);
   }, [error]);
 
   return (

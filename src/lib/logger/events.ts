@@ -1,0 +1,34 @@
+/**
+ * Standardized logging events for querying on DataDog / CloudWatch.
+ */
+export const LogEvent = {
+  // Authentication
+  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+  LOGIN_FAILED: 'LOGIN_FAILED',
+  LOGOUT: 'LOGOUT',
+
+  // System & Application
+  SERVICE_START: 'SERVICE_START',
+  SERVICE_CRASH: 'SERVICE_CRASH',
+  UNHANDLED_EXCEPTION: 'UNHANDLED_EXCEPTION',
+  CLIENT_ERROR: 'CLIENT_ERROR',
+  
+  // Auditing
+  AUDIT_FAILURE: 'AUDIT_FAILURE',
+  
+  // Products
+  PRODUCT_CREATED: 'PRODUCT_CREATED',
+  PRODUCT_UPDATED: 'PRODUCT_UPDATED',
+  PRODUCT_DELETED: 'PRODUCT_DELETED',
+  
+  // Pages
+  PAGE_CREATED: 'PAGE_CREATED',
+  PAGE_UPDATED: 'PAGE_UPDATED',
+  PAGE_DELETED: 'PAGE_DELETED',
+  
+  // Uploads
+  UPLOAD_COMPLETED: 'UPLOAD_COMPLETED',
+  UPLOAD_FAILED: 'UPLOAD_FAILED',
+} as const;
+
+export type LogEventName = keyof typeof LogEvent;

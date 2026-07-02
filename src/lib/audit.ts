@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { auditLogs } from "@/db/schema";
 import { headers } from "next/headers";
 import { Session } from "next-auth";
+import { logger } from "./logger";
 
 export type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'LOGIN' | 'LOGOUT' | 'DEPLOY' | 'UPLOAD';
 export type AuditResource = 'product' | 'page' | 'user' | 'setting' | 'upload' | 'richmenu' | 'deploy';
@@ -91,6 +92,6 @@ export async function logAudit({
     // Policy B: CMS Business Continuity over Audit Strictness.
     // We log the audit failure to the Application Error Log but DO NOT throw,
     // ensuring the parent transaction (Business Logic) can still commit successfully.
-    console.error("[AUDIT FAILURE] Failed to insert audit log. Policy B enforced (allowing business transaction to proceed):", error);
+    logger.error({ event: 'AUDIT_FAILURE', error }, 'Failed to insert audit log. Policy B enforced (allowing business transaction to proceed)');
   }
 }
