@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { siteConfig } from "@/data/site-config";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 
@@ -31,7 +32,7 @@ export default async function ContactSocialBlock({ headline, description }: Cont
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-[#00C300] hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group text-center flex flex-col items-center">
-          <img src="/images/social/line.png" alt="LINE" className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />
+          <Image src="/images/social/line.png" alt="LINE" width={64} height={64} className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />
           <h3 className="text-xl font-bold font-sans text-gray-900 mb-3 w-full text-left">LINE</h3>
           <p className="text-gray-600 text-sm leading-relaxed w-full text-left">
             ส่งรูปหน้างาน ขอใบเสนอราคา และสอบถามรายละเอียดสินค้าได้รวดเร็ว
@@ -39,7 +40,7 @@ export default async function ContactSocialBlock({ headline, description }: Cont
         </a>
 
         <a href={facebookUrl} target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-[#1877F2] hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group text-center flex flex-col items-center">
-          <img src="/images/social/facebook.png" alt="Facebook" className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />
+          <Image src="/images/social/facebook.png" alt="Facebook" width={64} height={64} className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />
           <h3 className="text-xl font-bold font-sans text-gray-900 mb-3 w-full text-left">Facebook</h3>
           <p className="text-gray-600 text-sm leading-relaxed w-full text-left">
             ติดตามผลงานจริง ข่าวสาร งานจัดส่ง และภาพหน้างานจาก พีซีซี โพสเทนชั่น ขอนแก่น
@@ -47,7 +48,7 @@ export default async function ContactSocialBlock({ headline, description }: Cont
         </a>
 
         <a href={siteConfig.social?.tiktok?.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-black hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group text-center flex flex-col items-center">
-          <img src="/images/social/tiktok.png" alt="TikTok" className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />
+          <Image src="/images/social/tiktok.png" alt="TikTok" width={64} height={64} className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />
           <h3 className="text-xl font-bold font-sans text-gray-900 mb-3 w-full text-left">TikTok</h3>
           <p className="text-gray-600 text-sm leading-relaxed w-full text-left">
             ชมวิดีโอผลงานติดตั้ง การยกวาง การจัดส่ง และบรรยากาศหน้างานจริง
@@ -55,7 +56,8 @@ export default async function ContactSocialBlock({ headline, description }: Cont
         </a>
 
         <a href="https://www.google.com/maps/place/16.476942,102.774184" target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-[#EA4335] hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group text-center flex flex-col items-center">
-          <img src="/images/social/google-map.png" alt="Google Map" className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />
+          <Image src="/images/social/google-map.png" alt="Google Map" width={64} height={64} className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />
+
           <h3 className="text-xl font-bold font-sans text-gray-900 mb-3 w-full text-left">Google Map</h3>
           <p className="text-gray-600 text-sm leading-relaxed w-full text-left">
             เปิดแผนที่เพื่อดูเส้นทางมายังสำนักงานสาขาขอนแก่น

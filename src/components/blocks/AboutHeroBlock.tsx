@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface AboutHeroBlockProps {
   headline?: string;
@@ -15,7 +16,9 @@ export default function AboutHeroBlock({ headline, description, backgroundImage 
     <section className="relative pt-24 pb-32 lg:pt-32 lg:pb-40 bg-[#0a174f] overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a174f] via-brand-900 to-brand-800/80 opacity-95 z-0 transition-opacity duration-1000"></div>
       <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay">
-        <img src={bgImage} alt="Background" className="w-full h-full object-cover" />
+        {bgImage ? (
+          <Image src={bgImage} alt="Background" fill className="object-cover" />
+        ) : null}
       </div>
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-lg">{title}</h1>
