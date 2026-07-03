@@ -9,7 +9,7 @@ import {
   ExternalLink,
   Users,
   ShoppingBag,
-  Image,
+  Image as ImageIcon,
   SearchCheck,
   MessageCircle,
   ChevronRight,
@@ -28,7 +28,7 @@ interface NavItem {
 const websiteItems: NavItem[] = [
   { href: "/admin/pages", label: "จัดการเพจ", icon: <FileText className="w-4 h-4" /> },
   { href: "/admin/products", label: "จัดการสินค้า", icon: <ShoppingBag className="w-4 h-4" /> },
-  { href: "/admin/media", label: "Media Library", icon: <Image className="w-4 h-4" /> },
+  { href: "/admin/media", label: "Media Library", icon: <ImageIcon className="w-4 h-4" /> },
 ];
 
 const marketingItems: NavItem[] = [
@@ -97,7 +97,7 @@ export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: strin
   return (
     <aside
       style={{ width: "260px", minWidth: "260px", maxWidth: "260px" }}
-      className="bg-slate-900 flex flex-col shrink-0 min-h-screen border-r border-slate-800"
+      className="bg-slate-900 flex flex-col shrink-0 h-screen sticky top-0 border-r border-slate-800"
     >
       {/* Logo / Brand */}
       <div className="px-4 py-5 border-b border-slate-800">

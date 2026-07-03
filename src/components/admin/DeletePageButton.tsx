@@ -97,7 +97,7 @@ export function DeletePageButton({ pageId, pageTitle, pageSlug }: DeletePageButt
           <AlertDialogDescription className="space-y-3 text-left">
             <p>
               คุณกำลังจะลบเพจ{" "}
-              <span className="font-bold text-slate-800">"{pageTitle}"</span>{" "}
+              <span className="font-bold text-slate-800">&quot;{pageTitle}&quot;</span>{" "}
               แบบถาวร การกระทำนี้{" "}
               <span className="text-red-600 font-semibold">ไม่สามารถกู้คืนได้</span>
             </p>

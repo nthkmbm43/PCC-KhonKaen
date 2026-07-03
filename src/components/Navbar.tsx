@@ -83,7 +83,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                           {products.map(product => (
                             <Link key={product.slug} href={`/products/${product.slug}`} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 hover:shadow-md transition-all group/item border border-transparent hover:border-brand-100">
                               <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-gray-100">
-                                <img src={product.image || ''} alt={product.title} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
+                                <Image src={product.image || '/images/placeholder.jpg'} alt={product.title} width={64} height={64} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
                               </div>
                               <div>
                                 <h4 className="font-bold text-gray-900 group-hover/item:text-brand-700 transition-colors leading-tight">{product.shortTitle}</h4>
@@ -122,7 +122,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                       {products.map(product => (
                         <Link key={product.slug} href={`/products/${product.slug}`} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 hover:shadow-md transition-all group/item border border-transparent hover:border-brand-100">
                           <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-gray-100">
-                            <img src={product.image || ''} alt={product.title} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
+                            <Image src={product.image || '/images/placeholder.jpg'} alt={product.title} width={64} height={64} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
                           </div>
                           <div>
                             <h4 className="font-bold text-gray-900 group-hover/item:text-brand-700 transition-colors leading-tight">{product.shortTitle}</h4>
