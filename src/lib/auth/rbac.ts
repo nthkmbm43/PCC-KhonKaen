@@ -11,10 +11,18 @@ export const ROUTE_PERMISSION: Record<string, string> = {
   '/admin/line-marketing': 'line-marketing:*',
   '/admin/users': 'users:*',
   '/admin/settings': 'settings:*',
+  '/admin/media': 'pages:*',
+  '/admin/seo': 'pages:*',
+  '/admin/audit': 'pages:*',
   '/api/products': 'products:*',
   '/api/pages': 'pages:*',
   '/api/users': 'users:*',
   '/api/settings': 'settings:*',
+  '/api/media': 'pages:*',
+  '/api/upload': 'pages:*',
+  '/api/revalidate': 'pages:*',
+  '/api/preview': 'pages:*',
+  '/api/deploy': 'pages:*',
 };
 
 /**
@@ -50,6 +58,10 @@ export function canAccessRoute(role: Role | undefined | null, pathname: string):
     return hasPermission(role, requiredPermission);
   }
 
-  // Fallback: if it's an admin/api route but no specific permission is mapped, restrict to superuser
+  // Fallback: if it's an admin route but no specific permission is mapped, allow any authenticated user
+  if (pathname.startsWith('/admin')) {
+    return !!role;
+  }
+  // Fallback: if it's an API route but no specific permission is mapped, restrict to superuser
   return role === 'superuser';
 }

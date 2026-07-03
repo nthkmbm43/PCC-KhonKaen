@@ -49,11 +49,11 @@ export const authConfig = {
       const isAllowed = canAccessRoute(role, nextUrl.pathname);
 
       if (!isAllowed) {
-        // If logged in but forbidden, could redirect to a 403 page or dashboard.
-        // For middleware, returning false redirects to login. 
-        // We'll redirect to dashboard for unauthorized admin routes to avoid login loops.
-        if (nextUrl.pathname.startsWith('/admin') && nextUrl.pathname !== '/admin') {
-           return Response.redirect(new URL('/admin', nextUrl));
+        // If logged in but forbidden on an admin sub-route, redirect to admin dashboard
+        // Avoid redirecting /admin itself to login (causes loop when role is unrecognized)
+        if (nextUrl.pathname.startsWith('/admin') && nextUrl.pathname !== '/admin/login') {
+          // If we can't access the specific page, go to dashboard — NOT to login
+          return Response.redirect(new URL('/admin', nextUrl));
         }
         return false;
       }
