@@ -37,13 +37,16 @@ test.describe('Products Management', { tag: ['@test.regression'] }, () => {
 
     // 3. DELETE (Cleanup)
     const editedRow = page.getByRole('row', { name: editTitle });
-    await editedRow.getByRole('button', { name: /ลบ|delete/i }).click();
+    await editedRow.getByRole('button', { name: /ลบ|delete|ลบสินค้านี้/i }).click();
+
+    // Type the title to confirm
+    await page.getByRole('textbox').fill(editTitle);
 
     // Click confirm in the AlertDialog
-    await page.getByRole('button', { name: /ยืนยันการลบ/i }).click();
+    await page.getByRole('button', { name: /ยืนยันลบถาวร/i }).click();
 
     // Wait for the deletion to process
-    await expect(page.getByText('ลบสินค้าเรียบร้อยแล้ว')).toBeVisible();
+    await expect(page.getByText(`ลบสินค้า "${editTitle}" สำเร็จแล้ว`)).toBeVisible();
 
     // Verify it's no longer in the list
     await expect(page.getByRole('table')).not.toContainText(testSlug);
