@@ -1,4 +1,4 @@
-
+import Image from 'next/image';
 
 type MediaProps = {
   media: {
@@ -14,7 +14,6 @@ export const MediaBlock = ({ media }: MediaProps) => {
   return (
     <div className="w-full my-8 flex justify-center">
       <div className="relative w-full max-w-5xl rounded-2xl overflow-hidden shadow-lg border border-gray-100">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={media.url}
           alt={media.alt || 'Media'}

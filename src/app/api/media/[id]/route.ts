@@ -6,13 +6,13 @@ import { auth } from '@/auth';
 import { logAudit } from '@/lib/audit';
 import { logger } from '@/lib/logger';
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { id } = params;
+  const { id } = await params;
 
   try {
     // 1. Fetch media record

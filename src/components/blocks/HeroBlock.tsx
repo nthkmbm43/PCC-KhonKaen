@@ -1,11 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link'
 import { Sparkles, Phone, MessageCircle } from 'lucide-react'
 
 type HeroBlockProps = {
   heading: string
   subheading?: string
-  backgroundImage: unknown
+  backgroundImage: any
   buttons?: {
     label: string
     url: string
@@ -14,7 +13,7 @@ type HeroBlockProps = {
   links?: {
     link: {
       type: 'reference' | 'custom'
-      reference?: { value: unknown, relationTo: string }
+      reference?: { value: any, relationTo: string }
       url?: string
       label: string
       newTab?: boolean

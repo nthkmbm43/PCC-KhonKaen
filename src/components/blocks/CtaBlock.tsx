@@ -1,8 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import Link from 'next/link';
 
-export default function CtaBlock({ headline, description, backgroundImage }: Record<string, unknown>) {
+export default function CtaBlock({ headline, description, backgroundImage }: any) {
   return (
     <div className="relative py-24 overflow-hidden">
       {backgroundImage && (

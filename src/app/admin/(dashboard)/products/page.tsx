@@ -17,7 +17,7 @@ export default async function ProductsPage() {
         </div>
       </div>
 
-      <ProductsClient initialProducts={allProducts as unknown as { id: string; title: string; image: string | null; shortTitle: string | null; category: string | null; slug: string; status: string | null; updatedAt: Date | null; createdAt: Date; isFeatured: string | null; }[]} />
+      <ProductsClient initialProducts={allProducts} />
     </div>
   );
 }

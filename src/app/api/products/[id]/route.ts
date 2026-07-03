@@ -6,9 +6,9 @@ import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { logAudit } from "@/lib/audit";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const productData = await db.select().from(products).where(eq(products.id, id)).limit(1);
     
     if (productData.length === 0) {
@@ -22,14 +22,14 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { id } = params;
+    const { id } = await params;
     const data = await req.json();
     
     const updatedProduct = await db.transaction(async (tx) => {
@@ -101,7 +101,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       
       const nextVersion = latestRevision.length > 0 ? latestRevision[0].version + 1 : 1;
 
-      const businessData = { ...updated[0] } as Record<string, unknown>;
+      const businessData = { ...updated[0] } as any;
       delete businessData.id;
       delete businessData.createdAt;
       delete businessData.updatedAt;
@@ -142,14 +142,14 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { id } = params;
+    const { id } = await params;
     
     const deletedProduct = await db.transaction(async (tx) => {
       const beforeState = await tx.select().from(products).where(eq(products.id, id)).limit(1);

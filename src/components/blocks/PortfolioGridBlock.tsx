@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { MapPin } from "lucide-react";
 import { getAllPortfolios } from "@/data/portfolio";
 

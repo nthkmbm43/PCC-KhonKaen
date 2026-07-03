@@ -13,7 +13,7 @@ type CallToActionBlockProps = {
   links?: {
     link: {
       type: 'reference' | 'custom'
-      reference?: { value: { slug?: string } | Record<string, unknown> | unknown, relationTo: string }
+      reference?: { value: any, relationTo: string }
       url?: string
       label: string
       newTab?: boolean
@@ -59,9 +59,8 @@ export default function CallToActionBlock({ headline, subheadline, theme, button
         <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
           {links && links.length > 0 ? (
             links.map(({ link }, index) => {
-              const refValue = link.reference?.value as { slug?: string } | undefined;
-              const href = link.type === 'reference' && refValue?.slug 
-                ? `/${refValue.slug}` 
+              const href = link.type === 'reference' && link.reference?.value?.slug 
+                ? `/${link.reference.value.slug}` 
                 : link.url || '#';
                 
               if (link.appearance === 'primary') {

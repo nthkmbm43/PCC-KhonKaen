@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { getPublishedProducts } from "@/lib/repositories/product";

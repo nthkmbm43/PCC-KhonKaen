@@ -25,6 +25,7 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
     .limit(1);
 
   if (result.length === 0) {
+
     notFound();
   }
 
@@ -33,11 +34,14 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
   // Merge SEO data into the initialData so the form receives them as top-level fields
   const initialData = {
     ...page,
+    status: (page.status || undefined) as "draft" | "published" | undefined,
+    workflowState: (page.workflowState || undefined) as string | undefined,
+    content: page.content as any,
     seoTitle: seo?.title ?? "",
     seoDescription: seo?.description ?? "",
     seoKeywords: seo?.keywords ?? "",
     ogImage: seo?.ogImage ?? "",
   };
 
-  return <PageForm initialData={initialData as Record<string, unknown>} pageId={page.id} />;
+  return <PageForm initialData={initialData as any} pageId={page.id} />;
 }

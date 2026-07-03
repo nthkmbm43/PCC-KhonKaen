@@ -5,39 +5,14 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { id } = params;
-    const page = await db.select().from(pages).where(eq(pages.id, id)).limit(1);
-
-    if (page.length === 0) {
-      return NextResponse.json({ error: "Page not found" }, { status: 404 });
-    }
-
-    const seo = await db.select().from(seoMetadata).where(
-      and(eq(seoMetadata.resourceType, 'page'), eq(seoMetadata.resourceId, id))
-    ).limit(1);
-
-    return NextResponse.json({ ...page[0], seo: seo[0] || null });
-  } catch (error) {
-    console.error("Error fetching page:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-  }
-}
-
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  try {
-    const { id } = params;
+    const { id } = await params;
     const data = await req.json();
     
     const result = await db.transaction(async (tx) => {
@@ -105,7 +80,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       
       const nextVersion = latestRevision.length > 0 ? latestRevision[0].version + 1 : 1;
 
-      const businessData = { ...updated[0] } as Record<string, unknown>;
+      const businessData = { ...updated[0] } as any;
       delete businessData.id;
       delete businessData.createdAt;
       delete businessData.updatedAt;
@@ -144,14 +119,14 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { id } = params;
+    const { id } = await params;
     
     const result = await db.transaction(async (tx) => {
       const beforeState = await tx.select().from(pages).where(eq(pages.id, id)).limit(1);
