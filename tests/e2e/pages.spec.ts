@@ -50,7 +50,7 @@ test.describe('Pages Management', { tag: ['@test.regression'] }, () => {
     await editedRow.getByRole('button', { name: /ลบ|delete|ลบเพจนี้/i }).click();
 
     // Type the title to confirm
-    await page.getByRole('alertdialog').getByRole('textbox').fill(editTitle);
+    await page.getByPlaceholder(/พิมพ์/i).fill(editTitle);
 
     // Click confirm in the AlertDialog
     await page.getByRole('button', { name: /ยืนยันการลบถาวร/i }).click();
