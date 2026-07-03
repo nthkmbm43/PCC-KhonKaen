@@ -20,7 +20,7 @@ export function DeployButton() {
       } else {
         toast.error(data.error || "เกิดข้อผิดพลาดในการ Deploy", { id: loadingToast });
       }
-    } catch (error) {
+    } catch {
       toast.error("เครือข่ายขัดข้อง", { id: loadingToast });
     } finally {
       setIsDeploying(false);

@@ -76,7 +76,7 @@ export function DeleteProductButton({ productId, productTitle }: DeleteProductBu
           <AlertDialogDescription className="space-y-3 text-left">
             <p>
               คุณกำลังจะลบสินค้า{" "}
-              <span className="font-bold text-slate-800">"{productTitle}"</span>{" "}
+              <span className="font-bold text-slate-800">&quot;{productTitle}&quot;</span>{" "}
               แบบถาวร การกระทำนี้{" "}
               <span className="text-red-600 font-semibold">ไม่สามารถกู้คืนได้</span>
             </p>

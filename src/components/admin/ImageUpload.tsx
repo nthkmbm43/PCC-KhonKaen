@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Loader2, UploadCloud, X, Image as ImageIcon } from "lucide-react";
+import { Loader2, UploadCloud, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface ImageUploadProps {
@@ -51,9 +51,9 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
       
       // Update with the blobUrl saved in media_files
       onChange(data.blobUrl);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Upload error:", err);
-      setError(err.message || "เกิดข้อผิดพลาดในการอัปโหลด");
+      setError(err instanceof Error ? err.message : "เกิดข้อผิดพลาดในการอัปโหลด");
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
