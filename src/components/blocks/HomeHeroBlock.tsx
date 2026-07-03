@@ -1,4 +1,5 @@
 import { Phone, MessageCircle, CheckCircle2, Factory, Truck, Sparkles } from "lucide-react";
+import Image from "next/image";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export default async function HomeHeroBlock() {
@@ -9,7 +10,7 @@ export default async function HomeHeroBlock() {
   return (
     <section className="relative overflow-hidden bg-gray-900 pt-14 pb-20 group sm:pt-20 sm:pb-28 lg:pt-32 lg:pb-40">
       <div className="absolute inset-0 z-0 transition-transform duration-[20s] group-hover:scale-110">
-        <img src="https://pcc-posttension.com/wp-content/uploads/2025/02/pcc-โรงงาน-copy.jpg" alt="PCC Post-Tension Factory" className="w-full h-full object-cover opacity-60" />
+        <Image src="https://pcc-posttension.com/wp-content/uploads/2025/02/pcc-โรงงาน-copy.jpg" alt="PCC Post-Tension Factory" fill className="object-cover opacity-60" />
       </div>
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/80 to-brand-900/90 z-0 mix-blend-multiply"></div>
       

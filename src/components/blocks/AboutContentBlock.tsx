@@ -1,5 +1,6 @@
 import React from 'react';
 import { Clock, Building2 } from 'lucide-react';
+import Image from 'next/image';
 
 interface AboutContentBlockProps {
   headline?: string;
@@ -50,7 +51,11 @@ export default function AboutContentBlock({ headline, description, image }: Abou
           </div>
           <div className="w-full lg:w-1/2 relative">
             <div className="absolute inset-0 bg-brand-500 rounded-[2.5rem] transform translate-x-4 translate-y-4 -z-10"></div>
-            <img src={bgImage} alt="About Us" className="w-full rounded-[2.5rem] shadow-xl object-cover aspect-[4/3]" />
+            {bgImage ? (
+              <div className="relative aspect-[4/3] w-full rounded-[2.5rem] overflow-hidden shadow-xl">
+                <Image src={bgImage} alt="About Us" fill className="object-cover" />
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

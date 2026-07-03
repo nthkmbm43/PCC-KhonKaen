@@ -1,5 +1,6 @@
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { getPublishedProducts } from "@/lib/repositories/product";
 
 export default async function ServicesGridBlock() {
@@ -27,11 +28,14 @@ export default async function ServicesGridBlock() {
                 <ArrowUpRight size={24} />
               </div>
               <div className="h-64 bg-slate-200 relative overflow-hidden">
-                <img 
-                  src={product.image || ''} 
-                  alt={product.title} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
-                />
+                {product.image ? (
+                  <Image 
+                    src={product.image} 
+                    alt={product.title} 
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
+                  />
+                ) : null}
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent transition-opacity duration-500 group-hover:opacity-90"></div>
                 <h3 className="absolute bottom-6 left-6 text-2xl font-bold text-white translate-y-0 group-hover:-translate-y-2 transition-transform duration-500">{product.shortTitle}</h3>
               </div>

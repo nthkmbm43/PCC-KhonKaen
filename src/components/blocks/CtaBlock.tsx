@@ -1,12 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
-export default function CtaBlock({ headline, description, backgroundImage }: any) {
+interface CtaBlockProps {
+  headline?: string;
+  description?: string;
+  backgroundImage?: string;
+}
+
+export default function CtaBlock({ headline, description, backgroundImage }: CtaBlockProps) {
   return (
     <div className="relative py-24 overflow-hidden">
       {backgroundImage && (
         <div className="absolute inset-0 z-0">
-          <img src={backgroundImage} alt="" className="w-full h-full object-cover" />
+          <Image src={backgroundImage} alt="" fill className="object-cover" />
           <div className="absolute inset-0 bg-slate-900/80"></div>
         </div>
       )}

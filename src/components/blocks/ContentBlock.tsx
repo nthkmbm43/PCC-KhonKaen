@@ -3,12 +3,12 @@ import { ArrowRight } from 'lucide-react'
 
 type ColumnType = {
   size: 'oneThird' | 'half' | 'twoThirds' | 'full' | string
-  richText?: any
+  richText?: string | Record<string, unknown>
   content?: string
   enableLink?: boolean
   link?: {
     type?: 'reference' | 'custom'
-    reference?: { value: any, relationTo: string }
+    reference?: { value: { slug?: string; [key: string]: unknown }, relationTo: string }
     url?: string
     label?: string
     newTab?: boolean
@@ -16,7 +16,7 @@ type ColumnType = {
   }
 }
 
-export default function ContentBlock({ richText, content, columns }: { richText?: any, content?: string, columns?: ColumnType[] }) {
+export default function ContentBlock({ richText, content, columns }: { richText?: string | Record<string, unknown>, content?: string, columns?: ColumnType[] }) {
   const displayContent = content || richText
   if (!displayContent && (!columns || columns.length === 0)) return null
 
@@ -27,7 +27,7 @@ export default function ContentBlock({ richText, content, columns }: { richText?
     full: 'col-span-12',
   }
 
-  const renderContent = (data: any) => {
+  const renderContent = (data: unknown) => {
     if (!data) return null;
     if (typeof data === 'string') {
       return <div dangerouslySetInnerHTML={{ __html: data }} />

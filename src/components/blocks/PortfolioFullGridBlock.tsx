@@ -1,6 +1,7 @@
 import React from 'react';
 import { getAllPortfolios } from "@/data/portfolio";
 import { MapPin } from "lucide-react";
+import Image from "next/image";
 
 interface PortfolioFullGridBlockProps {
   headline?: string;
@@ -29,11 +30,11 @@ export default async function PortfolioFullGridBlock({ headline, description }: 
         {portfolios.map((item, idx) => (
           <div key={idx} className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-2 flex flex-col">
             <div className="h-64 sm:h-72 bg-slate-200 relative overflow-hidden">
-              <img 
+              <Image 
                 src={item.image} 
-                alt={item.title} 
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
-                loading="lazy"
+                alt={item.title}
+                fill
+                className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent transition-opacity duration-500 opacity-80 group-hover:opacity-90"></div>
               

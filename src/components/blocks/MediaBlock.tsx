@@ -14,9 +14,11 @@ export const MediaBlock = ({ media }: MediaProps) => {
   return (
     <div className="w-full my-8 flex justify-center">
       <div className="relative w-full max-w-5xl rounded-2xl overflow-hidden shadow-lg border border-gray-100">
-        <img
+        <Image
           src={media.url}
           alt={media.alt || 'Media'}
+          width={media.width || 1200}
+          height={media.height || 800}
           className="w-full h-auto object-cover"
         />
       </div>

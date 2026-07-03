@@ -1,10 +1,11 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Sparkles, Phone, MessageCircle } from 'lucide-react'
 
 type HeroBlockProps = {
   heading: string
   subheading?: string
-  backgroundImage: any
+  backgroundImage?: { url?: string; alt?: string; [key: string]: unknown }
   buttons?: {
     label: string
     url: string
@@ -13,7 +14,7 @@ type HeroBlockProps = {
   links?: {
     link: {
       type: 'reference' | 'custom'
-      reference?: { value: any, relationTo: string }
+      reference?: { value: { slug?: string; [key: string]: unknown }, relationTo: string }
       url?: string
       label: string
       newTab?: boolean
@@ -30,7 +31,9 @@ export default function HeroBlock({ heading, subheading, backgroundImage, button
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a174f] via-brand-900 to-brand-800/80 opacity-95 z-0 transition-opacity duration-1000"></div>
 
       <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110">
-        <img src={imageUrl} alt={backgroundImage?.alt || heading} className="w-full h-full object-cover" />
+        {imageUrl ? (
+          <Image src={imageUrl} alt={backgroundImage?.alt || heading} fill className="object-cover" />
+        ) : null}
       </div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-up">
