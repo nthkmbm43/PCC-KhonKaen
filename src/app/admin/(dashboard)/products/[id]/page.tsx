@@ -38,9 +38,23 @@ export default async function ProductEditPage({ params }: { params: Promise<{ id
     }
   }
 
+  const formattedData = initialData ? {
+    ...initialData,
+    description: initialData.description ?? undefined,
+    image: initialData.image ?? undefined,
+    category: initialData.category ?? undefined,
+    shortTitle: initialData.shortTitle ?? undefined,
+    status: initialData.status ?? undefined,
+    updatedAt: initialData.updatedAt ?? undefined,
+    isFeatured: initialData.isFeatured ?? undefined,
+    workflowState: initialData.workflowState ?? undefined,
+    previewTokenHash: initialData.previewTokenHash ?? undefined,
+    previewExpiresAt: initialData.previewExpiresAt ?? undefined,
+  } : undefined;
+
   return (
     <div className="space-y-6">
-      <ProductForm initialData={initialData || undefined} productId={id} />
+      <ProductForm initialData={formattedData} productId={id} />
     </div>
   );
 }

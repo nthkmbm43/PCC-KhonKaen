@@ -10,13 +10,17 @@ export default async function SettingsPage() {
   
   const mappedSettings = {
     ...settings,
-    logoUrl: settings.logoUrl || undefined,
-    faviconUrl: settings.faviconUrl || undefined,
-    mainPhone: settings.mainPhone || undefined,
-    lineUrl: settings.lineUrl || undefined,
-    facebookUrl: settings.facebookUrl || undefined,
-    navbarLinks: (settings.navbarLinks as { label: string; url: string }[]) || [],
-    footerData: (settings.footerData as { footerLogoUrl?: string; description?: string; copyright?: string }) || {},
+    logoUrl: settings.logoUrl ?? undefined,
+    faviconUrl: settings.faviconUrl ?? undefined,
+    mainPhone: settings.mainPhone ?? undefined,
+    lineUrl: settings.lineUrl ?? undefined,
+    facebookUrl: settings.facebookUrl ?? undefined,
+    googleMapsUrl: settings.googleMapsUrl ?? undefined,
+    vercelDeployHookUrl: settings.vercelDeployHookUrl ?? undefined,
+    customHeadCode: settings.customHeadCode ?? undefined,
+    customBodyCode: settings.customBodyCode ?? undefined,
+    navbarLinks: (settings.navbarLinks as { label: string; url: string }[]) ?? [],
+    footerData: (settings.footerData as { footerLogoUrl?: string; description?: string; copyright?: string }) ?? {},
   };
 
   return <SettingsForm initialData={mappedSettings} />;
