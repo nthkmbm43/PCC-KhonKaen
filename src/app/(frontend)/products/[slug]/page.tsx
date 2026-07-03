@@ -1,6 +1,7 @@
 import { getProductWithSeo, getPublishedProducts } from "@/lib/repositories/product";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { CheckCircle2, MessageCircle, Phone, ArrowLeft, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
 import { getSiteSettings } from "@/lib/getSiteSettings";
@@ -102,10 +103,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       {/* Product Hero */}
       <div className="relative bg-slate-900 pt-20 pb-32 lg:pt-40 lg:pb-40 overflow-hidden group">
         <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay transition-transform duration-[10s] group-hover:scale-110">
-          <img 
+          <Image 
             src={product.image || '/images/hero.jpg'} 
             alt={product.title} 
-            className="w-full h-full object-cover blur-sm" 
+            fill
+            className="object-cover blur-sm" 
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent opacity-90 z-0"></div>
@@ -127,9 +129,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           {/* Main Content */}
           <div className="lg:col-span-2">
             <div className="rounded-[2.5rem] shadow-2xl overflow-hidden mb-16 border-4 border-white bg-white group cursor-default">
-              <img 
+              <Image 
                 src={product.image || '/images/hero.jpg'} 
-                alt={product.title} 
+                alt={product.title}
+                width={1200}
+                height={675}
                 className="w-full object-cover aspect-video group-hover:scale-105 transition-transform duration-700 ease-out" 
               />
             </div>
@@ -147,7 +151,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 } else if (section.type === 'image') {
                   return (
                     <div key={idx} className="mb-10 rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                      <img src={section.image} alt={section.title || product.title} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
+                      <Image src={section.image} alt={section.title || product.title} width={1200} height={800} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
                     </div>
                   );
                 } else if (section.type === 'html') {
@@ -164,7 +168,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                       
                       {section.image && (
                         <div className="mb-10 rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                          <img src={section.image} alt={section.title} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
+                          <Image src={section.image} alt={section.title} width={1200} height={800} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
                         </div>
                       )}
                       

@@ -37,11 +37,11 @@ export default async function PagesList({
   }
   
   if (statusFilter !== 'all') {
-    conditions.push(eq(pages.workflowState, statusFilter as any));
+    conditions.push(eq(pages.workflowState, statusFilter as "published" | "review" | "draft" | "archived"));
   }
   
   if (templateFilter !== 'all') {
-    conditions.push(eq(pages.template, templateFilter as any));
+    conditions.push(eq(pages.template, templateFilter as "default" | "landing" | "service" | "product" | "contact" | "about"));
   }
 
   // Fetch data
@@ -239,7 +239,7 @@ export default async function PagesList({
                             <FileEdit className="w-4 h-4" />
                           </Button>
                         </Link>
-                        <DeletePageButton pageId={page.id} pageTitle={page.title} />
+                        <DeletePageButton pageId={page.id} pageTitle={page.title} pageSlug={page.slug} />
                       </div>
                     </TableCell>
                   </TableRow>

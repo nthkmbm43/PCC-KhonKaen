@@ -51,7 +51,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     }, 'Media marked for deletion. Cleanup deferred to Background Worker (JOB-001).');
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting media file:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

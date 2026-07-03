@@ -1,7 +1,7 @@
 import { db } from '@/db';
 import { mediaFiles } from '@/db/schema';
 import { NextResponse } from 'next/server';
-import { desc, ilike, or, eq, and } from 'drizzle-orm';
+import { desc, ilike, or, eq, and, SQL } from 'drizzle-orm';
 import { auth } from '@/auth';
 
 export async function GET(req: Request) {
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
   const offset = (page - 1) * limit;
 
   try {
-    let condition: any = eq(mediaFiles.deleteStatus, 'ACTIVE');
+    let condition: SQL | undefined = eq(mediaFiles.deleteStatus, 'ACTIVE');
     if (q) {
       condition = and(
         eq(mediaFiles.deleteStatus, 'ACTIVE'),
@@ -38,7 +38,7 @@ export async function GET(req: Request) {
       .offset(offset);
 
     return NextResponse.json(files);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching media files:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

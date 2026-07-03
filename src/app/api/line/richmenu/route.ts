@@ -165,8 +165,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, richMenuId });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error saving LINE rich menu settings:", error);
-    return NextResponse.json({ error: `Internal Server Error: ${error?.message || String(error)}` }, { status: 500 });
+    const errObj = error as Error;
+    return NextResponse.json({ error: `Internal Server Error: ${errObj?.message || String(error)}` }, { status: 500 });
   }
 }
