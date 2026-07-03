@@ -151,7 +151,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 } else if (section.type === 'image') {
                   return (
                     <div key={idx} className="mb-10 rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                      <Image src={section.image} alt={section.title || product.title} width={1200} height={800} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
+                      <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
                     </div>
                   );
                 } else if (section.type === 'html') {
@@ -168,7 +168,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                       
                       {section.image && (
                         <div className="mb-10 rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                          <Image src={section.image} alt={section.title} width={1200} height={800} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
+                          <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
                         </div>
                       )}
                       
