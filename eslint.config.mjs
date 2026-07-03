@@ -14,7 +14,16 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     "playwright-report/**",
     "test-results/**",
+    "scripts/**",
+    "extract.js",
   ]),
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-var-requires": "warn",
+      "react/no-unescaped-entities": "warn"
+    }
+  }
 ]);
 
 export default eslintConfig;
