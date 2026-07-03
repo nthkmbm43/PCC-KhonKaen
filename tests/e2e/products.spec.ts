@@ -40,7 +40,7 @@ test.describe('Products Management', { tag: ['@test.regression'] }, () => {
     await editedRow.getByRole('button', { name: /ลบ|delete|ลบสินค้านี้/i }).click();
 
     // Type the title to confirm
-    await page.getByRole('textbox').fill(editTitle);
+    await page.getByRole('alertdialog').getByRole('textbox').fill(editTitle);
 
     // Click confirm in the AlertDialog
     await page.getByRole('button', { name: /ยืนยันลบถาวร/i }).click();
