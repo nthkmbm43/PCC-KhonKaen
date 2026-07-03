@@ -40,7 +40,7 @@ export default async function ProductEditPage({ params }: { params: Promise<{ id
 
   return (
     <div className="space-y-6">
-      <ProductForm initialData={(initialData as any) || undefined} productId={id} />
+      <ProductForm initialData={initialData || undefined} productId={id} />
     </div>
   );
 }

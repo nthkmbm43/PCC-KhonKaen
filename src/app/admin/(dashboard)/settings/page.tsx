@@ -15,9 +15,9 @@ export default async function SettingsPage() {
     mainPhone: settings.mainPhone || undefined,
     lineUrl: settings.lineUrl || undefined,
     facebookUrl: settings.facebookUrl || undefined,
-    navbarLinks: (settings.navbarLinks as any) || [],
-    footerData: (settings.footerData as any) || {},
+    navbarLinks: (settings.navbarLinks as { label: string; url: string }[]) || [],
+    footerData: (settings.footerData as { footerLogoUrl?: string; description?: string; copyright?: string }) || {},
   };
 
-  return <SettingsForm initialData={mappedSettings as any} />;
+  return <SettingsForm initialData={mappedSettings} />;
 }

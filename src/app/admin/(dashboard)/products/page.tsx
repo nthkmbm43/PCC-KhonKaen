@@ -12,7 +12,6 @@ export default async function ProductsPage() {
     ...p,
     createdAt: p.createdAt ?? new Date(),
     updatedAt: p.updatedAt ?? new Date(),
-    content: p.content as any, // prevent type mismatch with unknown content
   }));
 
   return (
@@ -24,7 +23,7 @@ export default async function ProductsPage() {
         </div>
       </div>
 
-      <ProductsClient initialProducts={mappedProducts as any} />
+      <ProductsClient initialProducts={mappedProducts} />
     </div>
   );
 }

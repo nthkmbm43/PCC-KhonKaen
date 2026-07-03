@@ -80,7 +80,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       
       const nextVersion = latestRevision.length > 0 ? latestRevision[0].version + 1 : 1;
 
-      const businessData = { ...updated[0] } as any;
+      const businessData: Record<string, unknown> = { ...updated[0] } as Record<string, unknown>;
       delete businessData.id;
       delete businessData.createdAt;
       delete businessData.updatedAt;
