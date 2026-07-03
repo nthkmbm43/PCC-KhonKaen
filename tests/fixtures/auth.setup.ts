@@ -1,5 +1,6 @@
 import { test as setup, expect } from '@playwright/test';
 import * as path from 'path';
+import * as fs from 'fs';
 import { resetDb } from '../seed/reset';
 import { seedDb } from '../seed/seed';
 import { TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD } from './constants';

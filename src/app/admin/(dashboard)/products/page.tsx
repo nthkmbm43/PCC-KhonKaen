@@ -8,6 +8,13 @@ export const dynamic = "force-dynamic";
 export default async function ProductsPage() {
   const allProducts = await db.select().from(products).orderBy(desc(products.createdAt));
 
+  const mappedProducts = allProducts.map(p => ({
+    ...p,
+    createdAt: p.createdAt ?? new Date(),
+    updatedAt: p.updatedAt ?? new Date(),
+    content: p.content as any, // prevent type mismatch with unknown content
+  }));
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
@@ -17,7 +24,7 @@ export default async function ProductsPage() {
         </div>
       </div>
 
-      <ProductsClient initialProducts={allProducts} />
+      <ProductsClient initialProducts={mappedProducts as any} />
     </div>
   );
 }
