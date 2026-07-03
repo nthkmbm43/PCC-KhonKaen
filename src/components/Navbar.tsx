@@ -14,9 +14,14 @@ type NavProduct = {
   image: string | null;
 };
 
+interface NavbarLink {
+  label: string;
+  url: string;
+}
+
 interface NavbarProps {
   products: NavProduct[];
-  navbarLinks?: any[];
+  navbarLinks?: NavbarLink[];
   contact: {
     logoUrl?: string;
     lineUrl: string;
@@ -63,7 +68,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
         {/* Desktop Menu */}
         <nav className="hidden lg:flex items-center gap-8 xl:gap-14 font-bold text-slate-700 h-full text-[15px] xl:text-base tracking-wide">
           {navbarLinks && navbarLinks.length > 0 ? (
-            navbarLinks.map((link: any, index: number) => {
+            navbarLinks.map((link: NavbarLink, index: number) => {
               if (link.url === "/products" || link.label === "สินค้าและบริการ") {
                 return (
                   <div key={index} className="relative group/nav h-full flex items-center">
@@ -172,7 +177,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
     <div className={`fixed top-16 sm:top-20 right-0 bottom-0 w-[300px] bg-white z-50 shadow-2xl border-l border-gray-100 transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
       <div className="flex flex-col p-6 gap-2">
         {navbarLinks && navbarLinks.length > 0 ? (
-            navbarLinks.map((link: any, index: number) => {
+            navbarLinks.map((link: NavbarLink, index: number) => {
               if (link.url === "/products" || link.label === "สินค้าและบริการ") {
                 return (
                   <div key={index} className="flex flex-col">

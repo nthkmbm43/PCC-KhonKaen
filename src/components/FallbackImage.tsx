@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Image, { ImageProps } from "next/image";
 
-interface FallbackImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface FallbackImageProps extends Omit<ImageProps, "src" | "alt"> {
   src: string;
   fallbackSrc: string;
   finalFallbackSrc?: string;
+  alt?: string;
 }
 
 export default function FallbackImage({ src, fallbackSrc, finalFallbackSrc = "/images/about-factory.jpg", alt, ...props }: FallbackImageProps) {
@@ -16,10 +18,12 @@ export default function FallbackImage({ src, fallbackSrc, finalFallbackSrc = "/i
   if (errorCount >= 2) currentSrc = finalFallbackSrc;
 
   return (
-    <img
+    <Image
       {...props}
       src={currentSrc}
       alt={alt || ""}
+      width={props.width || (props.fill ? undefined : 800)}
+      height={props.height || (props.fill ? undefined : 600)}
       onError={() => {
         setErrorCount(prev => prev + 1);
       }}

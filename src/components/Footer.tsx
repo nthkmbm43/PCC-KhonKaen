@@ -67,7 +67,20 @@ function FooterLinkList({
   );
 }
 
-export default function Footer({ contact, footerData }: { contact: any, footerData?: any }) {
+interface ContactInfo {
+  logoUrl?: string;
+  lineUrl: string;
+  mainPhone: string;
+  googleMapsUrl?: string;
+}
+
+interface FooterData {
+  footerLogoUrl?: string | null;
+  description?: string | null;
+  copyright?: string | null;
+}
+
+export default function Footer({ contact, footerData }: { contact: ContactInfo, footerData?: FooterData }) {
   const currentYear = new Date().getFullYear();
   return (
     <footer className="bg-slate-950 pt-16 text-slate-300">
