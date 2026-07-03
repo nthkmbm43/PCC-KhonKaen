@@ -40,7 +40,7 @@ async function main() {
   const existingSeo = await db.select({ resourceType: seoMetadata.resourceType, resourceId: seoMetadata.resourceId }).from(seoMetadata);
   const existingSet = new Set(existingSeo.map(s => `${s.resourceType}-${s.resourceId}`));
   
-  const valuesToInsert: any[] = [];
+  const valuesToInsert: Array<{ resourceType: 'page' | 'product'; resourceId: string; title: string | null; description: string | null; keywords: string | null; ogImage: string | null; }> = [];
 
   // 1. Migrate Pages SEO
   const allPages = await db.select().from(pages).where(

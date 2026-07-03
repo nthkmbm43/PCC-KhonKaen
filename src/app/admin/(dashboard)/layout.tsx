@@ -11,7 +11,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const role = session?.user?.role;
 
   const displayName =
-    (settings as any)?.companyName || "PCC Post-Tension";
+    (settings as { companyName?: string })?.companyName || "PCC Post-Tension";
 
   return (
     <div className="min-h-screen flex bg-slate-50">

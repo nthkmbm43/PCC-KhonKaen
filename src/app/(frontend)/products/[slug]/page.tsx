@@ -56,7 +56,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const displayPhone = settings.contact.mainPhone;
 
   // Type cast for features if it is stored as JSON
-  const features = Array.isArray((product as any).features) ? (product as any).features : [];
+  const features = Array.isArray((product as { features?: string[] }).features) ? (product as { features?: string[] }).features : [];
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -76,7 +76,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: product.shortTitle,
-      itemListElement: features.map((feature: any) => ({
+      itemListElement: (features || []).map((feature: string) => ({
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
@@ -135,7 +135,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
 
             <div className="space-y-20">
-              {sections.map((section: any, idx: number) => {
+              {sections.map((section: { type?: string; id?: string; title?: string; content?: string; image?: string; bullets?: string[] }, idx: number) => {
                 if (section.type === 'text') {
                   return (
                     <div key={idx} id={section.id} className="relative">
@@ -217,7 +217,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </h3>
               
               <ul className="space-y-5 mb-12 relative z-10">
-                {features.map((feature: any, idx: number) => (
+                {(features || []).map((feature: string, idx: number) => (
                   <li key={idx} className="flex items-start gap-3 group">
                     <CheckCircle2 size={24} className="text-[#06C755] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                     <span className="text-gray-700 font-medium text-lg group-hover:text-gray-900 transition-colors">{feature}</span>
