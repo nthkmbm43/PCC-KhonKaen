@@ -1,9 +1,9 @@
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { getAllProducts } from "@/data/products";
+import { getPublishedProducts } from "@/lib/repositories/product";
 
 export default async function ServicesGridBlock() {
-  const allProducts = await getAllProducts();
+  const allProducts = await getPublishedProducts();
 
   return (
     <section className="py-16 bg-white relative overflow-hidden sm:py-20 lg:py-24" id="services">
@@ -28,7 +28,7 @@ export default async function ServicesGridBlock() {
               </div>
               <div className="h-64 bg-slate-200 relative overflow-hidden">
                 <img 
-                  src={product.image} 
+                  src={product.image || ''} 
                   alt={product.title} 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
                 />

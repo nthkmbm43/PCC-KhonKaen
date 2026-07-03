@@ -4,8 +4,8 @@ import { headers } from "next/headers";
 import { Session } from "next-auth";
 import { logger } from "./logger";
 
-export type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'LOGIN' | 'LOGOUT' | 'DEPLOY' | 'UPLOAD';
-export type AuditResource = 'product' | 'page' | 'user' | 'setting' | 'upload' | 'richmenu' | 'deploy';
+export type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'LOGIN' | 'LOGOUT' | 'DEPLOY' | 'UPLOAD' | 'SEARCH' | 'ROLLBACK' | 'GENERATE';
+export type AuditResource = 'product' | 'page' | 'user' | 'setting' | 'upload' | 'richmenu' | 'deploy' | 'media' | 'seo' | 'revision';
 
 interface LogAuditParams {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { products } from "@/db/schema";
+import { products, seoMetadata } from "@/db/schema";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
 
@@ -32,6 +32,18 @@ export async function POST(req: Request) {
         ...data,
         isFeatured: data.isFeatured ? 'true' : 'false',
       }).returning();
+
+      // Dual-write SEO Metadata
+      if (data.seoTitle || data.seoDescription || data.seoKeywords || data.ogImage) {
+        await tx.insert(seoMetadata).values({
+          resourceType: 'product',
+          resourceId: inserted[0].id,
+          title: data.seoTitle,
+          description: data.seoDescription,
+          keywords: data.seoKeywords,
+          ogImage: data.ogImage,
+        });
+      }
 
       await logAudit({
         tx,

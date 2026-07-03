@@ -144,7 +144,7 @@ export function ProductsClient({ initialProducts }: { initialProducts: any[] }) 
                             <ExternalLink className="w-4 h-4" />
                           </Button>
                         </Link>
-                        <Link href={`/admin/products/${product.id}`}>
+                        <Link href={`/admin/products/${product.id}`} aria-label="แก้ไข">
                           <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-indigo-600">
                             <Edit className="w-4 h-4" />
                           </Button>
@@ -156,6 +156,8 @@ export function ProductsClient({ initialProducts }: { initialProducts: any[] }) 
                               size="icon" 
                               className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50"
                               disabled={isDeleting === product.id}
+                              aria-label="ลบ"
+                              title="ลบสินค้านี้"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>

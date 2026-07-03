@@ -62,7 +62,7 @@ export function ProductForm({ initialData, productId }: { initialData?: any, pro
       image: initialData?.image || "",
       category: initialData?.category || "general",
       isFeatured: initialData?.isFeatured === 'true',
-      status: initialData?.status || "published",
+      status: (initialData?.workflowState ?? initialData?.status ?? "published") as "draft" | "published",
       
       seoTitle: initialData?.seoTitle || "",
       seoDescription: initialData?.seoDescription || "",
@@ -173,27 +173,27 @@ export function ProductForm({ initialData, productId }: { initialData?: any, pro
               
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>ชื่อสินค้าเต็ม (Full Title)</Label>
-                  <Input {...form.register("title")} placeholder="เช่น แผ่นพื้นสำเร็จรูป มอก. แข็งแรง ได้มาตรฐาน" className="text-lg py-6" />
+                  <Label htmlFor="title">ชื่อสินค้าเต็ม (Full Title)</Label>
+                  <Input id="title" {...form.register("title")} placeholder="เช่น แผ่นพื้นสำเร็จรูป มอก. แข็งแรง ได้มาตรฐาน" className="text-lg py-6" />
                   {form.formState.errors.title && <p className="text-sm text-red-500">{form.formState.errors.title.message}</p>}
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>ชื่อย่อ (Short Title) - แสดงใน Navbar</Label>
-                    <Input {...form.register("shortTitle")} placeholder="เช่น แผ่นพื้นสำเร็จรูป" />
+                    <Label htmlFor="shortTitle">ชื่อย่อ (Short Title) - แสดงใน Navbar</Label>
+                    <Input id="shortTitle" {...form.register("shortTitle")} placeholder="เช่น แผ่นพื้นสำเร็จรูป" />
                     {form.formState.errors.shortTitle && <p className="text-sm text-red-500">{form.formState.errors.shortTitle.message}</p>}
                   </div>
                   <div className="space-y-2">
-                    <Label>URL Slug</Label>
-                    <Input {...form.register("slug")} placeholder="เช่น precast-slab" />
+                    <Label htmlFor="slug">URL Slug</Label>
+                    <Input id="slug" {...form.register("slug")} placeholder="เช่น precast-slab" />
                     {form.formState.errors.slug && <p className="text-sm text-red-500">{form.formState.errors.slug.message}</p>}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>รายละเอียดแบบย่อ (Description)</Label>
-                  <textarea 
+                  <Label htmlFor="description">รายละเอียดแบบย่อ (Description)</Label>
+                  <textarea id="description"
                     {...form.register("description")} 
                     className="flex min-h-[100px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     placeholder="คำอธิบายสรุปจุดเด่นของสินค้า"
@@ -290,8 +290,8 @@ export function ProductForm({ initialData, productId }: { initialData?: any, pro
               
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>หมวดหมู่ (Category)</Label>
-                  <select 
+                  <Label htmlFor="category">หมวดหมู่ (Category)</Label>
+                  <select id="category"
                     {...form.register("category")} 
                     className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
@@ -331,14 +331,14 @@ export function ProductForm({ initialData, productId }: { initialData?: any, pro
               
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>SEO Title</Label>
-                  <Input {...form.register("seoTitle")} placeholder="ไตเติลสำหรับ Google Search" />
+                  <Label htmlFor="seoTitle">SEO Title</Label>
+                  <Input id="seoTitle" {...form.register("seoTitle")} placeholder="ไตเติลสำหรับ Google Search" />
                   <p className="text-xs text-slate-400">ถ้าเว้นว่างไว้ จะใช้ชื่อสินค้าแทน</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>SEO Description</Label>
-                  <textarea 
+                  <Label htmlFor="seoDescription">SEO Description</Label>
+                  <textarea id="seoDescription"
                     {...form.register("seoDescription")} 
                     className="flex min-h-[80px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     placeholder="รายละเอียดสั้นๆ ที่จะโชว์บน Google"
@@ -346,8 +346,8 @@ export function ProductForm({ initialData, productId }: { initialData?: any, pro
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Keywords (คั่นด้วยลูกน้ำ)</Label>
-                  <Input {...form.register("seoKeywords")} placeholder="สินค้า, แผ่นพื้น, รับเหมา..." />
+                  <Label htmlFor="seoKeywords">Keywords (คั่นด้วยลูกน้ำ)</Label>
+                  <Input id="seoKeywords" {...form.register("seoKeywords")} placeholder="สินค้า, แผ่นพื้น, รับเหมา..." />
                 </div>
 
                 <div className="space-y-2 pt-2 border-t border-slate-100">

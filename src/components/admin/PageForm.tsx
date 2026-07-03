@@ -66,13 +66,14 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
 
   const form = useForm<PageFormValues>({
     resolver: zodResolver(pageSchema),
-    defaultValues: initialData || {
-      title: "",
-      slug: "",
-      seoTitle: "",
-      seoDescription: "",
-      status: "published",
-      content: [],
+    mode: "onChange",
+    defaultValues: {
+      title: initialData?.title ?? "",
+      slug: initialData?.slug ?? "",
+      seoTitle: initialData?.seoTitle ?? "",
+      seoDescription: initialData?.seoDescription ?? "",
+      status: (initialData?.workflowState ?? initialData?.status ?? "published") as "draft" | "published",
+      content: Array.isArray(initialData?.content) ? initialData.content : [],
     },
   });
 
@@ -173,15 +174,15 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Title</Label>
-                  <Input placeholder="Home" {...form.register("title")} />
+                  <Label htmlFor="title">Title</Label>
+                  <Input id="title" placeholder="Home" {...form.register("title")} />
                   {form.formState.errors.title && (
                     <p className="text-sm text-red-500">{form.formState.errors.title.message}</p>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label>Slug</Label>
-                  <Input placeholder="home" {...form.register("slug")} />
+                  <Label htmlFor="slug">Slug</Label>
+                  <Input id="slug" placeholder="home" {...form.register("slug")} />
                   {form.formState.errors.slug && (
                     <p className="text-sm text-red-500">{form.formState.errors.slug.message}</p>
                   )}
@@ -196,22 +197,26 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                   <CardDescription>Drag and drop blocks to build your page.</CardDescription>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Select disabled={!isEditMode} onValueChange={(val) => {
-                    if(val) {
-                      append({ blockType: val } as any);
-                    }
-                  }}>
-                    <SelectTrigger className="w-[200px]">
-                      <SelectValue placeholder="Add Block..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="hero">Hero / Header</SelectItem>
-                      <SelectItem value="text">Rich Text (Editor)</SelectItem>
-                      <SelectItem value="image">Single Image</SelectItem>
-                      <SelectItem value="cta">CTA Banner</SelectItem>
-                      <SelectItem value="customCode">Custom Code (HTML/CSS)</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {isEditMode && (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-sm text-slate-500 font-medium mr-2">เพิ่มบล็อก:</span>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'hero' } as any)}>
+                        <ImageIcon className="w-3.5 h-3.5 mr-1" /> Hero
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'text' } as any)}>
+                        <FileText className="w-3.5 h-3.5 mr-1" /> Rich Text
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'image' } as any)}>
+                        <ImageIcon className="w-3.5 h-3.5 mr-1" /> Image
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'cta' } as any)}>
+                        <Plus className="w-3.5 h-3.5 mr-1" /> CTA Banner
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'customCode' } as any)}>
+                        <span className="font-mono font-bold text-[10px] mr-1">{"</>"}</span> HTML/CSS
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardHeader>
               <CardContent className="space-y-4 pt-6 bg-slate-50/50">
@@ -269,12 +274,12 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                           {["hero", "cta"].includes(blockType) && (
                             <div className="space-y-6 pt-4">
                               <div className="space-y-2">
-                                <Label className="text-slate-600">Headline</Label>
-                                <Input className="bg-white" {...form.register(`content.${index}.headline` as const)} />
+                                <Label htmlFor={`content.${index}.headline`} className="text-slate-600">Headline</Label>
+                                <Input id={`content.${index}.headline`} className="bg-white" {...form.register(`content.${index}.headline` as const)} />
                               </div>
                               <div className="space-y-2">
-                                <Label className="text-slate-600">Description</Label>
-                                <Textarea className="bg-white h-24" {...form.register(`content.${index}.description` as const)} />
+                                <Label htmlFor={`content.${index}.description`} className="text-slate-600">Description</Label>
+                                <Textarea id={`content.${index}.description`} className="bg-white h-24" {...form.register(`content.${index}.description` as const)} />
                               </div>
                             </div>
                           )}
@@ -385,12 +390,12 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Meta Title</Label>
-                  <Input {...form.register("seoTitle")} />
+                  <Label htmlFor="seoTitle">Meta Title</Label>
+                  <Input id="seoTitle" {...form.register("seoTitle")} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Meta Description</Label>
-                  <Textarea className="h-24" {...form.register("seoDescription")} />
+                  <Label htmlFor="seoDescription">Meta Description</Label>
+                  <Textarea id="seoDescription" className="h-24" {...form.register("seoDescription")} />
                 </div>
               </CardContent>
             </Card>

@@ -1,22 +1,46 @@
 import { db } from "@/db";
-import { products } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { products, seoMetadata } from "@/db/schema";
+import { eq, and } from "drizzle-orm";
 import { ProductForm } from "@/components/admin/ProductForm";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProductEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  let productData = null;
+  let initialData = null;
 
   if (id !== "new") {
-    const data = await db.select().from(products).where(eq(products.id, id)).limit(1);
-    productData = data[0];
+    const result = await db
+      .select({
+        product: products,
+        seo: seoMetadata,
+      })
+      .from(products)
+      .leftJoin(
+        seoMetadata,
+        and(
+          eq(seoMetadata.resourceId, products.id),
+          eq(seoMetadata.resourceType, "product")
+        )
+      )
+      .where(eq(products.id, id))
+      .limit(1);
+
+    if (result.length > 0) {
+      const { product, seo } = result[0];
+      initialData = {
+        ...product,
+        seoTitle: seo?.title ?? "",
+        seoDescription: seo?.description ?? "",
+        seoKeywords: seo?.keywords ?? "",
+        ogImage: seo?.ogImage ?? "",
+      };
+    }
   }
 
   return (
     <div className="space-y-6">
-      <ProductForm initialData={productData} productId={id} />
+      <ProductForm initialData={initialData} productId={id} />
     </div>
   );
 }

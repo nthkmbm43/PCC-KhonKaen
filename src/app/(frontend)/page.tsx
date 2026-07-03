@@ -1,57 +1,45 @@
-import { db } from "@/db";
-import { pages } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { faqs as homeFAQ } from "@/data/faq";
 import { createSeoMetadata, faqJsonLd, JsonLd } from "@/lib/seo";
 import RenderBlocks from "@/components/blocks/RenderBlocks";
-import { getSiteSettings } from "@/lib/getSiteSettings";
-
 import { Metadata } from "next";
+import { getPageWithSeo } from "@/lib/repositories/page";
+import { notFound } from "next/navigation";
+import { draftMode } from "next/headers";
 
 export async function generateMetadata(): Promise<Metadata> {
-  let docs: any[] = [];
-  try {
-    docs = await db.select().from(pages).where(eq(pages.slug, "home")).limit(1);
-  } catch (error) {
-    console.error("Error fetching home page metadata from DB:", error);
-  }
-
-  const page = docs[0];
+  const page = await getPageWithSeo("home");
 
   return createSeoMetadata({
-    title: page?.seoTitle || "รับเหมาโพสเทนชั่น ขอนแก่น | กำแพงกันดิน รั้วสำเร็จรูป แผ่นพื้นสำเร็จรูป",
-    description: page?.seoDescription || "พีซีซี โพสเทนชั่น รับออกแบบ ผลิต และติดตั้งงานโพสเทนชั่น กำแพงกันดินตัว L รั้วสำเร็จรูป และแผ่นพื้นสำเร็จรูป ขอนแก่น ภาคอีสาน และเชียงใหม่",
+    title: page?.seo?.title || page?.title || "PCC Post-Tension",
+    description: page?.seo?.description || "",
     path: "/",
+    image: page?.seo?.ogImage || undefined,
   });
 }
 
 export default async function Home() {
-  // Fetch home page from DB
-  let docs: any[] = [];
-  try {
-    docs = await db.select().from(pages).where(eq(pages.slug, "home")).limit(1);
-  } catch (error) {
-    console.error("Error fetching home page from DB:", error);
+  const page = await getPageWithSeo("home");
+  const isDraftMode = (await draftMode()).isEnabled;
+
+  // Strict check: if not in draft mode, page must be published
+  if (!page || (!isDraftMode && page.workflowState !== "published")) {
+    // We shouldn't 404 the home page normally, but we follow the strict CMS integration rule
+    // Since we seeded it, it should exist.
+    notFound();
   }
 
-  const page = docs[0];
-  let layout = page?.content;
-
-  // Solid Failsafe Logic: If page doesn't exist or has no blocks, use the default structure
-  if (!Array.isArray(layout) || layout.length === 0) {
-    layout = [
-      { blockType: "homeHero" },
-      { blockType: "trustBanner" },
-      { blockType: "servicesGrid" },
-      { blockType: "portfolioGrid" },
-      { blockType: "faqSection" },
-      { blockType: "ctaBanner" },
-    ];
-  }
+  const layout = Array.isArray(page.content) ? page.content : [];
 
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
       <JsonLd data={faqJsonLd(homeFAQ)} />
+      
+      {isDraftMode && (
+        <div className="bg-amber-100 text-amber-800 text-center text-xs py-1 font-semibold sticky top-0 z-50">
+          Preview Mode: You are viewing unpublished changes.
+        </div>
+      )}
+
       <RenderBlocks layout={layout} />
     </div>
   );

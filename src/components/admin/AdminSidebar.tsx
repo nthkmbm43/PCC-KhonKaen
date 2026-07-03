@@ -13,16 +13,20 @@ interface NavItem {
   exact?: boolean;
 }
 
-const navItems: NavItem[] = [
-  { href: "/admin", label: "Dashboard", icon: <LayoutDashboard className="w-4.5 h-4.5" />, exact: true },
-  { href: "/admin/pages", label: "จัดการเพจ", icon: <FileText className="w-4.5 h-4.5" /> },
-  { href: "/admin/products", label: "จัดการสินค้า", icon: <ShoppingBag className="w-4.5 h-4.5" /> },
-  { href: "/admin/users", label: "จัดการผู้ใช้", icon: <Users className="w-4.5 h-4.5" /> },
-  { href: "/admin/settings", label: "ตั้งค่าเว็บไซต์", icon: <Settings className="w-4.5 h-4.5" /> },
+const websiteItems: NavItem[] = [
+  { href: "/admin/pages", label: "Pages", icon: <FileText className="w-4.5 h-4.5" /> },
+  { href: "/admin/products", label: "Products", icon: <ShoppingBag className="w-4.5 h-4.5" /> },
+  { href: "/admin/media", label: "Media Library", icon: <Sparkles className="w-4.5 h-4.5" /> },
 ];
 
 const marketingItems: NavItem[] = [
-  { href: "/admin/line-marketing", label: "จัดการ LINE OA", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> },
+  { href: "/admin/seo", label: "SEO", icon: <LayoutDashboard className="w-4.5 h-4.5" /> },
+  { href: "/admin/line-marketing", label: "LINE OA", icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4.5 h-4.5"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> },
+];
+
+const systemItems: NavItem[] = [
+  { href: "/admin/settings", label: "Settings", icon: <Settings className="w-4.5 h-4.5" /> },
+  { href: "/admin/users", label: "Users", icon: <Users className="w-4.5 h-4.5" /> },
 ];
 
 export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: string }) {
@@ -33,9 +37,40 @@ export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: strin
     return pathname?.startsWith(item.href);
   };
 
-  // Note: Menu hiding is UX Enhancement only. Real security is enforced at Middleware, Server Component, and API levels.
-  const filteredNavItems = navItems.filter(item => canAccessRoute(role, item.href));
+  const filteredWebsiteItems = websiteItems.filter(item => canAccessRoute(role, item.href));
   const filteredMarketingItems = marketingItems.filter(item => canAccessRoute(role, item.href));
+  const filteredSystemItems = systemItems.filter(item => canAccessRoute(role, item.href));
+
+  const renderNavSection = (title: string, items: NavItem[]) => {
+    if (items.length === 0) return null;
+    return (
+      <div className="mb-6">
+        <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 mb-3">{title}</p>
+        <div className="space-y-1">
+          {items.map((item) => {
+            const active = isActive(item);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  active
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
+                    : "text-slate-400 hover:text-white hover:bg-slate-800"
+                }`}
+              >
+                <span className={active ? "text-white" : "text-slate-500"}>{item.icon}</span>
+                {item.label}
+                {active && (
+                  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-200" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <aside className="w-full md:w-64 bg-slate-900 flex flex-col shrink-0 min-h-screen">
@@ -60,54 +95,22 @@ export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: strin
       </div>
 
       {/* Navigation */}
-      <nav className="px-3 py-5 space-y-1">
-        <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 mb-3">เมนูหลัก</p>
-        {filteredNavItems.map((item) => {
-          const active = isActive(item);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                active
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800"
-              }`}
-            >
-              <span className={active ? "text-white" : "text-slate-500"}>{item.icon}</span>
-              {item.label}
-              {active && (
-                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-200" />
-              )}
-            </Link>
-          );
-        })}
+      <nav className="px-3 py-5 flex-1 overflow-y-auto">
+        <Link
+          href="/admin"
+          className={`flex items-center gap-3 px-3 py-2.5 mb-6 rounded-xl text-sm font-medium transition-all duration-200 ${
+            pathname === "/admin"
+              ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
+              : "text-slate-400 hover:text-white hover:bg-slate-800"
+          }`}
+        >
+          <span className={pathname === "/admin" ? "text-white" : "text-slate-500"}><LayoutDashboard className="w-4.5 h-4.5" /></span>
+          Dashboard
+        </Link>
 
-        {filteredMarketingItems.length > 0 && (
-          <>
-            <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest px-3 mb-3 mt-6">เครื่องมือการตลาด</p>
-            {filteredMarketingItems.map((item) => {
-              const active = isActive(item);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    active
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
-                      : "text-slate-400 hover:text-white hover:bg-slate-800"
-                  }`}
-                >
-                  <span className={active ? "text-white" : "text-slate-500"}>{item.icon}</span>
-                  {item.label}
-                  {active && (
-                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-blue-200" />
-                  )}
-                </Link>
-              );
-            })}
-          </>
-        )}
+        {renderNavSection("เว็บไซต์", filteredWebsiteItems)}
+        {renderNavSection("Marketing", filteredMarketingItems)}
+        {renderNavSection("System", filteredSystemItems)}
       </nav>
 
       <div className="px-3 py-4 border-t border-slate-700/60 space-y-3">

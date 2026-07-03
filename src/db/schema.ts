@@ -1,7 +1,16 @@
-import { pgTable, text, timestamp, jsonb, uuid, pgEnum, index } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, jsonb, uuid, pgEnum, index, integer, uniqueIndex } from 'drizzle-orm/pg-core';
 
-export const auditActionEnum = pgEnum('audit_action', ['CREATE', 'UPDATE', 'DELETE', 'LOGIN', 'LOGOUT', 'DEPLOY', 'UPLOAD']);
-export const auditResourceEnum = pgEnum('audit_resource', ['product', 'page', 'user', 'setting', 'upload', 'richmenu', 'deploy']);
+export const pageTemplateEnum = pgEnum('page_template', [
+  'default',
+  'landing',
+  'service',
+  'product',
+  'contact',
+  'about',
+]);
+
+export const auditActionEnum = pgEnum('audit_action', ['CREATE', 'UPDATE', 'DELETE', 'LOGIN', 'LOGOUT', 'DEPLOY', 'UPLOAD', 'SEARCH', 'ROLLBACK', 'GENERATE']);
+export const auditResourceEnum = pgEnum('audit_resource', ['product', 'page', 'user', 'setting', 'upload', 'richmenu', 'deploy', 'media', 'seo', 'revision']);
 
 export const auditLogs = pgTable('audit_logs', {
   id: uuid('id').defaultRandom().primaryKey(),
@@ -25,18 +34,102 @@ export const auditLogs = pgTable('audit_logs', {
   };
 });
 
+export const mediaDeleteStatusEnum = pgEnum('delete_status', ['ACTIVE', 'PENDING_DELETE', 'DELETED', 'FAILED']);
+
+export const mediaFiles = pgTable('media_files', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  filename: text('filename').notNull(),
+  originalName: text('original_name').notNull(),
+  mimeType: text('mime_type').notNull(),
+  size: integer('size').notNull(),
+  width: integer('width'),
+  height: integer('height'),
+  blobUrl: text('blob_url').notNull(),
+  alt: text('alt'),
+  createdBy: text('created_by'),
+  deleteStatus: mediaDeleteStatusEnum('delete_status').default('ACTIVE'),
+  cleanupAttempts: integer('cleanup_attempts').default(0),
+  lastCleanupError: text('last_cleanup_error'),
+  lastCleanupAt: timestamp('last_cleanup_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+}, (table) => {
+  return {
+    filenameIdx: index('media_filename_idx').on(table.filename),
+    altIdx: index('media_alt_idx').on(table.alt),
+    deleteStatusIdx: index('media_delete_status_idx').on(table.deleteStatus),
+  };
+});
+
+export const seoResourceTypeEnum = pgEnum('seo_resource_type', ['page', 'product']);
+
+export const seoMetadata = pgTable('seo_metadata', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  resourceType: seoResourceTypeEnum('resource_type').notNull(), // 'page' | 'product'
+  resourceId: uuid('resource_id').notNull(),
+  title: text('title'),
+  description: text('description'),
+  keywords: text('keywords'),
+  canonical: text('canonical'),
+  ogImage: text('og_image'),
+  twitterImage: text('twitter_image'),
+  robots: text('robots').default('index, follow'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
+}, (table) => {
+  return {
+    resourceIdx: index('seo_resource_idx').on(table.resourceType, table.resourceId),
+    uniqueResource: uniqueIndex('seo_unique_resource_idx').on(table.resourceType, table.resourceId),
+  };
+});
+
+export const workflowStateEnum = pgEnum('workflow_state', ['draft', 'review', 'published', 'archived']);
+
+export const revisions = pgTable('revisions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  resourceType: text('resource_type').notNull(),
+  resourceId: uuid('resource_id').notNull(),
+  version: integer('version').notNull(),
+  data: jsonb('data').notNull(),
+  createdBy: text('created_by'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
+}, (table) => {
+  return {
+    uniqueResourceVersion: index('unique_resource_version_idx').on(table.resourceType, table.resourceId, table.version), // Unique constraint handled in migration via UNIQUE INDEX
+  };
+});
+
 export const pages = pgTable('pages', {
   id: uuid('id').defaultRandom().primaryKey(),
   slug: text('slug').notNull().unique(),
   title: text('title').notNull(),
   content: jsonb('content').default('[]'),
+  
+  // Legacy SEO columns (to be contracted later)
   seoTitle: text('seo_title'),
   seoDescription: text('seo_description'),
   seoKeywords: text('seo_keywords'),
   ogImage: text('og_image'),
-  status: text('status', { enum: ['draft', 'published'] }).default('published'),
+  
+  status: text('status', { enum: ['draft', 'published'] }).default('published'), // Legacy status
+  
+  // New workflow columns
+  template: pageTemplateEnum('template').default('default'),
+  workflowState: workflowStateEnum('workflow_state').default('published'),
+  previewTokenHash: text('preview_token_hash'),
+  previewExpiresAt: timestamp('preview_expires_at', { withTimezone: true }),
+  publishedAt: timestamp('published_at', { withTimezone: true }),
+  
+  // Auditing
+  createdBy: uuid('created_by'),
+  updatedBy: uuid('updated_by'),
+  
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    createdAtIdx: index('pages_created_at_idx').on(table.createdAt),
+  };
 });
 
 export const siteSettings = pgTable('site_settings', {
@@ -74,13 +167,27 @@ export const products = pgTable('products', {
   image: text('image'),
   category: text('category').default('general'),
   isFeatured: text('is_featured').default('false'),
+  
+  // Legacy SEO columns
   seoTitle: text('seo_title'),
   seoDescription: text('seo_description'),
   seoKeywords: text('seo_keywords'),
   ogImage: text('og_image'),
-  status: text('status', { enum: ['draft', 'published'] }).default('published'),
+  
+  status: text('status', { enum: ['draft', 'published'] }).default('published'), // Legacy status
+  
+  // New workflow columns
+  workflowState: workflowStateEnum('workflow_state').default('published'),
+  previewTokenHash: text('preview_token_hash'),
+  previewExpiresAt: timestamp('preview_expires_at', { withTimezone: true }),
+  
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => {
+  return {
+    statusCreatedAtIdx: index('products_status_created_at_idx').on(table.status, table.createdAt),
+    createdAtIdx: index('products_created_at_idx').on(table.createdAt),
+  };
 });
 
 export const lineRichMenus = pgTable('line_rich_menus', {

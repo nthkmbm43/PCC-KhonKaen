@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://pcc-posttension.com
+Sitemap: https://pcc-posttension.com/sitemap.xml

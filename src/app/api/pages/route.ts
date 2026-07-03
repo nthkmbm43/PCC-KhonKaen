@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { pages } from "@/db/schema";
+import { pages, seoMetadata } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
@@ -16,6 +16,18 @@ export async function POST(req: Request) {
     const result = await db.transaction(async (tx) => {
       const inserted = await tx.insert(pages).values(data).returning();
       
+      // Dual-write SEO Metadata
+      if (data.seoTitle || data.seoDescription || data.seoKeywords || data.ogImage) {
+        await tx.insert(seoMetadata).values({
+          resourceType: 'page',
+          resourceId: inserted[0].id,
+          title: data.seoTitle,
+          description: data.seoDescription,
+          keywords: data.seoKeywords,
+          ogImage: data.ogImage,
+        });
+      }
+
       await logAudit({
         tx,
         session,

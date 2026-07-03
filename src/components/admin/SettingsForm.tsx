@@ -29,11 +29,11 @@ const navLinkSchema = z.object({
 });
 
 const settingsSchema = z.object({
-  logoUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
-  faviconUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+  logoUrl: z.string().optional(),
+  faviconUrl: z.string().optional(),
   navbarLinks: z.array(navLinkSchema).optional(),
   footerData: z.object({
-    footerLogoUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+    footerLogoUrl: z.string().optional(),
     description: z.string().optional(),
     copyright: z.string().optional(),
   }).optional(),
@@ -360,8 +360,8 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
             </div>
             <div className="px-6 py-6 space-y-4">
               <div className="space-y-1.5">
-                <Label className="text-sm font-semibold text-slate-700">เบอร์โทรศัพท์หลัก</Label>
-                <Input placeholder="081-234-5678" {...form.register("mainPhone")} className="bg-white" readOnly={!isEditMode} />
+                <Label htmlFor="mainPhone" className="text-sm font-semibold text-slate-700">เบอร์โทรศัพท์หลัก</Label>
+                <Input id="mainPhone" placeholder="081-234-5678" {...form.register("mainPhone")} className="bg-white" readOnly={!isEditMode} />
               </div>
 
               <div className="space-y-1.5">

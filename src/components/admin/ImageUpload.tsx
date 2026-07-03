@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { upload } from "@vercel/blob/client";
+
 import { Button } from "@/components/ui/button";
 import { Loader2, UploadCloud, X, Image as ImageIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,6 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
       return;
     }
 
-    // Optional: limit file size to 5MB
     if (file.size > 5 * 1024 * 1024) {
       setError("ขนาดไฟล์ต้องไม่เกิน 5MB");
       return;
@@ -36,24 +35,27 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
     setError(null);
 
     try {
-      const uniqueFilename = `${Date.now()}-${file.name}`;
-      const newBlob = await upload(uniqueFilename, file, {
-        access: "public",
-        handleUploadUrl: "/api/upload",
+      const formData = new FormData();
+      formData.append("file", file);
+      
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       });
       
-      onChange(newBlob.url);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "เกิดข้อผิดพลาดในการอัปโหลด");
+      }
+      
+      // Update with the blobUrl saved in media_files
+      onChange(data.blobUrl);
     } catch (err: any) {
       console.error("Upload error:", err);
-      // Failsafe: if Vercel Blob fails (e.g. no token configured yet), show friendly error
-      if (err.message?.includes("token") || err.message?.includes("credentials")) {
-         setError("ไม่สามารถอัปโหลดได้ (กรุณาตั้งค่า Vercel Blob ใน Environment Variables)");
-      } else {
-         setError(err.message || "เกิดข้อผิดพลาดในการอัปโหลด");
-      }
+      setError(err.message || "เกิดข้อผิดพลาดในการอัปโหลด");
     } finally {
       setIsUploading(false);
-      // Reset input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }

@@ -1,6 +1,6 @@
 import { db } from "@/db";
-import { pages } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { pages, seoMetadata, revisions } from "@/db/schema";
+import { eq, and, desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
@@ -21,11 +21,70 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         return null;
       }
 
+      // Strip SEO-only fields that don't belong in the pages table
+      const { seoTitle: _st, seoDescription: _sd, seoKeywords: _sk, ogImage: _oi, status, ...pageData } = data;
+
+      // Map form's 'status' field to DB's 'workflowState'
+      if (status) {
+        pageData.workflowState = status;
+      }
+
+      // Invalidate preview token if publishing
+      if (pageData.workflowState === 'published') {
+        pageData.previewTokenHash = null;
+        pageData.previewExpiresAt = null;
+      }
+
       const updated = await tx
         .update(pages)
-        .set({ ...data, updatedAt: new Date() })
+        .set({ ...pageData, updatedAt: new Date() })
         .where(eq(pages.id, id))
         .returning();
+
+      // Dual-write SEO Metadata
+      if ('seoTitle' in data || 'seoDescription' in data || 'seoKeywords' in data || 'ogImage' in data) {
+        const existingSeo = await tx.select().from(seoMetadata).where(
+          and(eq(seoMetadata.resourceType, 'page'), eq(seoMetadata.resourceId, id))
+        ).limit(1);
+
+        if (existingSeo.length > 0) {
+          await tx.update(seoMetadata).set({
+            title: data.seoTitle !== undefined ? data.seoTitle : existingSeo[0].title,
+            description: data.seoDescription !== undefined ? data.seoDescription : existingSeo[0].description,
+            keywords: data.seoKeywords !== undefined ? data.seoKeywords : existingSeo[0].keywords,
+            ogImage: data.ogImage !== undefined ? data.ogImage : existingSeo[0].ogImage,
+            updatedAt: new Date(),
+          }).where(eq(seoMetadata.id, existingSeo[0].id));
+        } else {
+          await tx.insert(seoMetadata).values({
+            resourceType: 'page',
+            resourceId: id,
+            title: data.seoTitle,
+            description: data.seoDescription,
+            keywords: data.seoKeywords,
+            ogImage: data.ogImage,
+          });
+        }
+      }
+
+      // Create Revision Snapshot (Strip metadata)
+      const latestRevision = await tx.select({ version: revisions.version })
+        .from(revisions)
+        .where(and(eq(revisions.resourceType, 'page'), eq(revisions.resourceId, id)))
+        .orderBy(desc(revisions.version))
+        .limit(1);
+      
+      const nextVersion = latestRevision.length > 0 ? latestRevision[0].version + 1 : 1;
+
+      const { id: _id, createdAt: _ca, updatedAt: _ua, previewTokenHash: _pth, previewExpiresAt: _pea, ...businessData } = updated[0];
+
+      await tx.insert(revisions).values({
+        resourceType: 'page',
+        resourceId: id,
+        version: nextVersion,
+        data: businessData,
+        createdBy: session.user.id || 'system',
+      });
 
       await logAudit({
         tx,
@@ -67,6 +126,11 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       }
 
       await tx.delete(pages).where(eq(pages.id, id));
+      
+      // Delete associated SEO metadata
+      await tx.delete(seoMetadata).where(
+        and(eq(seoMetadata.resourceType, 'page'), eq(seoMetadata.resourceId, id))
+      );
 
       await logAudit({
         tx,

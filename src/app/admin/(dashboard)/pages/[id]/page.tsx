@@ -1,17 +1,43 @@
 import { db } from "@/db";
-import { pages } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { pages, seoMetadata } from "@/db/schema";
+import { eq, and } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { PageForm } from "@/components/admin/PageForm";
 
 export default async function EditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const pageArray = await db.select().from(pages).where(eq(pages.id, id)).limit(1);
-  const page = pageArray[0];
 
-  if (!page) {
+  // Fetch the page AND its SEO metadata in one query
+  const result = await db
+    .select({
+      page: pages,
+      seo: seoMetadata,
+    })
+    .from(pages)
+    .leftJoin(
+      seoMetadata,
+      and(
+        eq(seoMetadata.resourceId, pages.id),
+        eq(seoMetadata.resourceType, "page")
+      )
+    )
+    .where(eq(pages.id, id))
+    .limit(1);
+
+  if (result.length === 0) {
     notFound();
   }
 
-  return <PageForm initialData={page} pageId={page.id} />;
+  const { page, seo } = result[0];
+
+  // Merge SEO data into the initialData so the form receives them as top-level fields
+  const initialData = {
+    ...page,
+    seoTitle: seo?.title ?? "",
+    seoDescription: seo?.description ?? "",
+    seoKeywords: seo?.keywords ?? "",
+    ogImage: seo?.ogImage ?? "",
+  };
+
+  return <PageForm initialData={initialData} pageId={page.id} />;
 }

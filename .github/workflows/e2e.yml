@@ -1,0 +1,59 @@
+name: End-to-End Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  e2e-tests:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    
+    # Environment variables for the test database
+    # In a real environment, these would come from GitHub Secrets for a provisioned test database
+    env:
+      AUTH_SECRET: ${{ secrets.TEST_AUTH_SECRET || 'secret_for_ci_testing_only' }}
+      POSTGRES_URL: ${{ secrets.TEST_POSTGRES_URL }}
+      BLOB_READ_WRITE_TOKEN: 'vercel_blob_rw_dummy_token'
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Typecheck
+      run: npx tsc --noEmit
+      
+    - name: Lint
+      run: npm run lint
+      
+    - name: Build Next.js
+      run: npm run build
+      
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium firefox webkit
+      
+    - name: Run Playwright tests
+      # Playwright is configured in playwright.config.ts to have retries: 0
+      run: npm run test:e2e -- --reporter=html,json
+      
+    - name: Enforce Quality Gate (No Skipped or Flaky)
+      if: success()
+      run: node -e "const fs = require('fs'); const data = JSON.parse(fs.readFileSync('test-results.json')); const bad = data.suites?.flatMap(s => s.specs || []).filter(s => s.tests.some(t => t.status === 'skipped' || t.status === 'flaky')) || []; if (bad.length > 0) { console.error('Failing build due to skipped or flaky tests.'); process.exit(1); }"
+      
+    - name: Upload Test Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
