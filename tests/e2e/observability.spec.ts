@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { db } from '@/db';
 import { auditLogs } from '@/db/schema';
-import { eq, desc } from 'drizzle-orm';
-import { TEST_ADMIN_EMAIL } from '../fixtures/constants';
+import { desc } from 'drizzle-orm';
 
 test.describe('Observability & Audit Trace', { tag: ['@test.regression', '@test.health'] }, () => {
   // Use global admin storageState because we are going to do something that triggers an audit log (like a login or a CRUD)
@@ -17,7 +16,7 @@ test.describe('Observability & Audit Trace', { tag: ['@test.regression', '@test.
     
     // So let's create a dummy product to trigger a CREATE audit log
     const testSlug = `obs-trace-${Date.now()}`;
-    const response = await request.post('/api/admin/products', { // Assuming an API exists, but we usually use Server Actions
+    await request.post('/api/admin/products', { // Assuming an API exists, but we usually use Server Actions
         data: {
             title: 'Trace Test Product',
             shortTitle: 'Trace',

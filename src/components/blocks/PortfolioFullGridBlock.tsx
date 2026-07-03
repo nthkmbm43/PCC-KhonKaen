@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import { getAllPortfolios } from "@/data/portfolio";
 import { MapPin } from "lucide-react";

@@ -44,7 +44,7 @@ const blockComponents = {
   cta: CtaBlock,
 }
 
-export default function RenderBlocks({ layout }: { layout: any[] }) {
+export default function RenderBlocks({ layout }: { layout: Record<string, unknown>[] }) {
   if (!layout || !Array.isArray(layout)) return null
 
   return (

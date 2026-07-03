@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { logAudit } from "@/lib/audit";
 
-export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
     const { id } = await params;
     const productData = await db.select().from(products).where(eq(products.id, id)).limit(1);
@@ -22,7 +22,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   }
 }
 
-export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -101,7 +101,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       
       const nextVersion = latestRevision.length > 0 ? latestRevision[0].version + 1 : 1;
 
-      const businessData = { ...updated[0] } as any;
+      const businessData = { ...updated[0] } as Record<string, unknown>;
       delete businessData.id;
       delete businessData.createdAt;
       delete businessData.updatedAt;

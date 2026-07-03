@@ -45,7 +45,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       if (width && height && (width > 10000 || height > 10000)) {
          return NextResponse.json({ error: 'Image dimensions exceed maximum allowed size (10000x10000 pixels).' }, { status: 400 });
       }
-    } catch (e) {
+    } catch {
       // Not a valid image or failed magic number check by sharp
       return NextResponse.json({ error: 'Invalid image file or format.' }, { status: 400 });
     }
@@ -97,10 +97,10 @@ export async function POST(req: Request): Promise<NextResponse> {
     });
 
     return NextResponse.json(result[0]);
-  } catch (error: any) {
-    console.error('Error uploading file:', error);
+  } catch (e: unknown) {
+    console.error('Error uploading file:', e);
     return NextResponse.json(
-      { error: error.message || 'Internal Server Error' },
+      { error: e instanceof Error ? e.message : 'Internal Server Error' },
       { status: 500 }
     );
   }

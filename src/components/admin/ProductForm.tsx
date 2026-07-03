@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client";
 
 import { useState } from "react";
@@ -46,7 +47,7 @@ const productSchema = z.object({
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
-export function ProductForm({ initialData, productId }: { initialData?: any, productId: string }) {
+export function ProductForm({ initialData, productId }: { initialData?: Partial<ProductFormValues> & { workflowState?: string; status?: string }; productId: string }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const isNew = productId === "new";
@@ -84,13 +85,10 @@ export function ProductForm({ initialData, productId }: { initialData?: any, pro
       const url = isNew ? `/api/products` : `/api/products/${productId}`;
       const method = isNew ? "POST" : "PUT";
       
-      const payload = {
+      const payload: Record<string, unknown> = {
         ...data,
-        content: JSON.stringify(data.content), // Ensure it's stringified if DB requires it, but drizzle jsonb handles objects. Let's pass array directly.
+        content: data.content,
       };
-      
-      // Fix for drizzle JSONB
-      payload.content = data.content as any;
 
       const res = await fetch(url, {
         method,
@@ -237,6 +235,7 @@ export function ProductForm({ initialData, productId }: { initialData?: any, pro
                     
                     <div className="flex justify-between items-start mb-3">
                       <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded uppercase tracking-wider">
+                        { }
                         {form.watch(`content.${index}.type`)} BLOCK
                       </span>
                       <Button type="button" variant="ghost" size="icon" onClick={() => removeBlock(index)} className="w-6 h-6 text-slate-400 hover:text-red-600 hover:bg-red-50 -mt-1 -mr-1">

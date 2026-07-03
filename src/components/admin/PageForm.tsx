@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client";
 
 import { useState } from "react";
@@ -59,7 +60,7 @@ const pageSchema = z.object({
 
 type PageFormValues = z.infer<typeof pageSchema>;
 
-export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: string }) {
+export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFormValues> & { workflowState?: string; status?: string }; pageId?: string }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -200,19 +201,19 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
                   {isEditMode && (
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm text-slate-500 font-medium mr-2">เพิ่มบล็อก:</span>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'hero' } as any)}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'hero' })}>
                         <ImageIcon className="w-3.5 h-3.5 mr-1" /> Hero
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'text' } as any)}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'text' })}>
                         <FileText className="w-3.5 h-3.5 mr-1" /> Rich Text
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'image' } as any)}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'image' })}>
                         <ImageIcon className="w-3.5 h-3.5 mr-1" /> Image
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'cta' } as any)}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'cta' })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> CTA Banner
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'customCode' } as any)}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'customCode' })}>
                         <span className="font-mono font-bold text-[10px] mr-1">{"</>"}</span> HTML/CSS
                       </Button>
                     </div>
@@ -222,6 +223,7 @@ export function PageForm({ initialData, pageId }: { initialData?: any; pageId?: 
               <CardContent className="space-y-4 pt-6 bg-slate-50/50">
                 <Accordion className="w-full space-y-4" defaultValue={fields.map(f => f.id)}>
                   {fields.map((field, index) => {
+                     
                     const blockType = form.watch(`content.${index}.blockType`);
                     const blockTitle = blockType === "hero" ? form.watch(`content.${index}.headline`) || "Hero Block" : "Content Block";
                     

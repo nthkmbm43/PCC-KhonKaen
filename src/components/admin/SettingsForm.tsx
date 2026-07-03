@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client";
 
 import { useState } from "react";
@@ -7,7 +8,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Save, Plus, Trash2, Lock, Unlock } from "lucide-react";
+import { Save, Plus, Trash2, Unlock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "./ImageUpload";
 import toast from "react-hot-toast";
@@ -48,7 +49,7 @@ const settingsSchema = z.object({
 
 type SettingsFormValues = z.infer<typeof settingsSchema>;
 
-export function SettingsForm({ initialData }: { initialData?: any }) {
+export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFormValues> }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -156,8 +157,7 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                      <AlertDialogAction onClick={form.handleSubmit(onSubmit, (errors) => {
-                          console.log("Validation Errors:", errors);
+                      <AlertDialogAction onClick={form.handleSubmit(onSubmit, () => {
                           toast.error("กรุณาตรวจสอบข้อมูลช่องที่มีสีแดง (ข้อมูลไม่ถูกต้อง)");
                         })} className="bg-blue-600 hover:bg-blue-700">
                         ยืนยันการบันทึก
@@ -186,6 +186,7 @@ export function SettingsForm({ initialData }: { initialData?: any }) {
             <div className="px-6 py-6 space-y-6">
               <div className="space-y-2">
                 <Label className="text-sm font-semibold text-slate-700">โลโก้หลัก (แสดงบน Navbar)</Label>
+                { }
                 <ImageUpload
                   value={form.watch("logoUrl") || ""}
                   onChange={(val) => form.setValue("logoUrl", val, { shouldDirty: true })}

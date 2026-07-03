@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -117,6 +118,7 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
         </div>
         
         {isCustom ? (
+           
           <Input 
             placeholder="tel:0812345678 หรือ https://goo.gl/..."
             value={form.watch(fieldName) || ""}
@@ -147,7 +149,7 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
+      <form onSubmit={form.handleSubmit(onSubmit, () => {
         toast.error("กรุณาอัปโหลดรูปภาพก่อนการบันทึก");
       })} className="space-y-6 max-w-5xl mx-auto pb-20">
         
@@ -203,7 +205,7 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
               
               <div className="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  <strong>ข้อกำหนด:</strong> หากสร้างลิงก์หรือข้อความที่เกี่ยวกับสินค้าสำเร็จรูป ให้รักษามาตรฐานคำว่า <strong className="text-slate-700">"พรีแคสท์" (Precast)</strong> เสมอ เพื่อความสม่ำเสมอของข้อมูลแบรนด์
+                  <strong>ข้อกำหนด:</strong> หากสร้างลิงก์หรือข้อความที่เกี่ยวกับสินค้าสำเร็จรูป ให้รักษามาตรฐานคำว่า <strong className="text-slate-700">&quot;พรีแคสท์&quot; (Precast)</strong> เสมอ เพื่อความสม่ำเสมอของข้อมูลแบรนด์
                 </p>
               </div>
             </div>

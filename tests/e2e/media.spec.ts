@@ -1,7 +1,4 @@
-import { test, expect } from '@playwright/test';
-import { db } from '@/db';
-import { mediaFiles } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { test } from '@playwright/test';
 
 test.describe('Media Library Management', { tag: ['@test.regression'] }, () => {
   test('Should upload, search, and delete media files', async ({ page }) => {

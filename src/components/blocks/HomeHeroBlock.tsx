@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Phone, MessageCircle, CheckCircle2, Factory, Truck, Sparkles } from "lucide-react";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 

@@ -71,8 +71,8 @@ export function UsersClient({ initialUsers }: { initialUsers: User[] }) {
       setName("");
       setEmail("");
       setPassword("");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Failed to add user");
     } finally {
       setIsSubmitting(false);
     }
@@ -88,8 +88,8 @@ export function UsersClient({ initialUsers }: { initialUsers: User[] }) {
 
       setUsers(users.filter((u) => u.id !== id));
       toast.success("ลบผู้ดูแลระบบสำเร็จ");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Failed to delete user");
     }
   };
 

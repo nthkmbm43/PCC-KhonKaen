@@ -5,12 +5,25 @@ import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Plus, ExternalLink, Edit, Trash2, Tag, Star } from "lucide-react";
+import { Search, Plus, ExternalLink, Edit, Tag, Star } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { DeleteProductButton } from "./DeleteProductButton";
 
+interface Product {
+  id: string;
+  title: string;
+  image?: string | null;
+  shortTitle?: string | null;
+  category?: string | null;
+  slug: string;
+  status?: string | null;
+  updatedAt?: Date | string | null;
+  createdAt: Date | string;
+  isFeatured?: string | null;
+}
 
-export function ProductsClient({ initialProducts }: { initialProducts: any[] }) {
+export function ProductsClient({ initialProducts }: { initialProducts: Product[] }) {
   const [search, setSearch] = useState("");
 
   const filteredProducts = initialProducts.filter(p => 
@@ -68,7 +81,7 @@ export function ProductsClient({ initialProducts }: { initialProducts: any[] }) 
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden shrink-0">
                           {product.image ? (
-                            <img src={product.image} alt={product.title} className="object-cover w-full h-full" />
+                            <Image src={product.image} alt={product.title} width={40} height={40} className="object-cover w-full h-full" />
                           ) : (
                             <Tag className="w-4 h-4 text-slate-400" />
                           )}

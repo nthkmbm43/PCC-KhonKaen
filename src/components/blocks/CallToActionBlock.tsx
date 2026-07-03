@@ -13,7 +13,7 @@ type CallToActionBlockProps = {
   links?: {
     link: {
       type: 'reference' | 'custom'
-      reference?: { value: any, relationTo: string }
+      reference?: { value: unknown, relationTo: string }
       url?: string
       label: string
       newTab?: boolean
