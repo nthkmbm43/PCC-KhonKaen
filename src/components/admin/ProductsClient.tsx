@@ -7,51 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Plus, ExternalLink, Edit, Trash2, Tag, Star } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { DeleteProductButton } from "./DeleteProductButton";
 
 
 export function ProductsClient({ initialProducts }: { initialProducts: any[] }) {
-  const router = useRouter();
   const [search, setSearch] = useState("");
-  const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
   const filteredProducts = initialProducts.filter(p => 
     p.title.toLowerCase().includes(search.toLowerCase()) || 
     p.slug.toLowerCase().includes(search.toLowerCase())
   );
-
-  async function deleteProduct(id: string) {
-    setIsDeleting(id);
-    try {
-      const res = await fetch(`/api/products/${id}`, {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        toast.success("ลบสินค้าเรียบร้อยแล้ว");
-        router.refresh();
-      } else {
-        toast.error("ลบสินค้าไม่สำเร็จ");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("เกิดข้อผิดพลาด");
-    } finally {
-      setIsDeleting(null);
-    }
-  }
 
   return (
     <div className="space-y-6">
@@ -149,37 +114,7 @@ export function ProductsClient({ initialProducts }: { initialProducts: any[] }) 
                             <Edit className="w-4 h-4" />
                           </Button>
                         </Link>
-                        <AlertDialog>
-                          <AlertDialogTrigger render={
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              className="h-8 w-8 text-slate-400 hover:text-red-600 hover:bg-red-50"
-                              disabled={isDeleting === product.id}
-                              aria-label="ลบ"
-                              title="ลบสินค้านี้"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          } />
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>ยืนยันการลบสินค้า?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                คุณกำลังจะลบสินค้า "{product.title}" การกระทำนี้ไม่สามารถย้อนกลับได้
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                              <AlertDialogAction 
-                                onClick={() => deleteProduct(product.id)}
-                                className="bg-red-600 hover:bg-red-700"
-                              >
-                                ยืนยันการลบ
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        <DeleteProductButton productId={product.id} productTitle={product.title} />
                       </div>
                     </td>
                   </tr>
