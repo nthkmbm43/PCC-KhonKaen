@@ -39,7 +39,11 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       }
 
       // Strip SEO-only fields that don't belong in the products table
-      const { seoTitle: _st, seoDescription: _sd, seoKeywords: _sk, ogImage: _oi, status, ...productData } = data;
+      const { status, ...productData } = data;
+      delete productData.seoTitle;
+      delete productData.seoDescription;
+      delete productData.seoKeywords;
+      delete productData.ogImage;
 
       // Map form's 'status' field to DB's 'workflowState'
       if (status) {
@@ -97,7 +101,12 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       
       const nextVersion = latestRevision.length > 0 ? latestRevision[0].version + 1 : 1;
 
-      const { id: _id, createdAt: _ca, updatedAt: _ua, previewTokenHash: _pth, previewExpiresAt: _pea, ...businessData } = updated[0];
+      const businessData = { ...updated[0] } as any;
+      delete businessData.id;
+      delete businessData.createdAt;
+      delete businessData.updatedAt;
+      delete businessData.previewTokenHash;
+      delete businessData.previewExpiresAt;
 
       await tx.insert(revisions).values({
         resourceType: 'product',
