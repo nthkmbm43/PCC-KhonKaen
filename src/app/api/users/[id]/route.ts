@@ -4,14 +4,14 @@ import { admins } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { id } = await params;
+    const { id } = params;
     if (!id) {
       return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
     }

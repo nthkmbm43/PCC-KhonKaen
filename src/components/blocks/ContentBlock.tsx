@@ -8,7 +8,7 @@ type ColumnType = {
   enableLink?: boolean
   link?: {
     type?: 'reference' | 'custom'
-    reference?: { value: unknown, relationTo: string }
+    reference?: { value: { slug?: string } | Record<string, unknown> | unknown, relationTo: string }
     url?: string
     label?: string
     newTab?: boolean
@@ -43,7 +43,7 @@ export default function ContentBlock({ richText, content, columns }: { richText?
         {/* Legacy Support */}
         {!columns || columns.length === 0 ? (
           <div className="prose prose-lg prose-blue mx-auto prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-a:text-brand-600 hover:prose-a:text-brand-700 max-w-4xl">
-            {renderContent(displayContent)}
+            {renderContent(displayContent as string | Record<string, unknown> | null)}
           </div>
         ) : (
           /* New Column Layout */
@@ -54,8 +54,9 @@ export default function ContentBlock({ richText, content, columns }: { richText?
               const colClass = sizeClasses[size] || sizeClasses.full
               
               let href = '#'
-              if (col.link?.type === 'reference' && col.link.reference?.value?.slug) {
-                href = `/${col.link.reference.value.slug}`
+              const refValue = col.link?.reference?.value as { slug?: string } | undefined
+              if (col.link?.type === 'reference' && refValue?.slug) {
+                href = `/${refValue.slug}`
               } else if (col.link?.url) {
                 href = col.link.url
               }
@@ -64,7 +65,7 @@ export default function ContentBlock({ richText, content, columns }: { richText?
                 <div key={index} className={colClass}>
                   <div className="prose prose-lg prose-blue prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-a:text-brand-600 hover:prose-a:text-brand-700 max-w-none h-full flex flex-col">
                     <div className="flex-grow">
-                      {colContent && renderContent(colContent)}
+                      {colContent && renderContent(colContent as string | Record<string, unknown> | null)}
                     </div>
                     {col.enableLink && col.link && col.link.label && (
                       <div className="mt-8">

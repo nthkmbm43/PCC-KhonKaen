@@ -47,7 +47,7 @@ const productSchema = z.object({
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
-export function ProductForm({ initialData, productId }: { initialData?: Partial<ProductFormValues> & { workflowState?: string; status?: string }; productId: string }) {
+export function ProductForm({ initialData, productId }: { initialData?: Omit<Partial<ProductFormValues>, 'isFeatured' | 'content'> & { isFeatured?: string | boolean; workflowState?: string; status?: string; content?: unknown }; productId: string }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const isNew = productId === "new";
@@ -62,7 +62,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Partial<
       description: initialData?.description || "",
       image: initialData?.image || "",
       category: initialData?.category || "general",
-      isFeatured: initialData?.isFeatured === 'true',
+      isFeatured: initialData?.isFeatured === true || initialData?.isFeatured === 'true',
       status: (initialData?.workflowState ?? initialData?.status ?? "published") as "draft" | "published",
       
       seoTitle: initialData?.seoTitle || "",

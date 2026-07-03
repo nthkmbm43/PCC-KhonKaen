@@ -54,9 +54,9 @@ export default async function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col">
         <JsonLd data={organizationJsonLd(settings.contact)} />
-        <Navbar products={products} contact={settings.contact} navbarLinks={settings.navbarLinks} />
+        <Navbar products={products} contact={settings.contact} navbarLinks={settings.navbarLinks as { label: string; url: string }[]} />
         <main className="flex-grow flex flex-col">{children}</main>
-        <Footer contact={settings.contact} footerData={settings.footerData} />
+        <Footer contact={settings.contact} footerData={settings.footerData as { footerLogoUrl?: string; description?: string; copyright?: string }} />
         <StickyFloatingLineBtn lineUrl={settings.contact.lineUrl} />
         {settings.rawSettings?.customBodyCode ? (
           <div dangerouslySetInnerHTML={{ __html: settings.rawSettings.customBodyCode }} />

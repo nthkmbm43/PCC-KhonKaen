@@ -12,7 +12,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 
   try {
-    const { id } = await params;
+    const { id } = params;
     const page = await db.select().from(pages).where(eq(pages.id, id)).limit(1);
 
     if (page.length === 0) {
@@ -37,7 +37,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 
   try {
-    const { id } = await params;
+    const { id } = params;
     const data = await req.json();
     
     const result = await db.transaction(async (tx) => {
@@ -144,14 +144,14 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { id } = await params;
+    const { id } = params;
     
     const result = await db.transaction(async (tx) => {
       const beforeState = await tx.select().from(pages).where(eq(pages.id, id)).limit(1);

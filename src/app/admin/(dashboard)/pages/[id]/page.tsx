@@ -39,5 +39,5 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
     ogImage: seo?.ogImage ?? "",
   };
 
-  return <PageForm initialData={initialData} pageId={page.id} />;
+  return <PageForm initialData={initialData as Record<string, unknown>} pageId={page.id} />;
 }
