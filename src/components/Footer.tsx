@@ -45,7 +45,7 @@ function FooterLinkList({
     <ul className="divide-y divide-white/10">
       {links.map((link) => (
         <li key={link.label}>
-          <Link
+          <Link prefetch={false}
             href={link.href}
             className="group flex items-center justify-between gap-4 py-3 text-slate-300 transition-colors hover:text-brand-400"
             target={link.external ? "_blank" : undefined}
@@ -161,7 +161,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
               <FooterHeading eyebrow="Resources">ข้อมูลเพิ่มเติม</FooterHeading>
               <div className="grid flex-1 gap-3 sm:grid-cols-3">
                 {footerSecondaryLinks.map((link) => (
-                  <Link
+                  <Link prefetch={false}
                     key={link.label}
                     href={link.href}
                     className="flex min-h-20 items-center justify-center border border-white/10 px-4 py-4 text-center font-semibold text-slate-200 transition-colors hover:border-brand-400/60 hover:text-brand-300"
@@ -204,13 +204,13 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
         <div className="flex flex-col gap-4 py-8 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
           <p>{footerData?.copyright || `© ${currentYear} ${siteConfig.legalName}. All rights reserved.`}</p>
           <div className="flex flex-wrap gap-x-6 gap-y-2 font-semibold text-slate-400">
-            <Link href="/contact" className="hover:text-brand-300">
+            <Link prefetch={false} href="/contact" className="hover:text-brand-300">
               TERMS
             </Link>
-            <Link href="/contact" className="hover:text-brand-300">
+            <Link prefetch={false} href="/contact" className="hover:text-brand-300">
               PRIVACY
             </Link>
-            <Link href="/contact" className="hover:text-brand-300">
+            <Link prefetch={false} href="/contact" className="hover:text-brand-300">
               COOKIES
             </Link>
           </div>

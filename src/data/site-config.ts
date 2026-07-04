@@ -129,7 +129,7 @@ export const footerProductLinks = [
 export const footerQuickLinks = [
   { label: "หน้าแรก", href: "/" },
   { label: "เกี่ยวกับเรา", href: "/about" },
-  { label: "ผลงานของเรา", href: "/portfolio" },
+  { label: "สินค้าและบริการ", href: "/products" },
   { label: "ติดต่อเรา", href: "/contact" },
 ];
 
