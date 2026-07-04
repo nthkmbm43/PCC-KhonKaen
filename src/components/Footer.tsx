@@ -140,7 +140,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
               <FooterHeading eyebrow="Location">แผนที่</FooterHeading>
               <div className="relative h-56 overflow-hidden border border-white/15 bg-slate-900 sm:h-64">
                 <iframe
-                  src={siteConfig.googleMapsEmbed}
+                  src={contact.googleMapsUrl || siteConfig.googleMapsEmbed}
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
