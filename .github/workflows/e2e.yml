@@ -14,9 +14,9 @@ jobs:
     # Environment variables for the test database
     # In a real environment, these would come from GitHub Secrets for a provisioned test database
     env:
-      AUTH_SECRET: ${{ secrets.TEST_AUTH_SECRET || 'secret_for_ci_testing_only' }}
-      POSTGRES_URL: ${{ secrets.TEST_POSTGRES_URL }}
-      BLOB_READ_WRITE_TOKEN: 'vercel_blob_rw_dummy_token'
+      AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'secret_for_ci_testing_only' }}
+      POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+      BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_dummy_token' }}
 
     steps:
     - uses: actions/checkout@v4
