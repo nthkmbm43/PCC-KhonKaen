@@ -1,6 +1,27 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('SEO Metadata Sync', { tag: ['@test.regression'] }, () => {
+  test.beforeEach(async ({ page }) => {
+    // Mock the pages to prevent 404s when navigating or prefetching
+    await page.route('**/*', async (route, request) => {
+      const url = request.url();
+      if (
+        url.includes('/about') || 
+        url.includes('/contact') || 
+        url.includes('/products/retaining-wall') ||
+        url.includes('/products/precast-fence') ||
+        url.includes('/products/precast-slab') ||
+        url.includes('/products/barbed-wire-post') ||
+        url.includes('/products/post-tension') ||
+        url.includes('/portfolio')
+      ) {
+        await route.fulfill({ status: 200, contentType: 'text/html', body: '<html><body>Mocked Page</body></html>' });
+      } else {
+        await route.continue();
+      }
+    });
+  });
+
   test('Should dual-write SEO data to seo_metadata table on page creation', async ({ page }) => {
     // We can evaluate fetch on /api/pages to create a page with SEO
     // and then fetch /api/pages/slug to verify, but for now we just 
