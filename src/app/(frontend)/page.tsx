@@ -21,11 +21,14 @@ export default async function Home() {
   const page = await getPageWithSeo("home");
   const isDraftMode = (await draftMode()).isEnabled;
 
-  // Strict check: if not in draft mode, page must be published
+  // If no page in DB, provide a fallback UI instead of a 404 crash
   if (!page || (!isDraftMode && page.workflowState !== "published")) {
-    // We shouldn't 404 the home page normally, but we follow the strict CMS integration rule
-    // Since we seeded it, it should exist.
-    notFound();
+    return (
+      <div className="flex min-w-0 flex-1 flex-col overflow-x-clip min-h-[60vh] justify-center items-center">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">PCC Post-Tension</h1>
+        <p className="text-lg text-gray-600 mb-8">กำลังปรับปรุงข้อมูลหน้าเว็บ กรุณากลับมาใหม่ในภายหลัง</p>
+      </div>
+    );
   }
 
   const layout = Array.isArray(page.content) ? page.content : [];
