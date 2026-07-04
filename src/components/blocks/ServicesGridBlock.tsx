@@ -22,12 +22,7 @@ export default async function ServicesGridBlock() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 xl:grid-cols-3 xl:gap-8">
-          {allProducts.length === 0 ? (
-            <div className="col-span-full py-12 text-center text-gray-500 bg-gray-50 rounded-2xl border border-gray-100">
-              <p className="text-lg">ยังไม่มีสินค้าในขณะนี้</p>
-            </div>
-          ) : (
-            allProducts.map((product) => (
+          {allProducts.map((product) => (
             <div key={product.slug} className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 flex flex-col relative">
               <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md w-12 h-12 rounded-full flex items-center justify-center text-brand-600 opacity-100 translate-y-0 lg:opacity-0 lg:group-hover:opacity-100 lg:translate-y-4 lg:group-hover:translate-y-0 transition-all duration-500 shadow-lg cursor-pointer">
                 <ArrowUpRight size={24} />
@@ -54,7 +49,7 @@ export default async function ServicesGridBlock() {
                 </Link>
               </div>
             </div>
-          )))}
+          ))}
         </div>
       </div>
     </section>

@@ -21,9 +21,14 @@ export default async function Home() {
   const page = await getPageWithSeo("home");
   const isDraftMode = (await draftMode()).isEnabled;
 
-  // Graceful fallback: Instead of notFound(), just render an empty layout
-  // This allows the Navbar and Footer to still show, and prevents 404 errors on the index page
-  const layout = page && Array.isArray(page.content) ? page.content : [];
+  // Strict check: if not in draft mode, page must be published
+  if (!page || (!isDraftMode && page.workflowState !== "published")) {
+    // We shouldn't 404 the home page normally, but we follow the strict CMS integration rule
+    // Since we seeded it, it should exist.
+    notFound();
+  }
+
+  const layout = Array.isArray(page.content) ? page.content : [];
 
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
