@@ -34,14 +34,21 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
   // Merge SEO data into the initialData so the form receives them as top-level fields
   const initialData = {
     ...page,
+    title: page.title ?? undefined,
+    slug: page.slug ?? undefined,
+    content: page.content as unknown,
     status: (page.status || undefined) as "draft" | "published" | undefined,
     workflowState: (page.workflowState || undefined) as string | undefined,
-    content: page.content as any,
     seoTitle: seo?.title ?? "",
     seoDescription: seo?.description ?? "",
     seoKeywords: seo?.keywords ?? "",
     ogImage: seo?.ogImage ?? "",
   };
 
-  return <PageForm initialData={initialData as any} pageId={page.id} />;
+  // Clean up remaining nulls to undefined for the entire object
+  const safeInitialData = Object.fromEntries(
+    Object.entries(initialData).map(([key, value]) => [key, value === null ? undefined : value])
+  );
+
+  return <PageForm initialData={safeInitialData as unknown as React.ComponentProps<typeof PageForm>['initialData']} pageId={page.id} />;
 }

@@ -97,10 +97,10 @@ export async function POST(req: Request): Promise<NextResponse> {
     });
 
     return NextResponse.json(result[0]);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error uploading file:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal Server Error' },
+      { error: error instanceof Error ? error.message : 'Internal Server Error' },
       { status: 500 }
     );
   }

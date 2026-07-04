@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -104,9 +105,8 @@ export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: strin
         <Link href="/admin" className="flex items-center gap-3 group">
           <div className="flex-shrink-0">
             {logoUrl ? (
-              <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-slate-700 group-hover:ring-blue-500 transition-all bg-white flex items-center justify-center">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={logoUrl} alt="Logo" className="w-full h-full object-contain p-1" />
+              <div className="relative w-10 h-10 rounded-xl overflow-hidden ring-2 ring-slate-700 group-hover:ring-blue-500 transition-all bg-white flex items-center justify-center">
+                <Image src={logoUrl} alt="Logo" fill className="object-contain p-1" />
               </div>
             ) : (
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center ring-2 ring-blue-400/20 shadow-lg shadow-blue-500/30">

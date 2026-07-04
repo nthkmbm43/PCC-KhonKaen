@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowUpRight,
   Building2,
@@ -89,12 +90,14 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-[1.15fr_0.85fr_0.85fr_1.08fr]">
             <section className={`${sectionBase} md:row-span-2 lg:row-span-2`}>
               <div className="border-b border-white/10 pb-6">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={footerData?.footerLogoUrl || contact.logoUrl || "/images/logo-full-light.png"}
-                  alt="PCC Post-Tension Logo"
-                  className="h-24 w-auto max-w-full object-contain sm:h-28"
-                />
+                <div className="relative h-24 w-48 sm:h-28 sm:w-56">
+                  <Image
+                    src={footerData?.footerLogoUrl || contact.logoUrl || "/images/logo-full-light.png"}
+                    alt="PCC Post-Tension Logo"
+                    fill
+                    className="object-contain object-left"
+                  />
+                </div>
                 <div className="mt-5 inline-flex items-center gap-2 border border-brand-400/40 bg-brand-400/10 px-3 py-1.5 text-sm font-semibold text-brand-200">
                   <Building2 size={16} />
                   สำนักงานขอนแก่น

@@ -13,8 +13,7 @@ const REDACT_KEYS = new Set([
 /**
  * Recursively masks sensitive fields in an object.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function redact(obj: any): any {
+export function redact(obj: unknown): unknown {
   if (obj === null || obj === undefined) return obj;
 
   if (Array.isArray(obj)) {
@@ -23,11 +22,12 @@ export function redact(obj: any): any {
 
   if (typeof obj === 'object') {
     const redactedObj: Record<string, unknown> = {};
-    for (const key of Object.keys(obj)) {
+    const record = obj as Record<string, unknown>;
+    for (const key of Object.keys(record)) {
       if (REDACT_KEYS.has(key.toLowerCase())) {
         redactedObj[key] = '***MASKED***';
       } else {
-        redactedObj[key] = redact(obj[key]);
+        redactedObj[key] = redact(record[key]);
       }
     }
     return redactedObj;

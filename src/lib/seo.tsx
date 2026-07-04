@@ -71,7 +71,7 @@ export function createSeoMetadata({
   };
 }
 
-export function organizationJsonLd(contact?: any) {
+export function organizationJsonLd(contact?: Record<string, string | undefined>) {
   return {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Loader2, UploadCloud, X } from "lucide-react";
@@ -102,11 +103,11 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
 
       {value && (
         <div className="relative w-40 h-40 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center group">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
+          <Image 
             src={value} 
             alt="Uploaded Preview" 
-            className="w-full h-full object-contain"
+            fill
+            className="object-contain"
             onError={(e) => {
               // Hide broken image icon
               (e.target as HTMLImageElement).style.display = 'none';

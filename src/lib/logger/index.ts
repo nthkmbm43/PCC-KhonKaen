@@ -29,24 +29,26 @@ export class StructuredLogger {
     return new StructuredLogger({ ...this.baseContext, ...context }, this.transport);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private normalizeError(error: any): any {
+  private normalizeError(error: unknown): unknown {
     if (!error) return undefined;
     
-    const normalized = {
-      type: error.name || error.type || 'Error',
-      name: error.name || 'Error',
-      message: error.message || String(error),
-      code: error.code || error.statusCode,
-      digest: error.digest,
-    };
+    if (typeof error === 'object' && error !== null) {
+      const err = error as Record<string, unknown>;
+      const normalized = {
+        type: err.name || err.type || 'Error',
+        name: err.name || 'Error',
+        message: err.message || String(error),
+        code: err.code || err.statusCode,
+        digest: err.digest,
+      };
 
-    if (process.env.NODE_ENV !== 'production' && error.stack) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (normalized as any).stack = error.stack;
+      if (process.env.NODE_ENV !== 'production' && err.stack) {
+        (normalized as Record<string, unknown>).stack = err.stack;
+      }
+
+      return normalized;
     }
-
-    return normalized;
+    return { type: 'Error', name: 'Error', message: String(error) };
   }
 
   private write(level: LogLevel, params: Partial<LogParams> | string, messageOverride?: string) {
@@ -78,7 +80,7 @@ export class StructuredLogger {
     }
 
     // Redact sensitive PII recursively before sending to transport
-    const safeOutput = redact(output);
+    const safeOutput = redact(output) as LogOutput;
 
     this.transport.write(safeOutput);
   }

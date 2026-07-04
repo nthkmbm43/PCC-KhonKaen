@@ -14,7 +14,7 @@ export async function getSiteSettings() {
         description: siteConfig.description,
         keywords: '',
       },
-      navbarLinks: (settings?.navbarLinks as any[]) || [],
+      navbarLinks: (settings?.navbarLinks as Record<string, unknown>[]) || [],
       footerData: settings?.footerData || {},
       contact: {
         logoUrl: settings?.logoUrl || '',

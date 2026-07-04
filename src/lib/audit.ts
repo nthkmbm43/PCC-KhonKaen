@@ -8,16 +8,13 @@ export type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'LOGIN' | 'LOGOUT' | 
 export type AuditResource = 'product' | 'page' | 'user' | 'setting' | 'upload' | 'richmenu' | 'deploy' | 'media' | 'seo' | 'revision';
 
 interface LogAuditParams {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tx?: any; // To support Drizzle transaction object
+  tx?: unknown; // To support Drizzle transaction object
   session: Session | null;
   action: AuditAction;
   resource: AuditResource;
   resourceId?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  beforeState?: Record<string, any> | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  afterState?: Record<string, any> | null;
+  beforeState?: Record<string, unknown> | null;
+  afterState?: Record<string, unknown> | null;
   requestId?: string;
 }
 
@@ -27,8 +24,7 @@ const IGNORED_FIELDS = ['createdAt', 'updatedAt', 'created_at', 'updated_at'];
 /**
  * Filter and mask state data before saving to audit log.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sanitizeState(state?: Record<string, any> | null): Record<string, any> | null {
+function sanitizeState(state?: Record<string, unknown> | null): Record<string, unknown> | null {
   if (!state) return null;
   
   const sanitized = { ...state };
@@ -85,7 +81,7 @@ export async function logAudit({
     };
 
     // Use transaction context if provided, otherwise use standard db instance
-    const dbContext = tx || db;
+    const dbContext = (tx as typeof db) || db;
     
     await dbContext.insert(auditLogs).values(logEntry);
   } catch (error) {

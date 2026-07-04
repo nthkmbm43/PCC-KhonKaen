@@ -44,13 +44,13 @@ const blockComponents = {
   cta: CtaBlock,
 }
 
-export default function RenderBlocks({ layout }: { layout: any[] }) {
+export default function RenderBlocks({ layout }: { layout: Record<string, unknown>[] }) {
   if (!layout || !Array.isArray(layout)) return null
 
   return (
     <>
       {layout.map((block, i) => {
-        const BlockComponent = blockComponents[block.blockType as keyof typeof blockComponents]
+        const BlockComponent = blockComponents[block.blockType as keyof typeof blockComponents] as React.ComponentType<Record<string, unknown>>
 
         if (BlockComponent) {
           return <BlockComponent key={i} {...block} />
