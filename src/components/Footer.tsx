@@ -73,6 +73,9 @@ interface ContactInfo {
   lineUrl: string;
   mainPhone: string;
   googleMapsUrl?: string;
+  companyAddress?: string;
+  workingHours?: string;
+  holidayNotice?: string;
 }
 
 interface FooterData {
@@ -116,10 +119,8 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
                     className="border-l border-white/15 pl-4"
                   >
                     <h5 className="font-bold text-white">{office.name}</h5>
-                    <div className="mt-2 space-y-1 text-sm leading-6 text-slate-400">
-                      {office.addressLines.map((line) => (
-                        <p key={line}>{line}</p>
-                      ))}
+                    <div className="mt-2 space-y-1 text-sm leading-6 text-slate-400 whitespace-pre-line">
+                      {contact.companyAddress || office.addressLines.join('\n')}
                     </div>
                   </div>
                 ))}
@@ -153,7 +154,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
               </div>
               <a href={contact.googleMapsUrl || "#"} target="_blank" className="mt-4 flex items-start gap-2 border-t border-white/10 pt-4 text-sm leading-6 text-slate-400 hover:text-brand-300 transition-colors">
                 <MapPin size={17} className="mt-1 shrink-0 text-brand-400" />
-                {siteConfig.offices[0].address}
+                {contact.companyAddress ? "เปิดใน Google Maps" : siteConfig.offices[0].address}
               </a>
             </section>
 

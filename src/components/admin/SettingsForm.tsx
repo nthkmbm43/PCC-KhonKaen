@@ -42,6 +42,9 @@ const settingsSchema = z.object({
   lineUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   googleMapsUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   facebookUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+  workingHours: z.string().optional(),
+  holidayNotice: z.string().optional(),
+  companyAddress: z.string().optional(),
   vercelDeployHookUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   customHeadCode: z.string().optional(),
   customBodyCode: z.string().optional(),
@@ -70,6 +73,9 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
       lineUrl: initialData?.lineUrl || "",
       googleMapsUrl: initialData?.googleMapsUrl || "",
       facebookUrl: initialData?.facebookUrl || "",
+      workingHours: initialData?.workingHours || "",
+      holidayNotice: initialData?.holidayNotice || "",
+      companyAddress: initialData?.companyAddress || "",
       vercelDeployHookUrl: initialData?.vercelDeployHookUrl || "",
       customHeadCode: initialData?.customHeadCode || "",
       customBodyCode: initialData?.customBodyCode || "",
@@ -389,6 +395,36 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
                 {form.formState.errors.facebookUrl && (
                   <p className="text-sm text-red-500">{form.formState.errors.facebookUrl.message}</p>
                 )}
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-slate-700">เวลาทำการ (Working Hours)</Label>
+                <Input
+                  placeholder="เช่น จันทร์ - เสาร์: 08:00 - 17:00 น."
+                  {...form.register("workingHours")}
+                  className="bg-white"
+                  readOnly={!isEditMode}
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-slate-700">ประกาศวันหยุด / ข้อความพิเศษ (Holiday Notice)</Label>
+                <Input
+                  placeholder="เช่น หยุดเทศกาลสงกรานต์ 13-15 เมษายน"
+                  {...form.register("holidayNotice")}
+                  className="bg-white"
+                  readOnly={!isEditMode}
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-slate-700">ที่อยู่บริษัท (Company Address)</Label>
+                <textarea
+                  className="flex min-h-[80px] w-full rounded-lg border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  placeholder="กรอกที่อยู่เต็มของบริษัท..."
+                  {...form.register("companyAddress")}
+                  readOnly={!isEditMode}
+                />
               </div>
 
               <div className="space-y-1.5">

@@ -99,6 +99,21 @@ async function runMigrate() {
           WHEN duplicate_column THEN NULL;
         END;
         BEGIN
+          ALTER TABLE "site_settings" ADD COLUMN "working_hours" text;
+        EXCEPTION
+          WHEN duplicate_column THEN NULL;
+        END;
+        BEGIN
+          ALTER TABLE "site_settings" ADD COLUMN "holiday_notice" text;
+        EXCEPTION
+          WHEN duplicate_column THEN NULL;
+        END;
+        BEGIN
+          ALTER TABLE "site_settings" ADD COLUMN "company_address" text;
+        EXCEPTION
+          WHEN duplicate_column THEN NULL;
+        END;
+        BEGIN
           ALTER TABLE "site_settings" ADD COLUMN "custom_head_code" text;
         EXCEPTION
           WHEN duplicate_column THEN NULL;

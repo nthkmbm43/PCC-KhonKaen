@@ -59,19 +59,28 @@ export default async function ContactInfoBlock({ headline, description }: Contac
                 </div>
               </div>
 
+              {settings.contact.holidayNotice && (
+                <div className="flex gap-4 p-4 bg-orange-50 border border-orange-100 rounded-2xl">
+                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center shrink-0 text-orange-600">
+                    <Clock size={24} />
+                  </div>
+                  <div>
+                    <p className="text-sm text-orange-800 font-bold uppercase tracking-wider mb-1">ประกาศ (Notice)</p>
+                    <p className="text-orange-900 font-medium">
+                      {settings.contact.holidayNotice}
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div className="flex gap-4">
                 <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center shrink-0 text-slate-600">
                   <MapPin size={24} />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-bold uppercase tracking-wider mb-1">ที่ตั้งสำนักงาน/โรงงาน</p>
-                  <p className="text-gray-900 leading-relaxed">
-                    {siteConfig.offices[0].addressLines.map((line) => (
-                      <span key={line}>
-                        {line}
-                        <br />
-                      </span>
-                    ))}
+                  <p className="text-gray-900 leading-relaxed whitespace-pre-line">
+                    {settings.contact.companyAddress || siteConfig.offices[0].addressLines.join('\n')}
                   </p>
                 </div>
               </div>
@@ -82,8 +91,8 @@ export default async function ContactInfoBlock({ headline, description }: Contac
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-bold uppercase tracking-wider mb-1">เวลาทำการ</p>
-                  <p className="text-gray-900">
-                    จันทร์ - เสาร์: 8:00 น. - 17:00 น.
+                  <p className="text-gray-900 whitespace-pre-line">
+                    {settings.contact.workingHours || "จันทร์ - เสาร์: 8:00 น. - 17:00 น."}
                   </p>
                 </div>
               </div>
