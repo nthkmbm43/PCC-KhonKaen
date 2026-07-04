@@ -84,7 +84,7 @@ interface FooterData {
 export default function Footer({ contact, footerData }: { contact: ContactInfo, footerData?: FooterData }) {
   const currentYear = new Date().getFullYear();
   return (
-    <footer className="bg-slate-950 pt-16 text-slate-300">
+    <footer className="bg-slate-950 pt-16 text-slate-300 border-t-4 border-brand-500">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="border-b border-white/15 pb-10">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-[1.15fr_0.85fr_0.85fr_1.08fr]">
