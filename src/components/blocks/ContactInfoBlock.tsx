@@ -111,7 +111,7 @@ export default async function ContactInfoBlock({ headline, description }: Contac
         <div className="w-full lg:w-2/3">
           <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 h-full min-h-[500px]">
             <iframe
-              src={settings.contact.googleMapsUrl || "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d61215.556237235556!2d102.774184!3d16.476942!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3122604e86f3ffff%3A0xf6a12f14d76e2489!2z4Lia4Lij4Li04Lip4Lix4LiXIOC4nuC4teC4i-C4teC4i-C4tSDguYLguJ7guKrguYDguJfguJnguIrguLHguYjguJkg4LiI4Liz4LiB4Lix4LiU!5e0!3m2!1sth!2sth!4v1782275744409!5m2!1sth!2sth"}
+              src={settings.contact.googleMapsUrl || siteConfig.googleMapsEmbed}
               width="100%"
               height="100%"
               style={{ border: 0, borderRadius: "1.5rem" }}
