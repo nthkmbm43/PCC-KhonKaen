@@ -10,6 +10,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env.test') });
  */
 export default defineConfig({
   testDir: './tests',
+  globalSetup: './tests/fixtures/globalSetup.ts',
   globalTeardown: './tests/fixtures/globalTeardown.ts',
   /* Run tests in files in parallel */
   fullyParallel: true,

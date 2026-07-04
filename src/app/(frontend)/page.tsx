@@ -21,17 +21,9 @@ export default async function Home() {
   const page = await getPageWithSeo("home");
   const isDraftMode = (await draftMode()).isEnabled;
 
-  // If no page in DB, provide a fallback UI instead of a 404 crash
-  if (!page || (!isDraftMode && page.workflowState !== "published")) {
-    return (
-      <div className="flex min-w-0 flex-1 flex-col overflow-x-clip min-h-[60vh] justify-center items-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">PCC Post-Tension</h1>
-        <p className="text-lg text-gray-600 mb-8">กำลังปรับปรุงข้อมูลหน้าเว็บ กรุณากลับมาใหม่ในภายหลัง</p>
-      </div>
-    );
-  }
-
-  const layout = Array.isArray(page.content) ? page.content : [];
+  // Graceful fallback: Instead of notFound(), just render an empty layout
+  // This allows the Navbar and Footer to still show, and prevents 404 errors on the index page
+  const layout = page && Array.isArray(page.content) ? page.content : [];
 
   return (
     <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
