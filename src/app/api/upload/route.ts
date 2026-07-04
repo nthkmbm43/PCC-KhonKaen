@@ -45,7 +45,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       if (width && height && (width > 10000 || height > 10000)) {
          return NextResponse.json({ error: 'Image dimensions exceed maximum allowed size (10000x10000 pixels).' }, { status: 400 });
       }
-    } catch (e) {
+    } catch {
       // Not a valid image or failed magic number check by sharp
       return NextResponse.json({ error: 'Invalid image file or format.' }, { status: 400 });
     }
