@@ -16,6 +16,7 @@ jobs:
     env:
       AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'secret_for_ci_testing_only' }}
       POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+      DATABASE_URL: ${{ secrets.POSTGRES_URL }}
       BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_dummy_token' }}
 
     steps:
@@ -37,6 +38,9 @@ jobs:
       run: npm run lint
       
     - name: Build Next.js
+      env:
+        POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+        DATABASE_URL: ${{ secrets.POSTGRES_URL }}
       run: npm run build
       
     - name: Install Playwright Browsers
@@ -44,6 +48,9 @@ jobs:
       
     - name: Run Playwright tests
       # Playwright is configured in playwright.config.ts to have retries: 0
+      env:
+        POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+        DATABASE_URL: ${{ secrets.POSTGRES_URL }}
       run: npm run test:e2e -- --reporter=html,json
       
     - name: Enforce Quality Gate (No Skipped or Flaky)
