@@ -27,29 +27,36 @@ export default function HeroBlock({ heading, subheading, backgroundImage, button
   const imageUrl = backgroundImage?.url || '/images/hero-banner.webp'
 
   return (
-    <section className="relative overflow-hidden bg-[#0a174f] pt-14 pb-20 group sm:pt-20 sm:pb-28 lg:pt-32 lg:pb-40">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a174f] via-brand-900 to-brand-800/80 opacity-95 z-0 transition-opacity duration-1000"></div>
+    <section className="relative overflow-hidden bg-slate-900 pt-20 pb-24 group sm:pt-28 sm:pb-32 lg:pt-40 lg:pb-48">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-brand-900/40 via-slate-900 to-slate-950 z-0"></div>
 
-      <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110">
+      <div className="absolute inset-0 z-0 opacity-30 mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110">
         {imageUrl ? (
           <Image src={imageUrl} alt={backgroundImage?.alt || heading} fill className="object-cover" />
         ) : null}
       </div>
       
+      {/* Abstract Shapes for Premium feel */}
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent-500/20 rounded-full blur-3xl z-0 pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl z-0 pointer-events-none" />
+
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-up">
-        <div className="inline-flex max-w-full items-center gap-2 bg-accent-500/10 text-accent-400 border border-accent-500/30 px-4 py-2 rounded-full text-xs font-semibold tracking-wide mb-6 backdrop-blur-sm sm:px-6 sm:py-2.5 sm:text-sm sm:mb-8">
-          <Sparkles size={16} className="animate-pulse" /> PCC Post-Tension Page Builder
+        <div className="inline-flex max-w-full items-center gap-2 bg-white/5 border border-white/10 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide mb-8 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.1)] sm:text-sm sm:mb-10">
+          <Sparkles size={16} className="text-accent-400 animate-pulse" /> 
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-100 to-white">
+            Premium Corporate Engineering
+          </span>
         </div>
-        <h1 className="text-3xl font-bold text-white mb-5 leading-tight drop-shadow-2xl sm:text-4xl md:text-5xl lg:text-7xl lg:mb-6">
+        <h1 className="text-4xl font-extrabold text-white mb-6 leading-[1.15] drop-shadow-2xl sm:text-5xl md:text-6xl lg:text-[5rem] lg:mb-8 tracking-tight">
           {heading}
         </h1>
         {subheading && (
-          <p className="mt-5 text-base text-brand-100 max-w-3xl mx-auto mb-8 leading-relaxed drop-shadow-md sm:text-lg md:text-xl lg:mb-12">
+          <p className="mt-6 text-lg text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed drop-shadow-md sm:text-xl lg:mb-14">
             {subheading}
           </p>
         )}
         
-        <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+        <div className="flex flex-col sm:flex-row justify-center gap-5 sm:gap-6">
           {links && links.length > 0 ? (
             links.map(({ link }, index) => {
               const href = link.type === 'reference' && link.reference?.value?.slug 
@@ -58,15 +65,15 @@ export default function HeroBlock({ heading, subheading, backgroundImage, button
               
               if (link.appearance === 'primary') {
                 return (
-                  <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className="relative overflow-hidden bg-accent-500 hover:bg-accent-600 text-white px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all animate-pulse-glow sm:px-8 sm:text-lg group">
-                    <Phone size={24} className="group-hover:rotate-12 transition-transform" />
+                  <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className="relative overflow-hidden bg-[#00B900] hover:bg-[#009900] text-white px-8 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 hover:scale-105 shadow-[0_8px_30px_rgba(0,185,0,0.3)] hover:shadow-[0_12px_40px_rgba(0,185,0,0.5)] group">
+                    <Phone size={22} className="group-hover:rotate-12 transition-transform" />
                     {link.label}
                   </Link>
                 )
               }
               return (
-                <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className="bg-brand-50/10 hover:bg-brand-50/20 text-white backdrop-blur-md border border-white/30 px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all hover:-translate-y-1 hover:shadow-lg sm:px-8 sm:text-lg">
-                  <MessageCircle size={24} />
+                <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className="bg-white/10 hover:bg-white/15 text-white backdrop-blur-md border border-white/20 px-8 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 hover:scale-105 shadow-[0_8px_30px_rgba(0,0,0,0.1)] group">
+                  <MessageCircle size={22} className="group-hover:-translate-y-0.5 transition-transform" />
                   {link.label}
                 </Link>
               )
@@ -75,15 +82,15 @@ export default function HeroBlock({ heading, subheading, backgroundImage, button
             buttons.map((btn, index) => {
               if (btn.style === 'primary') {
                 return (
-                  <Link key={index} href={btn.url} className="relative overflow-hidden bg-accent-500 hover:bg-accent-600 text-white px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all animate-pulse-glow sm:px-8 sm:text-lg group">
-                    <Phone size={24} className="group-hover:rotate-12 transition-transform" />
+                  <Link key={index} href={btn.url} className="relative overflow-hidden bg-[#00B900] hover:bg-[#009900] text-white px-8 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 hover:scale-105 shadow-[0_8px_30px_rgba(0,185,0,0.3)] hover:shadow-[0_12px_40px_rgba(0,185,0,0.5)] group">
+                    <Phone size={22} className="group-hover:rotate-12 transition-transform" />
                     {btn.label}
                   </Link>
                 )
               }
               return (
-                <Link key={index} href={btn.url} className="bg-brand-50/10 hover:bg-brand-50/20 text-white backdrop-blur-md border border-white/30 px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all hover:-translate-y-1 hover:shadow-lg sm:px-8 sm:text-lg">
-                  <MessageCircle size={24} />
+                <Link key={index} href={btn.url} className="bg-white/10 hover:bg-white/15 text-white backdrop-blur-md border border-white/20 px-8 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 hover:scale-105 shadow-[0_8px_30px_rgba(0,0,0,0.1)] group">
+                  <MessageCircle size={22} className="group-hover:-translate-y-0.5 transition-transform" />
                   {btn.label}
                 </Link>
               )

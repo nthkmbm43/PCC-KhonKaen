@@ -65,14 +65,14 @@ export default function CallToActionBlock({ headline, subheadline, theme, button
                 
               if (link.appearance === 'primary') {
                 return (
-                  <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className="inline-flex bg-accent-500 hover:bg-accent-600 text-white px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all animate-pulse-glow hover:-translate-y-2 hover:scale-105 group">
+                  <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className="inline-flex bg-[#00B900] hover:bg-[#009900] text-white px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all duration-300 shadow-[0_8px_30px_rgba(0,185,0,0.3)] hover:shadow-[0_12px_40px_rgba(0,185,0,0.5)] hover:-translate-y-2 hover:scale-105 group">
                     {link.label}
-                    <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight size={24} className="group-hover:translate-x-1.5 transition-transform" />
                   </Link>
                 )
               }
               return (
-                <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className={`inline-flex px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all hover:-translate-y-2 hover:scale-105 group ${theme === 'light' ? 'bg-white text-brand-600 border border-brand-200 shadow-sm' : 'bg-white/10 text-white backdrop-blur-md border border-white/30 hover:bg-white/20'}`}>
+                <Link key={index} href={href} target={link.newTab ? '_blank' : undefined} className={`inline-flex px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all duration-300 hover:-translate-y-2 hover:scale-105 group ${theme === 'light' ? 'bg-white text-brand-600 border border-brand-200 shadow-sm' : 'bg-white/10 text-white backdrop-blur-md border border-white/30 hover:bg-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.1)]'}`}>
                   {link.label}
                 </Link>
               )
@@ -81,14 +81,14 @@ export default function CallToActionBlock({ headline, subheadline, theme, button
             buttons.map((btn, index) => {
               if (btn.style === 'primary') {
                 return (
-                  <Link key={index} href={btn.url} className="inline-flex bg-accent-500 hover:bg-accent-600 text-white px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all animate-pulse-glow hover:-translate-y-2 hover:scale-105 group">
+                  <Link key={index} href={btn.url} className="inline-flex bg-[#00B900] hover:bg-[#009900] text-white px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all duration-300 shadow-[0_8px_30px_rgba(0,185,0,0.3)] hover:shadow-[0_12px_40px_rgba(0,185,0,0.5)] hover:-translate-y-2 hover:scale-105 group">
                     {btn.label}
-                    <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight size={24} className="group-hover:translate-x-1.5 transition-transform" />
                   </Link>
                 )
               }
               return (
-                <Link key={index} href={btn.url} className={`inline-flex px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all hover:-translate-y-2 hover:scale-105 group ${theme === 'light' ? 'bg-white text-brand-600 border border-brand-200 shadow-sm' : 'bg-white/10 text-white backdrop-blur-md border border-white/30 hover:bg-white/20'}`}>
+                <Link key={index} href={btn.url} className={`inline-flex px-10 py-5 rounded-full font-bold text-xl items-center justify-center gap-4 transition-all duration-300 hover:-translate-y-2 hover:scale-105 group ${theme === 'light' ? 'bg-white text-brand-600 border border-brand-200 shadow-sm' : 'bg-white/10 text-white backdrop-blur-md border border-white/30 hover:bg-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.1)]'}`}>
                   {btn.label}
                 </Link>
               )

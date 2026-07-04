@@ -37,17 +37,19 @@ export default function ContentBlock({ richText, content, columns }: { richText?
   }
 
   return (
-    <section className="py-16 bg-white sm:py-20 lg:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-20 bg-white sm:py-24 lg:py-32 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Legacy Support */}
         {!columns || columns.length === 0 ? (
-          <div className="prose prose-lg prose-blue mx-auto prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-a:text-brand-600 hover:prose-a:text-brand-700 max-w-4xl">
+          <div className="prose prose-lg prose-slate mx-auto prose-headings:font-extrabold prose-headings:text-slate-900 prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-brand-600 hover:prose-a:text-brand-700 max-w-4xl">
             {renderContent(displayContent)}
           </div>
         ) : (
           /* New Column Layout */
-          <div className="grid grid-cols-12 gap-8 md:gap-12">
+          <div className="grid grid-cols-12 gap-10 md:gap-16 lg:gap-20">
             {columns.map((col, index) => {
               const size = col.size || 'full'
               const colContent = col.content || col.richText
@@ -62,26 +64,26 @@ export default function ContentBlock({ richText, content, columns }: { richText?
 
               return (
                 <div key={index} className={colClass}>
-                  <div className="prose prose-lg prose-blue prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-a:text-brand-600 hover:prose-a:text-brand-700 max-w-none h-full flex flex-col">
+                  <div className="prose prose-lg prose-slate prose-headings:font-extrabold prose-headings:text-slate-900 prose-p:text-slate-600 prose-p:leading-relaxed prose-a:text-brand-600 hover:prose-a:text-brand-700 max-w-none h-full flex flex-col">
                     <div className="flex-grow">
                       {colContent && renderContent(colContent)}
                     </div>
                     {col.enableLink && col.link && col.link.label && (
-                      <div className="mt-8">
+                      <div className="mt-10">
                         <Link 
                           href={href} 
                           target={col.link.newTab ? '_blank' : undefined}
-                          className={`inline-flex items-center gap-2 font-bold transition-all ${
+                          className={`inline-flex items-center gap-2 font-bold transition-all duration-300 ${
                             col.link.appearance === 'primary' 
-                              ? 'bg-accent-500 hover:bg-accent-600 text-white px-6 py-3 rounded-full' 
+                              ? 'bg-[#00B900] hover:bg-[#009900] text-white px-8 py-4 rounded-full shadow-[0_8px_30px_rgba(0,185,0,0.2)] hover:shadow-[0_12px_40px_rgba(0,185,0,0.4)] hover:scale-105' 
                               : col.link.appearance === 'outline'
-                              ? 'border-2 border-brand-500 text-brand-600 hover:bg-brand-50 px-6 py-3 rounded-full'
-                              : 'text-brand-600 hover:text-brand-700 group'
+                              ? 'border-2 border-brand-500 text-brand-600 hover:bg-brand-50 px-8 py-4 rounded-full hover:scale-105 shadow-[0_4px_14px_rgba(0,0,0,0.05)]'
+                              : 'text-brand-600 hover:text-brand-800 group text-lg'
                           }`}
                         >
                           {col.link.label}
                           {col.link.appearance !== 'primary' && col.link.appearance !== 'outline' && (
-                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                            <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
                           )}
                         </Link>
                       </div>
