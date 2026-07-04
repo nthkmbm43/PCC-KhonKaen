@@ -53,7 +53,7 @@ test.describe('Pages Management', { tag: ['@test.regression'] }, () => {
     await page.getByPlaceholder(/พิมพ์/i).fill(editTitle);
 
     // Click confirm in the AlertDialog
-    await page.getByRole('button', { name: /ยืนยันการลบถาวร/i }).click();
+    await page.getByRole('button', { name: /ยืนยันลบถาวร/i }).click();
 
     // Wait for the deletion to process
     await expect(page.getByText(`ลบเพจ "${editTitle}" สำเร็จแล้ว`)).toBeVisible();
