@@ -120,7 +120,15 @@ export default async function ContactInfoBlock({ headline, description }: Contac
         <div className="w-full lg:w-2/3">
           <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 h-full min-h-[500px]">
             <iframe
-              src={settings.contact.googleMapsUrl || siteConfig.googleMapsEmbed}
+              src={(() => {
+                const rawUrl = settings.contact.googleMapsUrl || siteConfig.googleMapsEmbed || "";
+                // If the user pasted an entire iframe tag, extract the src attribute
+                const match = rawUrl.match(/src="([^"]+)"/);
+                let cleanUrl = match ? match[1] : rawUrl;
+                // If the user accidentally included markdown brackets or whitespace
+                cleanUrl = cleanUrl.replace(/^\[|\]$/g, '').trim();
+                return cleanUrl;
+              })()}
               width="100%"
               height="100%"
               style={{ border: 0, borderRadius: "1.5rem" }}

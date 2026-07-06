@@ -4,9 +4,10 @@ import { siteConfig } from '@/data/site-config'
 import { unstable_cache } from 'next/cache'
 
 function formatImageUrl(url: string | null | undefined | unknown): string {
-  if (typeof url !== 'string' || !url) return '';
-  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url;
-  return `/${url}`;
+  if (typeof url !== 'string' || !url.trim()) return '';
+  const cleanUrl = url.trim();
+  if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://') || cleanUrl.startsWith('/')) return cleanUrl;
+  return `/${cleanUrl}`;
 }
 
 export const getSiteSettings = unstable_cache(

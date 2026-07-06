@@ -4,6 +4,7 @@ import { eq, and, desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -112,7 +113,14 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       return NextResponse.json({ error: "Page not found" }, { status: 404 });
     }
 
-    return NextResponse.json(result[0]);
+    // Revalidate cache to ensure frontend gets fresh data immediately
+    const updatedPage = result[0];
+    if (updatedPage.slug) {
+      revalidatePath(`/${updatedPage.slug}`);
+      revalidateTag('pages', { expire: 0 } as any);
+    }
+
+    return NextResponse.json(updatedPage);
   } catch (error) {
     console.error("Error updating page:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

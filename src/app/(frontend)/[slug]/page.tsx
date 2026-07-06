@@ -10,13 +10,14 @@ export const dynamicParams = true;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const page = await getPageWithSeo(slug)
+  const decodedSlug = decodeURIComponent(slug);
+  const page = await getPageWithSeo(decodedSlug)
 
   if (!page) {
     return createSeoMetadata({
       title: 'ไม่พบหน้า | PCC Post-Tension',
       description: 'ไม่พบหน้าที่คุณต้องการ',
-      path: `/${slug}`,
+      path: `/${decodedSlug}`,
     })
   }
 
@@ -30,17 +31,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function DynamicPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
+  const decodedSlug = decodeURIComponent(slug);
   
-  console.log(`[DynamicPage] Fetching page for slug: ${slug}`);
+  console.log(`[DynamicPage] Raw slug: "${slug}", Decoded slug: "${decodedSlug}"`);
 
   // Home page is handled by /page.tsx
-  if (slug === 'home') {
+  if (decodedSlug === 'home') {
     console.log(`[DynamicPage] Slug is 'home', returning notFound`);
     notFound();
   }
 
-  const page = await getPageWithSeo(slug)
-  console.log(`[DynamicPage] Retrieved page:`, page ? `ID: ${page.id}, Status: ${page.workflowState}` : 'NULL');
+  const page = await getPageWithSeo(decodedSlug)
+  console.log(`[DynamicPage] DB result for "${decodedSlug}":`, page ? `FOUND (ID: ${page.id}, Status: ${page.workflowState})` : 'NOT_FOUND');
 
   const isDraftMode = (await draftMode()).isEnabled
 
