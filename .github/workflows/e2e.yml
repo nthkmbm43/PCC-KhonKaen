@@ -40,7 +40,11 @@ jobs:
     - name: Build Next.js
       env:
         POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
-        DATABASE_URL: ${{ secrets.POSTGRES_URL }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+        NEXT_PUBLIC_SERVER_URL: ${{ secrets.NEXT_PUBLIC_SERVER_URL }}
+        ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       run: npm run build
       
     - name: Install Playwright Browsers
@@ -50,7 +54,11 @@ jobs:
       # Playwright is configured in playwright.config.ts to have retries: 0
       env:
         POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
-        DATABASE_URL: ${{ secrets.POSTGRES_URL }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+        NEXT_PUBLIC_SERVER_URL: ${{ secrets.NEXT_PUBLIC_SERVER_URL }}
+        ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+        ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       run: npm run test:e2e -- --reporter=html,json
       
     - name: Enforce Quality Gate (No Skipped or Flaky)
