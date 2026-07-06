@@ -35,7 +35,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
 
       <div className="absolute inset-0 z-0 opacity-30 mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110">
         {imageUrl ? (
-          <Image src={imageUrl} alt={backgroundImage?.alt || heading} fill className="object-cover" />
+          <Image src={imageUrl} alt={backgroundImage?.alt || heading || ''} fill className="object-cover" />
         ) : null}
       </div>
       
