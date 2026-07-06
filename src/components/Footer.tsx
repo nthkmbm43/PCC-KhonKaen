@@ -120,7 +120,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
                   >
                     <h5 className="font-bold text-white">{office.name}</h5>
                     <div className="mt-2 space-y-1 text-sm leading-6 text-slate-400 whitespace-pre-line">
-                      {contact.companyAddress || office.addressLines.join('\n')}
+                      {office.addressLines.join('\n')}
                     </div>
                   </div>
                 ))}

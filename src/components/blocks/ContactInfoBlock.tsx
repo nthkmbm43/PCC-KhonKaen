@@ -79,22 +79,16 @@ export default async function ContactInfoBlock({ headline, description }: Contac
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-bold uppercase tracking-wider mb-2">ที่ตั้งสำนักงาน</p>
-                  {settings.contact.companyAddress ? (
-                    <p className="text-gray-900 leading-relaxed whitespace-pre-line mb-4">
-                      {settings.contact.companyAddress}
-                    </p>
-                  ) : (
-                    <div className="space-y-4">
-                      {siteConfig.offices.map((office, idx) => (
-                        <div key={idx}>
-                          <p className="text-gray-900 font-bold">{office.name}</p>
-                          <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
-                            {office.addressLines.join('\n')}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <div className="space-y-4">
+                    {siteConfig.offices.map((office, idx) => (
+                      <div key={idx}>
+                        <p className="text-gray-900 font-bold">{office.name}</p>
+                        <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
+                          {office.addressLines.join('\n')}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
