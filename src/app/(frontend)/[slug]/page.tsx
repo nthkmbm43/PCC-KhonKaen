@@ -1,25 +1,12 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { db } from '@/db'
-import { pages } from '@/db/schema'
-import { eq } from 'drizzle-orm'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { createSeoMetadata } from '@/lib/seo'
 import { getPageWithSeo } from '@/lib/repositories/page'
 import { draftMode } from 'next/headers'
 
-export async function generateStaticParams() {
-  try {
-    // Only generate for published pages to optimize build time
-    const allPages = await db.select({ slug: pages.slug }).from(pages).where(eq(pages.workflowState, 'published'))
-    return allPages.map((doc) => ({
-      slug: doc.slug,
-    }))
-  } catch (error) {
-    console.error('Error in generateStaticParams:', error)
-    return []
-  }
-}
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
@@ -44,12 +31,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function DynamicPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   
+  console.log(`[DynamicPage] Fetching page for slug: ${slug}`);
+
   // Home page is handled by /page.tsx
   if (slug === 'home') {
+    console.log(`[DynamicPage] Slug is 'home', returning notFound`);
     notFound();
   }
 
   const page = await getPageWithSeo(slug)
+  console.log(`[DynamicPage] Retrieved page:`, page ? `ID: ${page.id}, Status: ${page.workflowState}` : 'NULL');
+
   const isDraftMode = (await draftMode()).isEnabled
 
   // Strict check: if not in draft mode, page must be published

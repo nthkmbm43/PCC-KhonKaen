@@ -37,10 +37,15 @@ export async function PUT(req: Request) {
       const newSettings = await db.insert(siteSettings).values({ ...data }).returning();
       return NextResponse.json(newSettings[0]);
     } else {
+      // Clean undefined fields for a true partial update
+      const updateData = Object.fromEntries(
+        Object.entries(data).filter(([_, v]) => v !== undefined)
+      );
+
       // Update
       const updatedSettings = await db
         .update(siteSettings)
-        .set({ ...data, updatedAt: new Date() })
+        .set({ ...updateData, updatedAt: new Date() })
         .returning();
       
       revalidatePath('/', 'layout');
