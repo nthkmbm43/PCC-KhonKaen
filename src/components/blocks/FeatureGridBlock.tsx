@@ -1,0 +1,59 @@
+import { ArrowUpRight, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { getPublishedProducts } from "@/lib/repositories/product";
+
+export default async function FeatureGridBlock({ data }: { data?: Record<string, unknown> }) {
+  const allProducts = await getPublishedProducts();
+  const headline = (data?.headline as string) || "สินค้าและบริการของเรา";
+  const description = (data?.description as string) || "ผู้เชี่ยวชาญด้านงานคอนกรีตอัดแรงและผลิตภัณฑ์สำเร็จรูป พร้อมตอบสนองทุกความต้องการของโครงการก่อสร้าง";
+
+  return (
+    <section className="py-16 bg-white relative overflow-hidden sm:py-20 lg:py-24" id="services">
+      <div className="absolute top-0 right-0 h-[360px] w-[360px] bg-brand-50 rounded-full blur-[100px] opacity-60 -translate-y-1/2 translate-x-1/3 pointer-events-none sm:h-[560px] sm:w-[560px] lg:h-[800px] lg:w-[800px]"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6 sm:mb-14 lg:mb-16">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight sm:text-4xl md:text-5xl sm:mb-6">
+              {headline}
+            </h2>
+            <p className="text-base text-gray-600 sm:text-lg md:text-xl">
+              {description}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 xl:grid-cols-3 xl:gap-8">
+          {allProducts.map((product) => (
+            <div key={product.slug} className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 flex flex-col relative">
+              <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md w-12 h-12 rounded-full flex items-center justify-center text-brand-600 opacity-100 translate-y-0 lg:opacity-0 lg:group-hover:opacity-100 lg:translate-y-4 lg:group-hover:translate-y-0 transition-all duration-500 shadow-lg cursor-pointer">
+                <ArrowUpRight size={24} />
+              </div>
+              <div className="h-64 bg-slate-200 relative overflow-hidden">
+                {product.image ? (
+                  <Image 
+                    src={product.image} 
+                    alt={product.title} 
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
+                  />
+                ) : null}
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent transition-opacity duration-500 group-hover:opacity-90"></div>
+                <h3 className="absolute bottom-6 left-6 text-2xl font-bold text-white translate-y-0 group-hover:-translate-y-2 transition-transform duration-500">{product.shortTitle}</h3>
+              </div>
+              <div className="p-6 flex flex-col flex-grow bg-white z-10 relative sm:p-8">
+                <p className="text-gray-600 mb-6 line-clamp-3 flex-grow text-base leading-relaxed sm:mb-8 sm:text-lg sm:line-clamp-2">{product.description}</p>
+                <Link href={`/products/${product.slug}`} className="inline-flex items-center gap-2 text-brand-600 font-bold hover:text-brand-700 transition-colors w-max group/link">
+                  ดูรายละเอียดเพิ่มเติม 
+                  <div className="bg-brand-50 rounded-full p-1.5 group-hover/link:bg-brand-100 transition-colors">
+                    <ChevronRight size={18} className="group-hover/link:translate-x-1 transition-transform" />
+                  </div>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

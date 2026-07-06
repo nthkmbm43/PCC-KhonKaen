@@ -4,12 +4,16 @@ import HeroBlock from './HeroBlock'
 import RichTextBlock from './RichTextBlock'
 import ImageBlock from './ImageBlock'
 import CtaBlock from './CtaBlock'
+import FeatureGridBlock from './FeatureGridBlock'
+import MapBlock from './MapBlock'
 
 const blockComponents = {
   hero: HeroBlock,
   richText: RichTextBlock,
   image: ImageBlock,
   cta: CtaBlock,
+  featureGrid: FeatureGridBlock,
+  mapBlock: MapBlock,
   // Support existing payload types
   homeHero: HeroBlock, 
   content: RichTextBlock,
