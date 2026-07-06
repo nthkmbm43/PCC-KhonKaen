@@ -3,11 +3,24 @@ import { siteSettings } from '@/db/schema'
 import { siteConfig } from '@/data/site-config'
 import { unstable_cache } from 'next/cache'
 
+function formatImageUrl(url: string | null | undefined | unknown): string {
+  if (typeof url !== 'string' || !url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('/')) return url;
+  return `/${url}`;
+}
+
 export const getSiteSettings = unstable_cache(
   async () => {
   try {
     const settingsArray = await db.select().from(siteSettings).limit(1)
     const settings = settingsArray[0]
+
+    // Parse footerData safely
+    const footerDataRaw = settings?.footerData as Record<string, unknown> || {};
+    const footerData = {
+      ...footerDataRaw,
+      footerLogoUrl: formatImageUrl(footerDataRaw.footerLogoUrl),
+    };
 
     // Use DB data if available, otherwise fallback to siteConfig
     return {
@@ -17,10 +30,10 @@ export const getSiteSettings = unstable_cache(
         keywords: '',
       },
       navbarLinks: (settings?.navbarLinks as Record<string, unknown>[]) || [],
-      footerData: settings?.footerData || {},
+      footerData: footerData,
       contact: {
-        logoUrl: settings?.logoUrl || '',
-        faviconUrl: settings?.faviconUrl || '',
+        logoUrl: formatImageUrl(settings?.logoUrl),
+        faviconUrl: formatImageUrl(settings?.faviconUrl),
         mainPhone: settings?.mainPhone || siteConfig.phone,
         secondaryPhone: '',
         lineUrl: settings?.lineUrl || siteConfig.social.line.url,
