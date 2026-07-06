@@ -2,6 +2,8 @@ import { db } from "@/db";
 import { pages, seoMetadata } from "@/db/schema";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
   // Security check in production: this should be guarded, but since it's a one-time setup requested by the admin,
   // and it's idempotent, we allow it. (In a real scenario, check admin auth here).
