@@ -6,16 +6,32 @@ import ImageBlock from './ImageBlock'
 import CtaBlock from './CtaBlock'
 import FeatureGridBlock from './FeatureGridBlock'
 import MapBlock from './MapBlock'
+import StatsBlock from './StatsBlock'
+import WhyUsBlock from './WhyUsBlock'
+import ProcessBlock from './ProcessBlock'
+import ContactFormBlock from './ContactFormBlock'
+import BranchLocationsBlock from './BranchLocationsBlock'
+import TestimonialBlock from './TestimonialBlock'
+import ProductSpecBlock from './ProductSpecBlock'
 
 const blockComponents = {
+  // Core blocks
   hero: HeroBlock,
   richText: RichTextBlock,
   image: ImageBlock,
   cta: CtaBlock,
   featureGrid: FeatureGridBlock,
   mapBlock: MapBlock,
-  // Support existing payload types
-  homeHero: HeroBlock, 
+  // New blocks (Phase 1)
+  stats: StatsBlock,
+  whyUs: WhyUsBlock,
+  process: ProcessBlock,
+  contactForm: ContactFormBlock,
+  branchLocations: BranchLocationsBlock,
+  testimonial: TestimonialBlock,
+  productSpec: ProductSpecBlock,
+  // Legacy aliases for backward compatibility
+  homeHero: HeroBlock,
   content: RichTextBlock,
 }
 
@@ -30,7 +46,6 @@ export default function BlockRenderer({ layout }: { layout: Record<string, unkno
         const BlockComponent = blockComponents[type as keyof typeof blockComponents] as React.ComponentType<{ data: Record<string, unknown> }>
 
         if (BlockComponent) {
-          // Pass the data explicitly to match the requirement <HeroBlock data="{blockData}"/>
           return (
             <BlockErrorBoundary key={i} blockName={type as string}>
               <BlockComponent data={block} />
