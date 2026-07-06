@@ -65,11 +65,14 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm start -- -H 127.0.0.1',
+    command: 'npm run build && npm start',
     url: 'http://127.0.0.1:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
     stdout: 'pipe',
     stderr: 'pipe',
+    env: {
+      POSTGRES_URL: process.env.POSTGRES_URL || '',
+    },
   },
 });
