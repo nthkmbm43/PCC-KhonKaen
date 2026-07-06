@@ -72,7 +72,12 @@ export default defineConfig({
     stdout: 'pipe',
     stderr: 'pipe',
     env: {
-      ...process.env,
+      POSTGRES_URL: process.env.POSTGRES_URL || '',
+      DATABASE_URL: process.env.DATABASE_URL || '',
+      AUTH_SECRET: process.env.AUTH_SECRET || '',
+      NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL || '',
+      ADMIN_USERNAME: process.env.ADMIN_USERNAME || '',
+      ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '',
     },
   },
 });
