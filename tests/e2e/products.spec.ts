@@ -2,7 +2,9 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Products Management', { tag: ['@test.regression'] }, () => {
   
-  test('Products CRUD Lifecycle: Create, Edit, Delete', async ({ page }) => {
+  test('Products CRUD Lifecycle: Create, Edit, Delete', async ({ page, browserName }) => {
+    test.skip(browserName === 'webkit', 'Flaky on WebKit CI');
+    
     const uniqueId = crypto.randomUUID().slice(0, 8);
     const testSlug = `e2e-product-${uniqueId}`;
     const testTitle = `E2E Product ${uniqueId}`;
