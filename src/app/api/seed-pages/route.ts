@@ -45,8 +45,8 @@ export async function GET(req: Request) {
         slug: 'contact',
         title: 'ติดต่อเรา',
         content: [
-          { type: 'hero', title: 'ติดต่อ PCC สาขาขอนแก่น', subtitle: 'เราพร้อมให้บริการและคำปรึกษาฟรี', align: 'center' },
-          { type: 'richText', content: '<div style="text-align: center; margin-bottom: 2rem;"><h3 style="font-size: 1.5rem; color: #1e3a8a;">ที่ตั้งสำนักงาน</h3><p style="color: #4b5563;">เลขที่ 123/45 ถนนมิตรภาพ ตำบลในเมือง อำเภอเมือง จังหวัดขอนแก่น 40000</p><p style="color: #4b5563;"><strong>โทรศัพท์:</strong> 081-xxx-xxxx</p></div>' },
+          { type: 'hero', title: 'ติดต่อ PCC สาขาขอนแก่น และ เชียงใหม่', subtitle: 'เราพร้อมให้บริการและคำปรึกษาฟรี', align: 'center' },
+          { type: 'richText', content: '<div style="text-align: center; margin-bottom: 2rem;"><div style="margin-bottom: 2rem;"><h3 style="font-size: 1.5rem; color: #1e3a8a; margin-bottom: 0.5rem;">ที่ตั้งสำนักงานขอนแก่น</h3><p style="color: #4b5563;">เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000</p><p style="color: #4b5563;"><strong>โทรศัพท์:</strong> 063-454-5656</p></div><div><h3 style="font-size: 1.5rem; color: #1e3a8a; margin-bottom: 0.5rem;">ที่ตั้งสำนักงานเชียงใหม่</h3><p style="color: #4b5563;">292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300</p><p style="color: #4b5563;"><strong>โทรศัพท์:</strong> 091-553-2624</p></div></div>' },
           { type: 'mapBlock' },
           { type: 'cta', title: 'ทักแชทคุยกับวิศวกร', buttonText: 'Add LINE OA', buttonLink: '#' }
         ],
