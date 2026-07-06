@@ -4,7 +4,7 @@ import { siteConfig } from '@/data/site-config'
 import { unstable_cache } from 'next/cache'
 
 function formatImageUrl(url: string | null | undefined | unknown): string {
-  if (typeof url !== 'string' || !url.trim()) return '';
+  if (typeof url !== 'string' || !url.trim() || url.trim() === 'undefined' || url.trim() === 'null') return '';
   const cleanUrl = url.trim();
   if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://') || cleanUrl.startsWith('/')) return cleanUrl;
   return `/${cleanUrl}`;
