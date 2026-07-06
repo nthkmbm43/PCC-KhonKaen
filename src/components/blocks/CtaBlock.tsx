@@ -3,12 +3,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 interface CtaBlockProps {
-  headline?: string;
-  description?: string;
-  backgroundImage?: string;
+  data: {
+    headline?: string;
+    description?: string;
+    backgroundImage?: string;
+    buttonText?: string;
+    buttonUrl?: string;
+  };
 }
 
-export default function CtaBlock({ headline, description, backgroundImage }: CtaBlockProps) {
+export default function CtaBlock({ data }: CtaBlockProps) {
+  const { headline, description, backgroundImage, buttonText, buttonUrl } = data || {};
+  
   return (
     <div className="relative py-24 overflow-hidden">
       {backgroundImage && (
@@ -21,8 +27,8 @@ export default function CtaBlock({ headline, description, backgroundImage }: Cta
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
         <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">{headline}</h2>
         <p className="text-xl text-slate-300 mb-10">{description}</p>
-        <Link href="/contact" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-xl hover:-translate-y-1 transition-all">
-          ติดต่อเรา
+        <Link href={buttonUrl || "/contact"} className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg px-8 py-4 rounded-xl shadow-xl hover:-translate-y-1 transition-all">
+          {buttonText || "ติดต่อเรา"}
         </Link>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { db } from '@/db'
 import { pages } from '@/db/schema'
 import { eq } from 'drizzle-orm'
-import RenderBlocks from '@/components/blocks/RenderBlocks'
+import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { createSeoMetadata } from '@/lib/seo'
 import { getPageWithSeo } from '@/lib/repositories/page'
 import { draftMode } from 'next/headers'
@@ -66,7 +66,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
           Preview Mode: You are viewing unpublished changes.
         </div>
       )}
-      <RenderBlocks layout={layout} />
+      <BlockRenderer layout={layout} />
     </div>
   )
 }

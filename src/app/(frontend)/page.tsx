@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import RenderBlocks from '@/components/blocks/RenderBlocks'
+import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { createSeoMetadata } from '@/lib/seo'
 import { getPageWithSeo } from '@/lib/repositories/page'
 import { draftMode } from 'next/headers'
@@ -41,7 +41,7 @@ export default async function HomePage() {
           Preview Mode: You are viewing unpublished changes.
         </div>
       )}
-      <RenderBlocks layout={layout} />
+      <BlockRenderer layout={layout} />
     </div>
   )
 }

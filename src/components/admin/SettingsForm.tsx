@@ -40,7 +40,7 @@ const settingsSchema = z.object({
   }).optional(),
   mainPhone: z.string().optional(),
   lineUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
-  googleMapsUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+  googleMapsUrl: z.string().optional(),
   facebookUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   workingHours: z.string().optional(),
   holidayNotice: z.string().optional(),

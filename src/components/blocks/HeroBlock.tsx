@@ -3,27 +3,30 @@ import Image from 'next/image'
 import { Sparkles, Phone, MessageCircle } from 'lucide-react'
 
 type HeroBlockProps = {
-  heading: string
-  subheading?: string
-  backgroundImage?: { url?: string; alt?: string; [key: string]: unknown }
-  buttons?: {
-    label: string
-    url: string
-    style: 'primary' | 'secondary'
-  }[]
-  links?: {
-    link: {
-      type: 'reference' | 'custom'
-      reference?: { value: { slug?: string; [key: string]: unknown }, relationTo: string }
-      url?: string
+  data: {
+    heading?: string
+    subheading?: string
+    backgroundImage?: { url?: string; alt?: string; [key: string]: unknown }
+    buttons?: {
       label: string
-      newTab?: boolean
-      appearance?: 'primary' | 'secondary' | 'outline'
-    }
-  }[]
+      url: string
+      style: 'primary' | 'secondary'
+    }[]
+    links?: {
+      link: {
+        type: 'reference' | 'custom'
+        reference?: { value: { slug?: string; [key: string]: unknown }, relationTo: string }
+        url?: string
+        label: string
+        newTab?: boolean
+        appearance?: 'primary' | 'secondary' | 'outline'
+      }
+    }[]
+  }
 }
 
-export default function HeroBlock({ heading, subheading, backgroundImage, buttons, links }: HeroBlockProps) {
+export default function HeroBlock({ data }: HeroBlockProps) {
+  const { heading, subheading, backgroundImage, buttons, links } = data || {}
   const imageUrl = backgroundImage?.url || '/images/hero-banner.webp'
 
   return (
