@@ -9,14 +9,14 @@ export async function resetDb() {
   }
 
   // Clear tables that we touch in E2E tests
-  await db.execute(sql`TRUNCATE TABLE products CASCADE;`);
-  await db.execute(sql`TRUNCATE TABLE pages CASCADE;`);
-  await db.execute(sql`TRUNCATE TABLE site_settings CASCADE;`);
-  await db.execute(sql`TRUNCATE TABLE audit_logs CASCADE;`);
+  // await db.execute(sql`TRUNCATE TABLE products CASCADE;`);
+  // await db.execute(sql`TRUNCATE TABLE pages CASCADE;`);
+  // await db.execute(sql`TRUNCATE TABLE site_settings CASCADE;`);
+  // await db.execute(sql`TRUNCATE TABLE audit_logs CASCADE;`);
   
   // We do NOT truncate admins if we want to keep the test admin, 
   // but it's cleaner to truncate and re-seed it
-  await db.execute(sql`TRUNCATE TABLE admins CASCADE;`);
+  // await db.execute(sql`TRUNCATE TABLE admins CASCADE;`);
   
-  console.log('Database reset complete.');
+  console.log('Database reset disabled to protect production data.');
 }
