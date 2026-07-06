@@ -10,6 +10,16 @@ function formatImageUrl(url: string | null | undefined | unknown): string {
   return `/${cleanUrl}`;
 }
 
+function formatGoogleMapsUrl(url: string | null | undefined | unknown): string {
+  if (typeof url !== 'string' || !url.trim()) return '';
+  const rawUrl = url.trim();
+  const match = rawUrl.match(/src="([^"]+)"/);
+  let cleanUrl = match ? match[1] : rawUrl;
+  cleanUrl = cleanUrl.replace(/^\[|\]$/g, '').trim();
+  if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) return cleanUrl;
+  return '';
+}
+
 export const getSiteSettings = unstable_cache(
   async () => {
   try {
@@ -39,7 +49,7 @@ export const getSiteSettings = unstable_cache(
         secondaryPhone: '',
         lineUrl: settings?.lineUrl || siteConfig.social.line.url,
         facebookUrl: settings?.facebookUrl || siteConfig.social.facebook?.url || '',
-        googleMapsUrl: settings?.googleMapsUrl || siteConfig.googleMapsEmbed || '',
+        googleMapsUrl: formatGoogleMapsUrl(settings?.googleMapsUrl) || siteConfig.googleMapsEmbed || '',
         workingHours: settings?.workingHours || '',
         holidayNotice: settings?.holidayNotice || '',
         companyAddress: settings?.companyAddress || '',
