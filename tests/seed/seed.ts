@@ -21,13 +21,13 @@ export async function seedDb() {
       password: hashedPassword,
       role: 'admin',
     }
-  ]);
+  ]).onConflictDoNothing();
 
   // Seed default site settings
   await db.insert(siteSettings).values({
     logoUrl: '/logo.png',
     mainPhone: '080-000-0000',
-  });
+  }).onConflictDoNothing();
 
   console.log('Seeding complete.');
 }
