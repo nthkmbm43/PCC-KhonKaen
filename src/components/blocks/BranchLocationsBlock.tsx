@@ -25,6 +25,7 @@ type BranchLocationsBlockProps = {
     headline?: string;
     branches?: Branch[];
   };
+  initialStatus?: BusinessStatus | null;
 };
 
 const defaultBranches: Branch[] = [
@@ -46,24 +47,12 @@ const defaultBranches: Branch[] = [
   },
 ];
 
-export default function BranchLocationsBlock({ data }: BranchLocationsBlockProps) {
+export default function BranchLocationsBlock({ data, initialStatus }: BranchLocationsBlockProps) {
   const headline = data?.headline || 'สาขาของเรา';
   const branches = data?.branches || defaultBranches;
 
-  const [status, setStatus] = useState<BusinessStatus | null>(null);
-  const [settingsData, setSettingsData] = useState<{ googleMapsEmbedUrl?: string; companyAddress?: string } | null>(null);
-
-  useEffect(() => {
-    fetch('/api/business-status')
-      .then(r => r.json())
-      .then((data) => {
-        setStatus(data);
-        if (data.googleMapsEmbedUrl || data.companyAddress) {
-          setSettingsData({ googleMapsEmbedUrl: data.googleMapsEmbedUrl, companyAddress: data.companyAddress });
-        }
-      })
-      .catch(() => {});
-  }, []);
+  const status = initialStatus || null;
+  const settingsData = status ? { googleMapsEmbedUrl: status.googleMapsEmbedUrl, companyAddress: status.companyAddress } : null;
 
   return (
     <section className="py-20 sm:py-24 bg-white relative">

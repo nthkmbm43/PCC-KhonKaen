@@ -19,6 +19,7 @@ type ContactFormBlockProps = {
     workingHours?: string;
     holidayNotice?: string;
   };
+  initialStatus?: BusinessStatus | null;
 };
 
 function formatDateTH(dateStr: string): string {
@@ -28,23 +29,15 @@ function formatDateTH(dateStr: string): string {
   return `${day} ${MONTHS_TH[month]} ${year + 543}`;
 }
 
-export default function ContactFormBlock({ data }: ContactFormBlockProps) {
+export default function ContactFormBlock({ data, initialStatus }: ContactFormBlockProps) {
   const headline    = data?.headline    || 'ส่งข้อความหาเรา';
   const subheadline = data?.subheadline || 'กรอกข้อมูลด้านล่าง ทีมงานของเราจะติดต่อกลับภายใน 24 ชั่วโมงในวันทำการ';
   const phone       = data?.phone       || '063-454-5656';
   const lineUrl     = data?.lineUrl     || '#';
 
-  const [status, setStatus]       = useState<BusinessStatus | null>(null);
   const [form, setForm]           = useState({ name: '', phone: '', email: '', project: '', message: '' });
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-
-  // Fetch live business status
-  useEffect(() => {
-    fetch('/api/business-status')
-      .then(r => r.json())
-      .then(setStatus)
-      .catch(() => {/* silent — fallback to no badge */});
-  }, []);
+  const status = initialStatus || null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -134,21 +127,18 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
               </div>
 
               {/* Live open/closed badge */}
-              <div className={`flex items-center gap-2.5 px-4 py-3.5 rounded-xl border text-sm font-bold shadow-sm ${
-                !status
-                  ? 'bg-slate-50 border-slate-100 text-slate-400'
-                  : status.isOpen
+              {status && (
+                <div className={`flex items-center gap-2.5 px-4 py-3.5 rounded-xl border text-sm font-bold shadow-sm ${
+                  status.isOpen
                     ? 'bg-green-50 border-green-200 text-green-700'
                     : 'bg-gray-50 border-gray-200 text-gray-700'
-              }`}>
-                {!status ? (
-                  <><div className="w-2.5 h-2.5 bg-slate-300 rounded-full animate-pulse" /> <span className="flex-1 text-base">กำลังโหลดสถานะ...</span></>
-                ) : status.isOpen ? (
-                  <><div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" /> <span className="flex-1 text-base">ตอนนี้เปิดทำการ</span></>
-                ) : (
-                  <><div className="w-2.5 h-2.5 bg-red-500 rounded-full" /> <span className="flex-1 text-base">ตอนนี้ปิดทำการ</span></>
-                )}
-              </div>
+                }`}>
+                  {status.isOpen
+                    ? <><div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" /> <span className="flex-1 text-base">ตอนนี้เปิดทำการ</span></>
+                    : <><div className="w-2.5 h-2.5 bg-red-500 rounded-full" /> <span className="flex-1 text-base">ตอนนี้ปิดทำการ</span></>
+                  }
+                </div>
+              )}
 
               {/* Smart Upcoming Holiday Notice */}
               {activeOrSoonHoliday && (

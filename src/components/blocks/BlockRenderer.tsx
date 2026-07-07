@@ -35,20 +35,37 @@ const blockComponents = {
   content: RichTextBlock,
 }
 
-export default function BlockRenderer({ layout }: { layout: Record<string, unknown>[] }) {
+import { getBusinessStatus } from '@/lib/getBusinessStatus'
+
+export default async function BlockRenderer({ layout }: { layout: Record<string, unknown>[] }) {
   if (!layout || !Array.isArray(layout)) return null
+
+  const needsBusinessStatus = layout.some(b => 
+    (b.type || b.blockType) === 'contactForm' || 
+    (b.type || b.blockType) === 'branchLocations'
+  );
+
+  let status = null;
+  if (needsBusinessStatus) {
+    status = await getBusinessStatus().catch(() => null);
+  }
 
   return (
     <>
       {layout.map((block, i) => {
         // Handle both type and blockType for backward compatibility
         const type = block.type || block.blockType
-        const BlockComponent = blockComponents[type as keyof typeof blockComponents] as React.ComponentType<{ data: Record<string, unknown> }>
+        const BlockComponent = blockComponents[type as keyof typeof blockComponents] as React.ComponentType<{ data: Record<string, unknown>, initialStatus?: any }>
 
         if (BlockComponent) {
+          const isStatusAware = type === 'contactForm' || type === 'branchLocations';
           return (
             <BlockErrorBoundary key={i} blockName={type as string}>
-              <BlockComponent data={block} />
+              {isStatusAware ? (
+                <BlockComponent data={block} initialStatus={status} />
+              ) : (
+                <BlockComponent data={block} />
+              )}
             </BlockErrorBoundary>
           )
         }
