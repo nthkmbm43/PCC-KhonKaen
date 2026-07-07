@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, jsonb, uuid, pgEnum, index, integer, uniqueIndex } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, jsonb, uuid, pgEnum, index, integer, uniqueIndex, date, boolean } from 'drizzle-orm/pg-core';
 
 export const pageTemplateEnum = pgEnum('page_template', [
   'default',
@@ -149,6 +149,15 @@ export const siteSettings = pgTable('site_settings', {
   customHeadCode: text('custom_head_code'),
   customBodyCode: text('custom_body_code'),
   updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export const businessHolidayClosures = pgTable('business_holiday_closures', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  startDate: date('start_date').notNull(),
+  endDate: date('end_date').notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 export const admins = pgTable('admins', {

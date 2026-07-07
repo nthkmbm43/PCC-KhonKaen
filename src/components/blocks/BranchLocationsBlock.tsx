@@ -1,4 +1,6 @@
-import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
+'use client';
+import { useState, useEffect } from 'react';
+import { MapPin, Phone, Mail, Clock, ExternalLink, CheckCircle2, XCircle } from 'lucide-react';
 
 type Branch = {
   name: string;
@@ -8,6 +10,11 @@ type Branch = {
   hours?: string;
   mapUrl?: string;
   isPrimary?: boolean;
+};
+
+type BusinessStatus = {
+  isOpen: boolean;
+  reason: string;
 };
 
 type BranchLocationsBlockProps = {
@@ -39,6 +46,15 @@ const defaultBranches: Branch[] = [
 export default function BranchLocationsBlock({ data }: BranchLocationsBlockProps) {
   const headline = data?.headline || 'สาขาของเรา';
   const branches = data?.branches || defaultBranches;
+
+  const [status, setStatus] = useState<BusinessStatus | null>(null);
+
+  useEffect(() => {
+    fetch('/api/business-status')
+      .then(r => r.json())
+      .then(setStatus)
+      .catch(() => {});
+  }, []);
 
   return (
     <section className="py-20 sm:py-24 bg-white relative">
@@ -87,7 +103,22 @@ export default function BranchLocationsBlock({ data }: BranchLocationsBlockProps
               </div>
 
               <div className="p-6 sm:p-8 space-y-4">
-                <h3 className="text-xl font-bold text-gray-900">{branch.name}</h3>
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="text-xl font-bold text-gray-900">{branch.name}</h3>
+                  {branch.isPrimary && status && (
+                    <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border whitespace-nowrap ${
+                      status.isOpen 
+                        ? 'bg-green-50 border-green-200 text-green-700' 
+                        : 'bg-red-50 border-red-200 text-red-700'
+                    }`}>
+                      {status.isOpen ? (
+                        <><span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> เปิดทำการ</>
+                      ) : (
+                        <><XCircle size={12} className="text-red-500" /> ปิดทำการ</>
+                      )}
+                    </div>
+                  )}
+                </div>
 
                 <div className="space-y-3">
                   <div className="flex items-start gap-3 text-gray-600">

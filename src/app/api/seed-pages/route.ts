@@ -51,22 +51,25 @@ const NAVBAR_LINKS = [
 
 export async function GET() {
   try {
-    // ── 1. Upsert siteSettings (workingHours + navbarLinks) ──────────────────
+    // ── 1. Upsert siteSettings ──────────────────────────────────────────────
     const existingSettings = await db.select().from(siteSettings).limit(1);
+    const CORRECT_WORKING_HOURS = 'จันทร์ – เสาร์: 08:00 – 17:00 น. (หยุดทุกวันอาทิตย์)';
     if (existingSettings.length === 0) {
       await db.insert(siteSettings).values({
         navbarLinks: NAVBAR_LINKS,
         mainPhone: '063-454-5656',
-        lineUrl: 'https://line.me/R/ti/p/@pcc.kk',
-        facebookUrl: 'https://www.facebook.com/pcc.posttension.kk',
-        workingHours: 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.',
+        lineUrl: 'https://lin.ee/5O8rHvD',
+        facebookUrl: 'https://www.facebook.com/profile.php?id=61591107462645',
+        workingHours: CORRECT_WORKING_HOURS,
         companyAddress: 'เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000',
       });
     } else {
       // Only update navbarLinks and workingHours — preserve logo/other settings
       await db.update(siteSettings).set({
         navbarLinks: NAVBAR_LINKS,
-        workingHours: existingSettings[0].workingHours || 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.',
+        lineUrl: existingSettings[0].lineUrl || 'https://lin.ee/5O8rHvD',
+        facebookUrl: existingSettings[0].facebookUrl || 'https://www.facebook.com/profile.php?id=61591107462645',
+        workingHours: CORRECT_WORKING_HOURS,
         mainPhone: existingSettings[0].mainPhone || '063-454-5656',
       });
     }

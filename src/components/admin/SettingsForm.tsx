@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Save, Plus, Trash2, Unlock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "./ImageUpload";
+import { HolidayManager } from "./HolidayManager";
 import toast from "react-hot-toast";
 import {
   AlertDialog,
@@ -496,6 +497,18 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
 
         </div>
       </form>
+
+      {/* ─── Holiday Management ────────────────────────────────────────── */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+          <h2 className="text-base font-bold text-slate-800">📅 จัดการวันหยุดพิเศษ</h2>
+          <p className="text-sm text-slate-500 mt-0.5">กำหนดล่วงหน้า เมื่อถึงวันที่ระบุ หน้าเว็บจะแสดงสถานะ ปิดทำการ โดยอัตโนมัติ</p>
+        </div>
+        <div className="p-6">
+          <HolidayManager />
+        </div>
+      </div>
+
     </FormProvider>
   );
 }
