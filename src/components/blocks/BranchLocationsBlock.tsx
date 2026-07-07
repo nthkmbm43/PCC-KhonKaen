@@ -15,6 +15,8 @@ type Branch = {
 type BusinessStatus = {
   isOpen: boolean;
   reason: string;
+  googleMapsEmbedUrl?: string;
+  companyAddress?: string;
 };
 
 type BranchLocationsBlockProps = {
@@ -48,11 +50,17 @@ export default function BranchLocationsBlock({ data }: BranchLocationsBlockProps
   const branches = data?.branches || defaultBranches;
 
   const [status, setStatus] = useState<BusinessStatus | null>(null);
+  const [settingsData, setSettingsData] = useState<{ googleMapsEmbedUrl?: string; companyAddress?: string } | null>(null);
 
   useEffect(() => {
     fetch('/api/business-status')
       .then(r => r.json())
-      .then(setStatus)
+      .then((data) => {
+        setStatus(data);
+        if (data.googleMapsEmbedUrl || data.companyAddress) {
+          setSettingsData({ googleMapsEmbedUrl: data.googleMapsEmbedUrl, companyAddress: data.companyAddress });
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -87,9 +95,11 @@ export default function BranchLocationsBlock({ data }: BranchLocationsBlockProps
               <div className="h-52 bg-gradient-to-br from-slate-200 to-slate-300 relative overflow-hidden">
                 <iframe
                   src={
-                    branch.isPrimary
-                      ? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3840.8!2d102.8359!3d16.4419!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDI2JzMxLjYiTiAxMDLCsDUwJzA5LjIiRQ!5e0!3m2!1sth!2sth!4v1700000000000!5m2!1sth!2sth'
-                      : 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3775.3!2d99.0199!3d18.8156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDQ4JzU2LjIiTiA5OcKwMDEnMTEuNiJF!5e0!3m2!1sth!2sth!4v1700000000001!5m2!1sth!2sth'
+                    branch.isPrimary && settingsData?.googleMapsEmbedUrl
+                      ? settingsData.googleMapsEmbedUrl
+                      : branch.isPrimary
+                        ? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3840.8!2d102.8359!3d16.4419!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTbCsDI2JzMxLjYiTiAxMDLCsDUwJzA5LjIiRQ!5e0!3m2!1sth!2sth!4v1700000000000!5m2!1sth!2sth'
+                        : 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3775.3!2d99.0199!3d18.8156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDQ4JzU2LjIiTiA5OcKwMDEnMTEuNiJF!5e0!3m2!1sth!2sth!4v1700000000001!5m2!1sth!2sth'
                   }
                   width="100%"
                   height="100%"
@@ -123,7 +133,9 @@ export default function BranchLocationsBlock({ data }: BranchLocationsBlockProps
                 <div className="space-y-3">
                   <div className="flex items-start gap-3 text-gray-600">
                     <MapPin size={18} className="text-blue-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm leading-relaxed">{branch.address}</span>
+                    <span className="text-sm leading-relaxed whitespace-pre-line">
+                      {branch.isPrimary && settingsData?.companyAddress ? settingsData.companyAddress : branch.address}
+                    </span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-600">
                     <Phone size={18} className="text-blue-500 flex-shrink-0" />

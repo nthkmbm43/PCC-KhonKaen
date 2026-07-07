@@ -113,17 +113,26 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
               </div>
 
               <div className="space-y-6 pt-6">
-                {siteConfig.offices.map((office) => (
-                  <div
-                    key={office.name}
-                    className="border-l border-white/15 pl-4"
-                  >
-                    <h5 className="font-bold text-white">{office.name}</h5>
+                {contact.companyAddress ? (
+                  <div className="border-l border-white/15 pl-4">
+                    <h5 className="font-bold text-white">สำนักงานใหญ่</h5>
                     <div className="mt-2 space-y-1 text-sm leading-6 text-slate-400 whitespace-pre-line">
-                      {office.addressLines.join('\n')}
+                      {contact.companyAddress}
                     </div>
                   </div>
-                ))}
+                ) : (
+                  siteConfig.offices.map((office) => (
+                    <div
+                      key={office.name}
+                      className="border-l border-white/15 pl-4"
+                    >
+                      <h5 className="font-bold text-white">{office.name}</h5>
+                      <div className="mt-2 space-y-1 text-sm leading-6 text-slate-400 whitespace-pre-line">
+                        {office.addressLines.join('\n')}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </section>
 

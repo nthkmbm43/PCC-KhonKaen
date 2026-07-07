@@ -7,6 +7,19 @@ import { and, lte, gte, eq } from 'drizzle-orm';
 export const dynamic = 'force-dynamic';
 
 /**
+ * Extracts src URL if given an iframe, or cleans up the URL.
+ */
+function formatGoogleMapsUrl(url: string | null | undefined | unknown): string {
+  if (typeof url !== 'string' || !url.trim()) return '';
+  const rawUrl = url.trim();
+  const match = rawUrl.match(/src="([^"]+)"/);
+  let cleanUrl = match ? match[1] : rawUrl;
+  cleanUrl = cleanUrl.replace(/^\[|\]$/g, '').trim();
+  if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) return cleanUrl;
+  return '';
+}
+
+/**
  * Returns the current business open/closed status based on:
  * 1. Day of week (Sunday = closed always)
  * 2. Time of day (08:00–17:00 BKK = open on working days)
@@ -103,6 +116,8 @@ export async function GET() {
       workingHours,
       currentHoliday: isHoliday ? activeHolidays[0] : null,
       upcomingHolidays,
+      googleMapsEmbedUrl: formatGoogleMapsUrl(settings?.googleMapsUrl) || null,
+      companyAddress: settings?.companyAddress || null,
       debug: {
         bangkokTime: nowBKK.toISOString(),
         dayOfWeek,
