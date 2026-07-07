@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Send, CheckCircle, Phone, MessageSquare } from 'lucide-react';
+import { Send, CheckCircle, Phone, MessageSquare, Clock, AlertCircle } from 'lucide-react';
 
 type ContactFormBlockProps = {
   data: {
@@ -8,6 +8,8 @@ type ContactFormBlockProps = {
     subheadline?: string;
     phone?: string;
     lineUrl?: string;
+    workingHours?: string;
+    holidayNotice?: string;
   };
 };
 
@@ -16,6 +18,9 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
   const subheadline = data?.subheadline || 'กรอกข้อมูลด้านล่าง ทีมงานของเราจะติดต่อกลับภายใน 24 ชั่วโมง';
   const phone = data?.phone || '063-454-5656';
   const lineUrl = data?.lineUrl || '#';
+  // workingHours from CMS — plain text e.g. "จันทร์ – อาทิตย์: 08:00 – 17:00 น."
+  const workingHours = data?.workingHours || 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.';
+  const holidayNotice = data?.holidayNotice || '';
 
   const [form, setForm] = useState({ name: '', phone: '', email: '', project: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -27,7 +32,6 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('sending');
-    // Simulate form submission - in production connect to an API route
     await new Promise((r) => setTimeout(r, 1200));
     setStatus('success');
   };
@@ -37,7 +41,7 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16 items-start">
           {/* Left info panel */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6">
             <div>
               <span className="inline-block bg-blue-100 text-blue-700 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4">
                 ติดต่อเรา
@@ -79,13 +83,19 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
               </a>
             </div>
 
-            {/* Business hours */}
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <h4 className="font-semibold text-gray-900 mb-3 text-sm">เวลาทำการ</h4>
-              <div className="space-y-1 text-sm text-gray-600">
-                <div className="flex justify-between"><span>จันทร์ – เสาร์</span><span className="font-medium text-gray-900">08:00 – 17:00 น.</span></div>
-                <div className="flex justify-between"><span>อาทิตย์</span><span className="text-red-500">ปิดทำการ</span></div>
+            {/* Business hours — from CMS */}
+            <div className="bg-white rounded-xl border border-gray-100 p-5 space-y-3">
+              <div className="flex items-center gap-2 mb-1">
+                <Clock size={16} className="text-blue-500" />
+                <h4 className="font-semibold text-gray-900 text-sm">เวลาทำการ</h4>
               </div>
+              <p className="text-sm text-gray-700 leading-relaxed">{workingHours}</p>
+              {holidayNotice && (
+                <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                  <AlertCircle size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-amber-700 leading-relaxed">{holidayNotice}</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -144,7 +154,7 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="contact-project">ประเภทโครงการ</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="contact-project">ประเภทสินค้า/บริการ</label>
                     <select
                       id="contact-project"
                       name="project"
@@ -153,11 +163,11 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
                       className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
                     >
                       <option value="">-- เลือกประเภทสินค้า/บริการ --</option>
+                      <option>แผ่นพื้นสำเร็จรูป (Precast / Hollow Core Slab)</option>
+                      <option>งานโพสเทนชั่น (Post-Tension)</option>
                       <option>กำแพงกันดินตัว L</option>
                       <option>รั้วสำเร็จรูป</option>
-                      <option>แผ่นพื้นสำเร็จรูป (Hollow Core Slab)</option>
                       <option>เสารั้วลวดหนาม</option>
-                      <option>งานโพสเทนชั่น</option>
                       <option>รั้วคาวบอย</option>
                       <option>อื่นๆ</option>
                     </select>
@@ -171,7 +181,7 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
                       rows={4}
                       value={form.message}
                       onChange={handleChange}
-                      placeholder="ขนาดพื้นที่, จำนวนที่ต้องการ, หรือรายละเอียดโครงการ..."
+                      placeholder="ขนาดพื้นที่, ช่วงพาด, จำนวนที่ต้องการ หรือรายละเอียดโครงการ..."
                       className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white resize-none"
                     />
                   </div>

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { createSeoMetadata } from '@/lib/seo'
 import { getPageWithSeo } from '@/lib/repositories/page'
+import { getSiteSettings } from '@/lib/getSiteSettings'
 import { draftMode } from 'next/headers'
 
 export const dynamic = 'force-dynamic';
@@ -41,7 +42,10 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
-  const page = await getPageWithSeo(decodedSlug)
+  const [page, settings] = await Promise.all([
+    getPageWithSeo(decodedSlug),
+    getSiteSettings(),
+  ])
   console.log(`[DynamicPage] DB result for "${decodedSlug}":`, page ? `FOUND (ID: ${page.id}, Status: ${page.workflowState})` : 'NOT_FOUND');
 
   const isDraftMode = (await draftMode()).isEnabled
@@ -51,7 +55,20 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
     notFound()
   }
 
-  const layout = Array.isArray(page.content) ? page.content : []
+  // Inject global CMS settings into blocks that need them (e.g. ContactFormBlock)
+  const rawLayout = Array.isArray(page.content) ? page.content : []
+  const layout = rawLayout.map((block) => {
+    if ((block as Record<string, unknown>).type === 'contactForm') {
+      return {
+        ...block,
+        phone: (block as Record<string, unknown>).phone || settings.contact.mainPhone,
+        lineUrl: (block as Record<string, unknown>).lineUrl || settings.contact.lineUrl,
+        workingHours: (block as Record<string, unknown>).workingHours || settings.contact.workingHours || 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.',
+        holidayNotice: (block as Record<string, unknown>).holidayNotice || settings.contact.holidayNotice || '',
+      }
+    }
+    return block
+  })
 
   return (
     <div className="flex flex-col min-h-screen">

@@ -1,14 +1,80 @@
 import { db } from "@/db";
-import { pages, seoMetadata } from "@/db/schema";
+import { pages, seoMetadata, siteSettings } from "@/db/schema";
 import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 
+// ─── SHARED CONTENT BLOCKS ────────────────────────────────────────────────────
+const WHY_US_ITEMS = [
+  { icon: 'award', title: 'มาตรฐาน มอก. รับรอง', description: 'ทุกผลิตภัณฑ์ผ่านการรับรองมาตรฐาน มอก. ควบคุมคุณภาพโดยวิศวกรผู้เชี่ยวชาญทุกขั้นตอน' },
+  { icon: 'clock', title: 'ประสบการณ์กว่า 20 ปี', description: 'ดำเนินธุรกิจในวงการก่อสร้างมากกว่า 20 ปี มีผลงานอ้างอิงทั่วภาคอีสานและทั่วประเทศ' },
+  { icon: 'wrench', title: 'บริการครบวงจร OEM', description: 'ออกแบบ ผลิต จัดส่ง และติดตั้งโดยทีมของเราเอง ไม่ผ่านนายหน้า ประหยัดต้นทุน' },
+  { icon: 'shield', title: 'โรงงานได้มาตรฐาน', description: 'โรงงานผลิตทันสมัย ผ่านการรับรอง ใช้วัตถุดิบคุณภาพสูงทุกชิ้น' },
+  { icon: 'mapPin', title: 'ครอบคลุมภาคอีสาน', description: 'สาขาขอนแก่นและเชียงใหม่ พร้อมบริการจัดส่งและติดตั้งทั่วภาคอีสานและภาคเหนือ' },
+  { icon: 'headphones', title: 'ปรึกษาวิศวกรฟรี', description: 'ทีมวิศวกรพร้อมให้คำปรึกษา ประเมินราคา และออกแบบเบื้องต้นฟรี ไม่มีค่าใช้จ่าย' },
+];
+
+const PROCESS_STEPS = [
+  { title: 'ปรึกษาและประเมิน', description: 'ติดต่อทีมวิศวกรเพื่อรับคำปรึกษาและประเมินโครงการฟรี ไม่มีค่าใช้จ่าย' },
+  { title: 'ออกแบบและเสนอราคา', description: 'จัดทำใบเสนอราคาชัดเจน ไม่มีค่าใช้จ่ายซ่อนเร้น ส่งให้ภายใน 24 ชั่วโมง' },
+  { title: 'ผลิตในโรงงาน มอก.', description: 'ผลิตในโรงงานมาตรฐาน มอก. ควบคุมคุณภาพคอนกรีตและลวดอัดแรงทุกชุด' },
+  { title: 'จัดส่งและติดตั้ง', description: 'ส่งมอบตรงเวลา ติดตั้งโดยทีมช่างผู้เชี่ยวชาญ พร้อมวิศวกรควบคุมหน้างาน' },
+  { title: 'ส่งมอบและรับประกัน', description: 'ตรวจสอบคุณภาพก่อนส่งมอบ พร้อมบริการหลังการขายและการรับประกัน' },
+];
+
+const BRANCHES = [
+  {
+    name: 'สาขาขอนแก่น (สำนักงานใหญ่)',
+    address: 'เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000',
+    phone: '063-454-5656',
+    email: 'contact@pcc-posttension.com',
+    hours: 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.',
+    mapUrl: 'https://maps.google.com/?q=16.4419,102.8359',
+    isPrimary: true,
+  },
+  {
+    name: 'สาขาเชียงใหม่',
+    address: '292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300',
+    phone: '091-553-2624',
+    hours: 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.',
+    mapUrl: 'https://maps.google.com/?q=18.8156,99.0199',
+  },
+];
+
+// ─── NAV LINKS ────────────────────────────────────────────────────────────────
+const NAVBAR_LINKS = [
+  { label: 'หน้าแรก', url: '/' },
+  { label: 'สินค้าและบริการ', url: '/products' },
+  { label: 'เกี่ยวกับเรา', url: '/about' },
+  { label: 'ติดต่อเรา', url: '/contact' },
+];
+
 export async function GET() {
   try {
+    // ── 1. Upsert siteSettings (workingHours + navbarLinks) ──────────────────
+    const existingSettings = await db.select().from(siteSettings).limit(1);
+    if (existingSettings.length === 0) {
+      await db.insert(siteSettings).values({
+        navbarLinks: NAVBAR_LINKS,
+        mainPhone: '063-454-5656',
+        lineUrl: 'https://line.me/R/ti/p/@pcc.kk',
+        facebookUrl: 'https://www.facebook.com/pcc.posttension.kk',
+        workingHours: 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.',
+        companyAddress: 'เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000',
+      });
+    } else {
+      // Only update navbarLinks and workingHours — preserve logo/other settings
+      await db.update(siteSettings).set({
+        navbarLinks: NAVBAR_LINKS,
+        workingHours: existingSettings[0].workingHours || 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.',
+        mainPhone: existingSettings[0].mainPhone || '063-454-5656',
+      });
+    }
+
+    // ── 2. Pages seed data ────────────────────────────────────────────────────
     const seedData = [
       // ============================
-      // 1. HOME PAGE
+      // HOME PAGE
       // ============================
       {
         slug: 'home',
@@ -17,7 +83,7 @@ export async function GET() {
           {
             type: 'hero',
             heading: 'PCC Post-Tension สาขาขอนแก่น',
-            subheading: 'ผู้ผลิตและติดตั้งผลิตภัณฑ์คอนกรีตอัดแรง กำแพงกันดิน รั้วสำเร็จรูป และแผ่นพื้นสำเร็จรูป มาตรฐาน มอก. ครบวงจรในภาคอีสาน',
+            subheading: 'ผู้ผลิตและติดตั้ง พรีแคสท์คอนกรีต แผ่นพื้นสำเร็จรูป กำแพงกันดิน รั้วสำเร็จรูป และงานโพสเทนชั่น ครบวงจร มาตรฐาน มอก. โดยวิศวกรผู้เชี่ยวชาญ',
             buttons: [
               { label: 'โทรหาเราเลย 063-454-5656', url: 'tel:0634545656', style: 'primary' },
               { label: 'ดูสินค้าทั้งหมด', url: '/products', style: 'secondary' },
@@ -33,57 +99,64 @@ export async function GET() {
               { value: 100, suffix: '%', label: 'มาตรฐาน มอก.' },
             ],
           },
+          // ── ไฮไลต์ 2 สินค้าเด่น: Precast + Post-tension ──────────────────
+          {
+            type: 'richText',
+            content: `
+<div style="background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 100%);padding:3rem 1.5rem;text-align:center;color:white;">
+  <p style="font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:#93c5fd;margin-bottom:.75rem;font-weight:700;">สินค้าแนะนำ • Best Sellers</p>
+  <h2 style="font-size:2rem;font-weight:800;margin-bottom:1rem;line-height:1.2;">พรีแคสท์ & โพสเทนชั่น<br/>สองเทคโนโลยีที่เปลี่ยนการก่อสร้างของคุณ</h2>
+  <p style="font-size:1.1rem;color:#bfdbfe;max-width:700px;margin:0 auto 2.5rem;line-height:1.8;">
+    ประหยัดเวลา ลดต้นทุน และได้โครงสร้างที่แข็งแกร่งกว่า — ด้วยวัสดุสำเร็จรูปจากโรงงานมาตรฐาน มอก. ที่คุณไว้ใจได้
+  </p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="/products/hollow-core-slab" style="display:inline-block;background:white;color:#1e40af;font-weight:700;padding:.9rem 2rem;border-radius:999px;text-decoration:none;font-size:1rem;">
+      🏗️ แผ่นพื้นสำเร็จรูป (Precast)
+    </a>
+    <a href="/products/post-tension" style="display:inline-block;background:#00B900;color:white;font-weight:700;padding:.9rem 2rem;border-radius:999px;text-decoration:none;font-size:1rem;">
+      ⚙️ งานโพสเทนชั่น (Post-Tension)
+    </a>
+  </div>
+</div>`,
+          },
           {
             type: 'featureGrid',
-            headline: 'ผลิตภัณฑ์คอนกรีตสำเร็จรูปของเรา',
-            description: 'ครบทุกความต้องการก่อสร้าง ผลิตในโรงงานมาตรฐาน พร้อมติดตั้งโดยทีมวิศวกรผู้เชี่ยวชาญ',
+            headline: 'ผลิตภัณฑ์คอนกรีตสำเร็จรูปทั้งหมดของเรา',
+            description: 'ครบทุกความต้องการก่อสร้าง ผลิตในโรงงานมาตรฐาน มอก. พร้อมบริการติดตั้งโดยวิศวกร',
           },
           {
             type: 'whyUs',
             headline: 'ทำไมต้องเลือก PCC Post-Tension?',
             subheadline: 'มากกว่า 20 ปีที่เราสร้างความเชื่อมั่นให้กับลูกค้าทั่วภาคอีสาน',
-            items: [
-              { icon: 'award', title: 'มาตรฐาน มอก. รับรอง', description: 'ผลิตภัณฑ์ทุกชิ้นผ่านการรับรองมาตรฐาน มอก. 576-2546 และ มอก.828-2546 ควบคุมคุณภาพโดยวิศวกร' },
-              { icon: 'clock', title: 'ประสบการณ์กว่า 20 ปี', description: 'ดำเนินธุรกิจในวงการก่อสร้างมากกว่า 20 ปี มีผลงานอ้างอิงทั่วภาคอีสานและทั่วประเทศ' },
-              { icon: 'wrench', title: 'บริการครบวงจร', description: 'ออกแบบ ผลิต จัดส่ง และติดตั้งโดยทีมของเราเอง ไม่ผ่านนายหน้า ควบคุมคุณภาพได้ทุกขั้นตอน' },
-              { icon: 'shield', title: 'โรงงานผลิตได้มาตรฐาน', description: 'โรงงานผลิตทันสมัย ผ่านการรับรอง ใช้วัตถุดิบคุณภาพสูงทุกชิ้น' },
-              { icon: 'mapPin', title: 'ครอบคลุมภาคอีสาน', description: 'สาขาขอนแก่นและเชียงใหม่ พร้อมบริการจัดส่งและติดตั้งทั่วภาคอีสานและภาคเหนือ' },
-              { icon: 'headphones', title: 'ปรึกษาวิศวกรฟรี', description: 'ทีมวิศวกรพร้อมให้คำปรึกษา ประเมินราคา และออกแบบเบื้องต้นฟรี ไม่มีค่าใช้จ่าย' },
-            ],
+            items: WHY_US_ITEMS,
           },
           {
             type: 'process',
             headline: 'ขั้นตอนการสั่งซื้อ',
-            subheadline: 'ง่าย สะดวก รวดเร็ว โปร่งใส ตั้งแต่เริ่มต้นจนส่งมอบงาน',
-            steps: [
-              { title: 'ปรึกษาและประเมิน', description: 'ติดต่อทีมวิศวกรเพื่อรับคำปรึกษาและประเมินโครงการฟรี' },
-              { title: 'ออกแบบและเสนอราคา', description: 'จัดทำใบเสนอราคาชัดเจน ไม่มีค่าใช้จ่ายซ่อนเร้น' },
-              { title: 'ผลิตในโรงงาน', description: 'ผลิตในโรงงานมาตรฐาน มอก. ควบคุมคุณภาพทุกขั้นตอน' },
-              { title: 'จัดส่งและติดตั้ง', description: 'ส่งมอบตรงเวลา ติดตั้งโดยทีมช่างผู้เชี่ยวชาญ' },
-              { title: 'ส่งมอบงาน', description: 'ตรวจสอบคุณภาพก่อนส่งมอบ พร้อมบริการหลังการขาย' },
-            ],
+            subheadline: 'ง่าย สะดวก โปร่งใส ตั้งแต่ปรึกษาจนส่งมอบงาน',
+            steps: PROCESS_STEPS,
           },
           {
             type: 'testimonial',
             headline: 'เสียงจากลูกค้าจริงของเรา',
-            subheadline: 'ความไว้วางใจที่สะสมมากว่า 20 ปี',
+            subheadline: 'ความไว้วางใจที่สะสมมากกว่า 20 ปี',
           },
           {
             type: 'cta',
             headline: 'พร้อมเริ่มโครงการของคุณ?',
-            description: 'รับคำปรึกษาจากทีมวิศวกรของเราฟรี ไม่มีค่าใช้จ่าย พร้อมใบเสนอราคาภายใน 24 ชั่วโมง',
+            description: 'รับคำปรึกษาจากทีมวิศวกรของเราฟรี พร้อมใบเสนอราคาภายใน 24 ชั่วโมง ไม่มีค่าใช้จ่าย',
             buttonText: 'ติดต่อเราเลย',
             buttonUrl: '/contact',
           },
         ],
         seo: {
-          title: 'กำแพงกันดิน รั้วสำเร็จรูป แผ่นพื้นสำเร็จรูป ขอนแก่น | PCC Post-Tension',
-          description: 'PCC Post-Tension ขอนแก่น รับออกแบบ ผลิต ติดตั้ง กำแพงกันดินตัว L รั้วสำเร็จรูป แผ่นพื้นสำเร็จรูป เสารั้วลวดหนาม และงานโพสเทนชั่น มาตรฐาน มอก. โดยทีมวิศวกรผู้เชี่ยวชาญ',
+          title: 'กำแพงกันดิน รั้วสำเร็จรูป แผ่นพื้นพรีแคสท์ โพสเทนชั่น ขอนแก่น | PCC',
+          description: 'PCC Post-Tension ขอนแก่น รับออกแบบ ผลิต ติดตั้ง แผ่นพื้นสำเร็จรูป Hollow Core Slab งานโพสเทนชั่น กำแพงกันดินตัว L รั้วสำเร็จรูป เสารั้วลวดหนาม มาตรฐาน มอก. โดยวิศวกร โทร 063-454-5656',
         },
       },
 
       // ============================
-      // 2. ABOUT PAGE
+      // ABOUT PAGE
       // ============================
       {
         slug: 'about',
@@ -92,7 +165,7 @@ export async function GET() {
           {
             type: 'hero',
             heading: 'บริษัท พีซีซี โพสเทนชั่น จำกัด',
-            subheading: 'ผู้นำด้านผลิตภัณฑ์คอนกรีตสำเร็จรูปและงานโพสเทนชั่นในภาคอีสาน มุ่งมั่นส่งมอบงานคุณภาพสูงกว่า 20 ปี',
+            subheading: 'ผู้ผลิตและติดตั้งพรีแคสท์คอนกรีตและงานโพสเทนชั่นครบวงจรในภาคอีสาน ด้วยประสบการณ์กว่า 20 ปี',
             buttons: [
               { label: 'ดูสินค้าของเรา', url: '/products', style: 'primary' },
               { label: 'ติดต่อเรา', url: '/contact', style: 'secondary' },
@@ -100,18 +173,22 @@ export async function GET() {
           },
           {
             type: 'richText',
-            content: `<div style="max-width:800px;margin:0 auto;padding:3rem 1.5rem;">
-              <p style="font-size:1.15rem;color:#374151;line-height:1.9;margin-bottom:1.5rem;">
-                <strong>บริษัท พีซีซี โพสเทนชั่น จำกัด</strong> ก่อตั้งขึ้นด้วยความมุ่งมั่นที่จะยกระดับมาตรฐานวัสดุก่อสร้างในภาคตะวันออกเฉียงเหนือของประเทศไทย
-                ด้วยประสบการณ์กว่า 20 ปีในวงการก่อสร้าง เราเชี่ยวชาญในการผลิตและติดตั้งผลิตภัณฑ์คอนกรีตสำเร็จรูปที่หลากหลาย
+            content: `<div style="max-width:820px;margin:0 auto;padding:3.5rem 1.5rem;">
+              <h2 style="font-size:1.8rem;font-weight:800;color:#1e3a8a;margin-bottom:1.25rem;">ผู้นำด้านพรีแคสท์คอนกรีตในภาคอีสาน</h2>
+              <p style="font-size:1.1rem;color:#374151;line-height:1.9;margin-bottom:1.5rem;">
+                <strong>บริษัท พีซีซี โพสเทนชั่น จำกัด (PCC Post-Tension)</strong> สาขาขอนแก่น คือหนึ่งในผู้แทนจำหน่ายและติดตั้งผลิตภัณฑ์คอนกรีตสำเร็จรูปและงานโพสเทนชั่นชั้นนำของภาคตะวันออกเฉียงเหนือ
+                เชื่อมโยงกับ <strong>บริษัท พิบูลย์คอนกรีต จำกัด (PCC)</strong> ผู้ผลิตรายใหญ่ที่ได้รับการรับรองมาตรฐาน มอก.
               </p>
-              <p style="font-size:1.15rem;color:#374151;line-height:1.9;margin-bottom:1.5rem;">
-                สาขาขอนแก่นของเราตั้งอยู่ที่หัวใจของภาคอีสาน ทำให้เราสามารถให้บริการจัดส่งและติดตั้งได้อย่างรวดเร็วและทั่วถึงในพื้นที่ภาคตะวันออกเฉียงเหนือทั้งหมด
-                นอกจากนี้เรายังมีสาขาเชียงใหม่ที่ให้บริการลูกค้าในภาคเหนือ
+              <p style="font-size:1.1rem;color:#374151;line-height:1.9;margin-bottom:1.5rem;">
+                เราเชี่ยวชาญในสองเทคโนโลยีหลัก ได้แก่ <strong>พรีแคสท์คอนกรีต (Precast Concrete)</strong> — ชิ้นส่วนโครงสร้างสำเร็จรูปที่ผลิตในโรงงานและนำมาประกอบในสถานที่ก่อสร้าง และ <strong>โพสเทนชั่น (Post-Tension)</strong> — ระบบคอนกรีตอัดแรงที่ทำให้โครงสร้างแข็งแกร่งขึ้น ช่วงพาดได้ยาวขึ้น และประหยัดวัสดุ
               </p>
-              <p style="font-size:1.15rem;color:#374151;line-height:1.9;">
-                ทุกผลิตภัณฑ์ของเราผ่านการผลิตในโรงงานมาตรฐาน <strong>มอก.</strong> และตรวจสอบคุณภาพโดยทีมวิศวกรผู้เชี่ยวชาญก่อนส่งมอบให้ลูกค้าทุกครั้ง
-                เพราะเราเชื่อว่างานก่อสร้างที่ดีต้องเริ่มต้นจากวัสดุที่มีคุณภาพ
+              <div style="background:#f0f9ff;border-left:4px solid #1d4ed8;padding:1.25rem 1.5rem;border-radius:0 .75rem .75rem 0;margin-bottom:1.5rem;">
+                <p style="font-size:1rem;color:#1e3a8a;font-weight:600;margin:0;">
+                  🏆 ผู้แทนจำหน่ายและติดตั้งผลิตภัณฑ์ Hollow Core Slab จาก PCC (พิบูลย์คอนกรีต) มาตรฐาน มอก. 576-2546 และ มอก.828-2546
+                </p>
+              </div>
+              <p style="font-size:1.1rem;color:#374151;line-height:1.9;">
+                ด้วยทีมวิศวกรและช่างผู้เชี่ยวชาญ เราให้บริการครบวงจรตั้งแต่ออกแบบ ผลิต จัดส่ง จนถึงติดตั้งในสถานที่จริง ให้บริการลูกค้าในขอนแก่น ภาคอีสานทั้งหมด รวมถึงสาขาเชียงใหม่สำหรับภาคเหนือ
               </p>
             </div>`,
           },
@@ -127,31 +204,33 @@ export async function GET() {
           },
           {
             type: 'whyUs',
-            headline: 'คุณค่าที่เราส่งมอบ',
+            headline: 'คุณค่าที่เราส่งมอบให้ลูกค้า',
             subheadline: 'หลักการทำงานที่ยึดถือมาตลอดกว่า 20 ปี',
+            items: WHY_US_ITEMS,
           },
           {
             type: 'process',
             headline: 'กระบวนการทำงานของเรา',
             subheadline: 'ขั้นตอนที่ชัดเจน โปร่งใส ตรวจสอบได้ทุกขั้น',
             theme: 'dark',
+            steps: PROCESS_STEPS,
           },
           {
             type: 'cta',
             headline: 'ร่วมสร้างโครงการคุณภาพไปกับเรา',
-            description: 'ทีมวิศวกรของเราพร้อมรับฟังความต้องการและนำเสนอโซลูชั่นที่เหมาะสมกับโครงการของคุณ',
+            description: 'ทีมวิศวกรของเราพร้อมรับฟังและนำเสนอโซลูชั่นที่เหมาะสมกับโครงการของคุณ ปรึกษาฟรีไม่มีค่าใช้จ่าย',
             buttonText: 'ปรึกษาวิศวกรฟรี',
             buttonUrl: '/contact',
           },
         ],
         seo: {
-          title: 'เกี่ยวกับเรา | PCC Post-Tension ขอนแก่น ผู้ผลิตคอนกรีตสำเร็จรูป',
-          description: 'ทำความรู้จักกับ บริษัท พีซีซี โพสเทนชั่น จำกัด สาขาขอนแก่น ผู้เชี่ยวชาญด้านงานคอนกรีตอัดแรง กำแพงกันดิน รั้วสำเร็จรูป แผ่นพื้นสำเร็จรูป และงานโพสเทนชั่น มากกว่า 20 ปี มาตรฐาน มอก.',
+          title: 'เกี่ยวกับเรา | PCC Post-Tension ขอนแก่น ผู้ผลิตพรีแคสท์คอนกรีต โพสเทนชั่น',
+          description: 'ทำความรู้จักกับ บริษัท พีซีซี โพสเทนชั่น จำกัด สาขาขอนแก่น ผู้เชี่ยวชาญด้านพรีแคสท์คอนกรีต แผ่นพื้นสำเร็จรูป งานโพสเทนชั่น และกำแพงกันดิน มาตรฐาน มอก. ประสบการณ์กว่า 20 ปี',
         },
       },
 
       // ============================
-      // 3. PRODUCTS (OVERVIEW) PAGE
+      // PRODUCTS OVERVIEW PAGE
       // ============================
       {
         slug: 'products',
@@ -160,10 +239,39 @@ export async function GET() {
           {
             type: 'hero',
             heading: 'สินค้าและบริการของเรา',
-            subheading: 'ครบวงจรด้านผลิตภัณฑ์คอนกรีตสำเร็จรูป มาตรฐาน มอก. ออกแบบ ผลิต จัดส่ง และติดตั้งโดยวิศวกรผู้เชี่ยวชาญ',
+            subheading: 'พรีแคสท์คอนกรีตและงานโพสเทนชั่นคุณภาพสูง พร้อมผลิตภัณฑ์ครบครัน มาตรฐาน มอก. ออกแบบ ผลิต จัดส่ง และติดตั้งโดยวิศวกร',
             buttons: [
               { label: 'ขอใบเสนอราคาฟรี', url: '/contact', style: 'primary' },
             ],
+          },
+          // ── Featured: Precast + Post-tension ──────────────────────────────
+          {
+            type: 'richText',
+            content: `
+<div style="padding:3rem 1rem;background:#f8fafc;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p style="text-align:center;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:#1d4ed8;font-weight:700;margin-bottom:.5rem;">⭐ สินค้าแนะนำ — เน้นขาย</p>
+    <h2 style="text-align:center;font-size:2rem;font-weight:800;color:#111827;margin-bottom:.75rem;">พรีแคสท์ & โพสเทนชั่น</h2>
+    <p style="text-align:center;color:#6b7280;max-width:650px;margin:0 auto 2.5rem;">เทคโนโลยีที่ประหยัดเวลาก่อสร้าง ลดต้นทุน และให้โครงสร้างที่แข็งแกร่งกว่า เหมาะกับทุกโครงการตั้งแต่บ้านพักไปจนถึงโรงงานและคอนโด</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;">
+
+      <div style="background:linear-gradient(135deg,#1e3a8a,#1e40af);border-radius:1.25rem;padding:2rem;color:white;">
+        <div style="font-size:2.5rem;margin-bottom:1rem;">🏗️</div>
+        <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:.75rem;">แผ่นพื้นพรีแคสท์<br/>(Hollow Core Slab)</h3>
+        <p style="color:#bfdbfe;line-height:1.8;margin-bottom:1.5rem;font-size:.95rem;">แผ่นพื้นกลวงสำเร็จรูปจากโรงงาน ความหนา 8–30 ซม. กว้าง 60/120 ซม. ช่วงพาดสูงสุด 12 เมตร มาตรฐาน มอก. 576-2546 ลดน้ำหนักโครงสร้าง 30–40% ติดตั้งเร็วกว่าเทในที่</p>
+        <a href="/products/hollow-core-slab" style="display:inline-block;background:white;color:#1e40af;font-weight:700;padding:.75rem 1.5rem;border-radius:999px;text-decoration:none;font-size:.9rem;">ดูรายละเอียด →</a>
+      </div>
+
+      <div style="background:linear-gradient(135deg,#14532d,#15803d);border-radius:1.25rem;padding:2rem;color:white;">
+        <div style="font-size:2.5rem;margin-bottom:1rem;">⚙️</div>
+        <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:.75rem;">งานโพสเทนชั่น<br/>(Post-Tension System)</h3>
+        <p style="color:#bbf7d0;line-height:1.8;margin-bottom:1.5rem;font-size:.95rem;">ระบบคอนกรีตอัดแรงขั้นสูง เพิ่มความแข็งแกร่งโครงสร้าง ช่วงพาดได้ยาว 20+ เมตร ลดจำนวนเสาและคาน เหมาะกับอาคารสูง ศูนย์การค้า คลังสินค้า ตามมาตรฐาน ACI 318</p>
+        <a href="/products/post-tension" style="display:inline-block;background:white;color:#15803d;font-weight:700;padding:.75rem 1.5rem;border-radius:999px;text-decoration:none;font-size:.9rem;">ดูรายละเอียด →</a>
+      </div>
+
+    </div>
+  </div>
+</div>`,
           },
           {
             type: 'featureGrid',
@@ -174,6 +282,7 @@ export async function GET() {
             type: 'whyUs',
             headline: 'เหตุผลที่ลูกค้าเลือกเรา',
             subheadline: 'มากกว่าแค่ผู้ขาย เราคือพันธมิตรในการก่อสร้างที่คุณไว้ใจได้',
+            items: WHY_US_ITEMS,
           },
           {
             type: 'testimonial',
@@ -188,13 +297,13 @@ export async function GET() {
           },
         ],
         seo: {
-          title: 'สินค้าและบริการ | กำแพงกันดิน รั้ว แผ่นพื้น โพสเทนชั่น ขอนแก่น | PCC',
-          description: 'จำหน่ายและติดตั้งกำแพงกันดินตัว L รั้วสำเร็จรูป แผ่นพื้นสำเร็จรูป Hollow Core Slab เสารั้วลวดหนาม รั้วคาวบอย และงานโพสเทนชั่น มาตรฐาน มอก. ขอนแก่น',
+          title: 'สินค้าและบริการ | แผ่นพื้นพรีแคสท์ โพสเทนชั่น กำแพงกันดิน รั้ว ขอนแก่น | PCC',
+          description: 'จำหน่ายและติดตั้งแผ่นพื้นสำเร็จรูป Hollow Core Slab งานโพสเทนชั่น Post-Tension กำแพงกันดินตัว L รั้วสำเร็จรูป เสารั้วลวดหนาม รั้วคาวบอย มาตรฐาน มอก. ขอนแก่น',
         },
       },
 
       // ============================
-      // 4. POST-TENSION PRODUCT PAGE
+      // POST-TENSION PRODUCT PAGE
       // ============================
       {
         slug: 'post-tension',
@@ -203,7 +312,7 @@ export async function GET() {
           {
             type: 'hero',
             heading: 'งานโพสเทนชั่น (Post-Tension)',
-            subheading: 'ระบบคอนกรีตอัดแรงที่ช่วยเพิ่มความแข็งแกร่งให้โครงสร้าง ประหยัดวัสดุ และลดระยะเวลาก่อสร้าง โดยวิศวกรผู้เชี่ยวชาญ',
+            subheading: 'ระบบคอนกรีตอัดแรงขั้นสูงที่เพิ่มความแข็งแกร่ง ช่วงพาดได้ยาวขึ้น ลดจำนวนเสาและคาน ออกแบบและติดตั้งโดยวิศวกรผู้เชี่ยวชาญ',
             buttons: [
               { label: 'ขอใบเสนอราคา', url: '/contact', style: 'primary' },
               { label: 'ดูสินค้าอื่นๆ', url: '/products', style: 'secondary' },
@@ -211,20 +320,25 @@ export async function GET() {
           },
           {
             type: 'richText',
-            content: `<div style="max-width:800px;margin:0 auto;padding:3rem 1.5rem;">
-              <h2 style="font-size:1.75rem;font-weight:700;color:#1e3a8a;margin-bottom:1rem;">ระบบโพสเทนชั่นคืออะไร?</h2>
+            content: `<div style="max-width:820px;margin:0 auto;padding:3rem 1.5rem;">
+              <h2 style="font-size:1.75rem;font-weight:800;color:#1e3a8a;margin-bottom:1rem;">⚙️ Post-Tension คืออะไร?</h2>
               <p style="font-size:1.1rem;color:#374151;line-height:1.9;margin-bottom:1.5rem;">
-                <strong>Post-Tension (โพสเทนชั่น)</strong> คือเทคโนโลยีการก่อสร้างที่ใช้ลวดอัดแรงดึงภายหลังจากเทคอนกรีตแล้ว
-                ทำให้คอนกรีตมีความแข็งแกร่งสูงกว่าปกติ ลดการแอ่นตัวของโครงสร้าง และสามารถออกแบบช่วงพาดได้ยาวขึ้น
+                <strong>Post-Tension (โพสเทนชั่น)</strong> เป็นเทคโนโลยีการก่อสร้างที่ใช้ลวดอัดแรงดึงภายหลังจากเทและบ่มคอนกรีตแล้ว ทำให้คอนกรีตมีแรงอัดภายใน ลดการแอ่นตัว ลดรอยแตกร้าว และสามารถออกแบบช่วงพาดได้ยาวกว่าคอนกรีตเสริมเหล็กทั่วไป
               </p>
-              <h3 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;">ข้อดีของระบบโพสเทนชั่น</h3>
-              <ul style="color:#374151;line-height:2;margin-left:1.5rem;margin-bottom:1.5rem;">
-                <li>ช่วงพาดได้ยาวขึ้น ลดจำนวนเสาและคาน</li>
-                <li>ลดความหนาของพื้นและคาน ประหยัดวัสดุ</li>
-                <li>ลดการแอ่นตัวและรอยแตกร้าว</li>
-                <li>เหมาะสำหรับอาคารสูง ศูนย์การค้า โกดัง และที่จอดรถ</li>
-                <li>ลดน้ำหนักรวมของโครงสร้างอาคาร</li>
+              <h3 style="font-size:1.3rem;font-weight:700;color:#1e3a8a;margin-bottom:.75rem;">เหมาะกับโครงการประเภทใด?</h3>
+              <ul style="color:#374151;line-height:2.1;margin-left:1.5rem;margin-bottom:1.5rem;font-size:1rem;">
+                <li>อาคารสูง คอนโดมิเนียม และโครงการที่อยู่อาศัย</li>
+                <li>ศูนย์การค้า ห้างสรรพสินค้า และพื้นที่รีเทล</li>
+                <li>อาคารโรงพยาบาล สถานศึกษา และอาคารสาธารณะ</li>
+                <li>คลังสินค้า โรงงานอุตสาหกรรม และโกดังขนาดใหญ่</li>
+                <li>ที่จอดรถยกสูง (Parking Structure)</li>
+                <li>สะพาน และโครงสร้างพิเศษที่ต้องการช่วงพาดยาว</li>
               </ul>
+              <div style="background:#dcfce7;border:1px solid #86efac;border-radius:1rem;padding:1.25rem 1.5rem;">
+                <p style="color:#15803d;font-weight:700;font-size:1rem;margin:0;">
+                  💡 ข้อได้เปรียบหลัก: ลดความหนาพื้น 20–30%, ช่วงพาดสูงสุด 20+ เมตร, ประหยัดแบบหล่อ, ลดน้ำหนักรวมโครงสร้าง
+                </p>
+              </div>
             </div>`,
           },
           {
@@ -235,52 +349,52 @@ export async function GET() {
                 title: 'สเปคระบบโพสเทนชั่น',
                 rows: [
                   { label: 'ประเภทลวด', value: 'Monostrand / Multistrand' },
-                  { label: 'กำลังดึงลวด', value: 'ASTM A416 Grade 270' },
-                  { label: 'ระบบยึดปลาย', value: 'ระบบลิ่ม (Wedge Anchor System)' },
-                  { label: 'การออกแบบ', value: 'ตามมาตรฐาน ACI 318 / วสท.' },
+                  { label: 'กำลังดึงลวด', value: 'ASTM A416 Grade 270 (270 ksi)' },
+                  { label: 'ระบบยึดปลาย', value: 'Wedge Anchor System (ระบบลิ่ม)' },
+                  { label: 'มาตรฐานการออกแบบ', value: 'ACI 318 / วสท. (วิศวกรรมสถานแห่งประเทศไทย)' },
                   { label: 'การใช้งาน', value: 'พื้น, คาน, ผนัง, สะพาน' },
-                  { label: 'ช่วงพาดสูงสุด', value: 'สูงสุดถึง 20+ เมตร (ขึ้นอยู่กับการออกแบบ)' },
+                  { label: 'ช่วงพาดสูงสุด', value: '20+ เมตร (ขึ้นอยู่กับการออกแบบ)' },
                 ],
               },
             ],
             features: [
-              'ลดจำนวนเสาและคาน เพิ่มพื้นที่ใช้สอย',
-              'ลดความหนาพื้น 20-30% เมื่อเทียบกับระบบทั่วไป',
-              'ลดน้ำหนักโครงสร้างรวมลง ประหยัดงานฐานราก',
-              'ควบคุมการแอ่นตัวและรอยร้าวได้ดีกว่า',
+              'ลดจำนวนเสาและคาน เพิ่มพื้นที่ใช้สอยภายในอาคาร',
+              'ลดความหนาพื้น 20–30% เมื่อเทียบกับคอนกรีตเสริมเหล็กทั่วไป',
+              'ลดน้ำหนักโครงสร้างรวม ประหยัดงานฐานราก',
+              'ควบคุมการแอ่นตัวและรอยร้าวได้ดีกว่ามาตรฐาน',
               'ระยะเวลาก่อสร้างสั้นกว่า เพราะไม่ต้องรอถอดแบบนาน',
               'คุ้มค่าในระยะยาว ลดค่าซ่อมบำรุง',
             ],
-            standardNote: 'ออกแบบและติดตั้งโดยวิศวกรโยธาที่มีใบประกอบวิชาชีพ ตามมาตรฐาน ACI 318 และมาตรฐานวิศวกรรมสถานแห่งประเทศไทย (วสท.)',
+            standardNote: 'ออกแบบและติดตั้งโดยวิศวกรโยธาที่มีใบประกอบวิชาชีพ (กว.) ตามมาตรฐาน ACI 318 และมาตรฐานวิศวกรรมสถานแห่งประเทศไทย (วสท.)',
           },
           {
             type: 'process',
             headline: 'ขั้นตอนงานโพสเทนชั่น',
             subheadline: 'กระบวนการทำงานที่เป็นระบบและได้มาตรฐาน',
             steps: [
-              { title: 'สำรวจและออกแบบ', description: 'วิศวกรสำรวจหน้างาน ออกแบบและคำนวณโครงสร้างที่เหมาะสม' },
-              { title: 'ติดตั้งลวดอัดแรง', description: 'วางและยึดลวดโพสเทนชั่นในตำแหน่งที่ออกแบบไว้' },
-              { title: 'เทคอนกรีต', description: 'เทคอนกรีตตามมาตรฐาน บ่มจนถึงกำลังที่กำหนด' },
-              { title: 'ดึงลวดอัดแรง', description: 'ดึงลวดด้วยแรงตามที่ออกแบบ ด้วยอุปกรณ์มาตรฐาน' },
-              { title: 'ตัดและอัดฉีดสี', description: 'ตัดลวดส่วนเกิน อัดฉีดวัสดุกันสนิม ตรวจสอบและส่งมอบ' },
+              { title: 'สำรวจและออกแบบ', description: 'วิศวกรสำรวจหน้างาน ออกแบบและคำนวณโครงสร้างตามมาตรฐาน ACI 318' },
+              { title: 'ติดตั้งลวดอัดแรง', description: 'วางและยึดลวดโพสเทนชั่นในตำแหน่งที่ออกแบบไว้อย่างแม่นยำ' },
+              { title: 'เทคอนกรีต', description: 'เทคอนกรีตตามมาตรฐาน บ่มจนได้กำลังที่กำหนด (ไม่น้อยกว่า 400 ksc)' },
+              { title: 'ดึงลวดอัดแรง', description: 'ดึงลวดด้วยแรงตามที่ออกแบบ โดยใช้อุปกรณ์มาตรฐานและวัดแรงอย่างแม่นยำ' },
+              { title: 'ตัดและอัดฉีดสี', description: 'ตัดลวดส่วนเกิน อัดฉีดวัสดุกันสนิม ตรวจสอบและส่งมอบงาน' },
             ],
           },
           {
             type: 'cta',
             headline: 'สนใจระบบโพสเทนชั่น?',
-            description: 'ให้วิศวกรของเราประเมินความเหมาะสมและคำนวณความประหยัดที่คุณจะได้รับจากระบบโพสเทนชั่นฟรี',
+            description: 'ให้วิศวกรของเราประเมินความเหมาะสมและคำนวณความประหยัดที่คุณจะได้รับจากระบบโพสเทนชั่นฟรี ไม่มีข้อผูกมัด',
             buttonText: 'ปรึกษาวิศวกรฟรี',
             buttonUrl: '/contact',
           },
         ],
         seo: {
-          title: 'งานโพสเทนชั่น ขอนแก่น | ระบบคอนกรีตอัดแรง | PCC Post-Tension',
-          description: 'รับงานโพสเทนชั่น Post-Tension ขอนแก่นและภาคอีสาน ออกแบบและติดตั้งโดยวิศวกรผู้เชี่ยวชาญ เหมาะสำหรับพื้น คาน สะพาน และโครงสร้างช่วงพาดยาว ตามมาตรฐาน ACI 318',
+          title: 'งานโพสเทนชั่น ขอนแก่น | Post-Tension ระบบคอนกรีตอัดแรง | PCC',
+          description: 'รับงานโพสเทนชั่น Post-Tension ขอนแก่นและภาคอีสาน ออกแบบ คำนวณ และติดตั้งโดยวิศวกรผู้เชี่ยวชาญ เหมาะสำหรับพื้น คาน สะพาน ช่วงพาดยาวสูงสุด 20+ เมตร ตามมาตรฐาน ACI 318',
         },
       },
 
       // ============================
-      // 5. HOLLOW CORE SLAB PRODUCT PAGE
+      // HOLLOW CORE SLAB / PRECAST PAGE
       // ============================
       {
         slug: 'hollow-core-slab',
@@ -288,8 +402,8 @@ export async function GET() {
         content: [
           {
             type: 'hero',
-            heading: 'แผ่นพื้นสำเร็จรูป Hollow Core Slab',
-            subheading: 'แผ่นพื้นกลวงคุณภาพสูง มาตรฐาน มอก. 576-2546 และ มอก.828-2546 ความหนา 8-30 ซม. ผลิตตามสั่ง ส่งถึงหน้างาน',
+            heading: 'แผ่นพื้นพรีแคสท์ Hollow Core Slab',
+            subheading: 'แผ่นพื้นกลวงสำเร็จรูปคุณภาพสูง มาตรฐาน มอก. 576-2546 และ มอก.828-2546 ความหนา 8–30 ซม. ผลิตตามสั่ง ส่งถึงหน้างาน ติดตั้งโดยวิศวกร',
             buttons: [
               { label: 'ขอใบเสนอราคา', url: '/contact', style: 'primary' },
               { label: 'ดูสินค้าอื่นๆ', url: '/products', style: 'secondary' },
@@ -297,16 +411,22 @@ export async function GET() {
           },
           {
             type: 'richText',
-            content: `<div style="max-width:800px;margin:0 auto;padding:3rem 1.5rem;">
-              <h2 style="font-size:1.75rem;font-weight:700;color:#1e3a8a;margin-bottom:1rem;">แผ่นพื้น Hollow Core Slab คืออะไร?</h2>
+            content: `<div style="max-width:820px;margin:0 auto;padding:3rem 1.5rem;">
+              <h2 style="font-size:1.75rem;font-weight:800;color:#1e3a8a;margin-bottom:1rem;">🏗️ พรีแคสท์ Hollow Core Slab คืออะไร?</h2>
               <p style="font-size:1.1rem;color:#374151;line-height:1.9;margin-bottom:1.5rem;">
-                <strong>Hollow Core Slab</strong> หรือ <strong>แผ่นพื้นกลวง</strong> คือแผ่นพื้นคอนกรีตอัดแรงสำเร็จรูปที่มีช่องกลวงตลอดความยาว
-                ผลิตในโรงงานภายใต้การควบคุมคุณภาพอย่างเข้มงวด ทำให้มีความแข็งแกร่งสูง น้ำหนักเบา และติดตั้งได้รวดเร็ว
+                <strong>Hollow Core Slab</strong> หรือ <strong>แผ่นพื้นกลวง</strong> คือแผ่นพื้นคอนกรีตอัดแรงสำเร็จรูปที่มีช่องกลวงตลอดความยาว ผลิตจากโรงงานภายใต้การควบคุมคุณภาพเข้มงวด ทำให้มีความแข็งแกร่งสูง น้ำหนักเบากว่าแผ่นพื้นทึบ 30–40% และสามารถติดตั้งได้รวดเร็วโดยไม่ต้องรอบ่มคอนกรีตในสถานที่
               </p>
               <p style="font-size:1.1rem;color:#374151;line-height:1.9;margin-bottom:1.5rem;">
-                PCC Post-Tension เป็นหนึ่งในผู้แทนจำหน่ายและติดตั้งแผ่นพื้น Hollow Core Slab จาก <strong>บริษัท พิบูลย์คอนกรีต จำกัด (PCC)</strong>
-                ซึ่งผลิตตามมาตรฐาน มอก. 576-2546 (แผ่นพื้นคอนกรีตอัดแรง) และ มอก.828-2546 (แผ่นพื้นคอนกรีตอัดแรงชนิดกลวง)
+                PCC Post-Tension ขอนแก่น เป็นตัวแทนจำหน่ายและติดตั้งแผ่นพื้น Hollow Core Slab จาก <strong>บริษัท พิบูลย์คอนกรีต จำกัด (PCC)</strong> ซึ่งผลิตตามมาตรฐาน <strong>มอก. 576-2546</strong> (แผ่นพื้นคอนกรีตอัดแรง) และ <strong>มอก.828-2546</strong> (แผ่นพื้นคอนกรีตอัดแรงชนิดกลวง) รับรองโดยสำนักงานมาตรฐานผลิตภัณฑ์อุตสาหกรรม
               </p>
+              <h3 style="font-size:1.3rem;font-weight:700;color:#1e3a8a;margin-bottom:.75rem;">เหมาะกับงานประเภทใด?</h3>
+              <ul style="color:#374151;line-height:2.1;margin-left:1.5rem;font-size:1rem;">
+                <li>บ้านพักอาศัย อาคารพาณิชย์ ทาวน์เฮาส์</li>
+                <li>คลังสินค้า โรงงาน โกดังขนาดใหญ่</li>
+                <li>อาคารสำนักงาน โรงเรียน โรงพยาบาล</li>
+                <li>ที่จอดรถ อาคารจอดรถยกสูง</li>
+                <li>โครงการก่อสร้างที่ต้องการความเร็ว</li>
+              </ul>
             </div>`,
           },
           {
@@ -328,45 +448,45 @@ export async function GET() {
               {
                 title: 'ความสามารถรับน้ำหนัก (ตัวอย่าง)',
                 rows: [
-                  { label: 'หนา 12 ซม. ช่วง 4 ม.', value: 'รับน้ำหนัก ~400 ksc' },
-                  { label: 'หนา 15 ซม. ช่วง 5 ม.', value: 'รับน้ำหนัก ~350 ksc' },
-                  { label: 'หนา 20 ซม. ช่วง 7 ม.', value: 'รับน้ำหนัก ~320 ksc' },
-                  { label: 'หนา 25 ซม. ช่วง 9 ม.', value: 'รับน้ำหนัก ~280 ksc' },
-                  { label: 'หนา 30 ซม. ช่วง 12 ม.', value: 'รับน้ำหนัก ~250 ksc' },
+                  { label: 'หนา 12 ซม. ช่วง 4 ม.', value: '~400 ksc' },
+                  { label: 'หนา 15 ซม. ช่วง 5 ม.', value: '~350 ksc' },
+                  { label: 'หนา 20 ซม. ช่วง 7 ม.', value: '~320 ksc' },
+                  { label: 'หนา 25 ซม. ช่วง 9 ม.', value: '~280 ksc' },
+                  { label: 'หนา 30 ซม. ช่วง 12 ม.', value: '~250 ksc' },
                 ],
               },
             ],
             features: [
-              'ลดน้ำหนักโครงสร้างเมื่อเทียบกับแผ่นพื้นทึบ 30-40%',
-              'ช่วงพาดได้ไกลขึ้น ลดจำนวนคานและเสา',
-              'ติดตั้งรวดเร็ว ลดระยะเวลาก่อสร้างได้มาก',
+              'ลดน้ำหนักโครงสร้าง 30–40% เมื่อเทียบกับแผ่นพื้นทึบ',
+              'ช่วงพาดได้ไกลขึ้น ลดจำนวนคานและเสาค้ำยัน',
+              'ติดตั้งรวดเร็ว ลดระยะเวลาก่อสร้าง 40–60%',
               'ผลิตในโรงงาน ควบคุมคุณภาพดีกว่าเทในสถานที่',
-              'ช่องกลวงสามารถใช้เดินท่อร้อยสายไฟได้',
-              'ประหยัดแบบหล่อ ลดต้นทุนงานพื้น',
-              'รับน้ำหนักได้ดี เหมาะกับคลังสินค้า โรงงาน อาคารพาณิชย์',
+              'ช่องกลวงสามารถร้อยท่อไฟฟ้า ท่อน้ำ และสายเคเบิลได้',
+              'ประหยัดแบบหล่อ ลดต้นทุนงานพื้นโดยรวม',
+              'พื้นผิวด้านล่างเรียบ ไม่ต้องฉาบเพิ่มสำหรับงานบางประเภท',
             ],
-            standardNote: 'ผลิตตามมาตรฐาน มอก. 576-2546 (แผ่นพื้นคอนกรีตอัดแรง) และ มอก. 828-2546 (แผ่นพื้นคอนกรีตอัดแรงชนิดกลวง) โดยโรงงานที่ได้รับการรับรองจากสำนักงานมาตรฐานผลิตภัณฑ์อุตสาหกรรม',
+            standardNote: 'ผลิตตามมาตรฐาน มอก. 576-2546 (แผ่นพื้นคอนกรีตอัดแรง) และ มอก. 828-2546 (แผ่นพื้นคอนกรีตอัดแรงชนิดกลวง) รับรองโดยสำนักงานมาตรฐานผลิตภัณฑ์อุตสาหกรรม (สมอ.)',
           },
           {
             type: 'testimonial',
-            headline: 'ลูกค้าที่ใช้แผ่นพื้นของเรา',
+            headline: 'ลูกค้าที่ใช้แผ่นพื้นพรีแคสท์ของเรา',
           },
           {
             type: 'cta',
             headline: 'สนใจแผ่นพื้น Hollow Core Slab?',
-            description: 'แจ้งขนาดและช่วงพาดที่ต้องการ วิศวกรของเราจะเลือกสเปคที่เหมาะสมและส่งใบเสนอราคาให้ฟรี',
+            description: 'แจ้งขนาด ช่วงพาด และจำนวนที่ต้องการ วิศวกรของเราจะเลือกสเปคที่เหมาะสมและส่งใบเสนอราคาให้ฟรีภายใน 24 ชั่วโมง',
             buttonText: 'ขอใบเสนอราคา',
             buttonUrl: '/contact',
           },
         ],
         seo: {
-          title: 'แผ่นพื้นสำเร็จรูป Hollow Core Slab ขอนแก่น | มอก. | PCC Post-Tension',
-          description: 'จำหน่ายและติดตั้งแผ่นพื้นสำเร็จรูป Hollow Core Slab ขอนแก่นและภาคอีสาน ความหนา 8-30 ซม. กว้าง 60/120 ซม. ผลิตตามมาตรฐาน มอก. 576-2546 และ มอก.828-2546 ราคาโรงงาน',
+          title: 'แผ่นพื้นสำเร็จรูป Hollow Core Slab พรีแคสท์ ขอนแก่น | มอก. | PCC',
+          description: 'จำหน่ายและติดตั้งแผ่นพื้นสำเร็จรูป Hollow Core Slab พรีแคสท์คอนกรีต ขอนแก่นและภาคอีสาน ความหนา 8–30 ซม. กว้าง 60/120 ซม. มาตรฐาน มอก. 576-2546 และ มอก.828-2546 โทร 063-454-5656',
         },
       },
 
       // ============================
-      // 6. CONTACT PAGE
+      // CONTACT PAGE
       // ============================
       {
         slug: 'contact',
@@ -375,7 +495,7 @@ export async function GET() {
           {
             type: 'hero',
             heading: 'ติดต่อ PCC Post-Tension',
-            subheading: 'พร้อมให้คำปรึกษา ประเมินราคา และออกแบบเบื้องต้นฟรี ไม่มีข้อผูกมัด',
+            subheading: 'พร้อมให้คำปรึกษา ประเมินราคา และออกแบบเบื้องต้นฟรี ไม่มีข้อผูกมัด ตอบกลับภายใน 24 ชั่วโมงในวันทำการ',
             buttons: [
               { label: 'โทร 063-454-5656', url: 'tel:0634545656', style: 'primary' },
             ],
@@ -389,34 +509,64 @@ export async function GET() {
           {
             type: 'branchLocations',
             headline: 'ที่ตั้งสาขาของเรา',
-            branches: [
-              {
-                name: 'สาขาขอนแก่น (สำนักงานใหญ่)',
-                address: 'เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000',
-                phone: '063-454-5656',
-                email: 'contact@pcc-posttension.com',
-                hours: 'จันทร์ – เสาร์: 08:00 – 17:00 น.',
-                mapUrl: 'https://maps.google.com/?q=16.4419,102.8359',
-                isPrimary: true,
-              },
-              {
-                name: 'สาขาเชียงใหม่',
-                address: '292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300',
-                phone: '091-553-2624',
-                hours: 'จันทร์ – เสาร์: 08:00 – 17:00 น.',
-                mapUrl: 'https://maps.google.com/?q=18.8156,99.0199',
-              },
-            ],
+            branches: BRANCHES,
           },
         ],
         seo: {
-          title: 'ติดต่อเรา | PCC Post-Tension ขอนแก่น โทร 063-454-5656',
-          description: 'ติดต่อ PCC Post-Tension สาขาขอนแก่น โทร 063-454-5656 หรือสาขาเชียงใหม่ โทร 091-553-2624 ขอใบเสนอราคา ปรึกษาแบบ ประเมินราคาฟรี ไม่มีข้อผูกมัด',
+          title: 'ติดต่อเรา | PCC Post-Tension ขอนแก่น โทร 063-454-5656 | พรีแคสท์ โพสเทนชั่น',
+          description: 'ติดต่อ PCC Post-Tension สาขาขอนแก่น โทร 063-454-5656 สาขาเชียงใหม่ โทร 091-553-2624 ขอใบเสนอราคา ปรึกษาวิศวกรฟรี แผ่นพื้นพรีแคสท์ โพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป',
         },
       },
 
       // ============================
-      // 7. PRIVACY POLICY PAGE
+      // ABOUT (DETAILED PRODUCTS) / RETAINING WALL
+      // ============================
+      {
+        slug: 'retaining-wall',
+        title: 'กำแพงกันดินตัว L',
+        content: [
+          {
+            type: 'hero',
+            heading: 'กำแพงกันดินตัว L (L-Shape Retaining Wall)',
+            subheading: 'กำแพงกันดินคอนกรีตสำเร็จรูปแบบตัว L แข็งแกร่ง ทนทาน ติดตั้งรวดเร็ว เหมาะสำหรับกันดินทุกประเภท มาตรฐาน มอก.',
+            buttons: [
+              { label: 'ขอใบเสนอราคา', url: '/contact', style: 'primary' },
+              { label: 'ดูสินค้าอื่นๆ', url: '/products', style: 'secondary' },
+            ],
+          },
+          {
+            type: 'richText',
+            content: `<div style="max-width:820px;margin:0 auto;padding:3rem 1.5rem;">
+              <h2 style="font-size:1.75rem;font-weight:800;color:#1e3a8a;margin-bottom:1rem;">กำแพงกันดินตัว L คืออะไร?</h2>
+              <p style="font-size:1.1rem;color:#374151;line-height:1.9;margin-bottom:1.5rem;">
+                <strong>กำแพงกันดินรูปตัว L (L-Shape Retaining Wall)</strong> เป็นผลิตภัณฑ์คอนกรีตสำเร็จรูปที่มีหน้าตัดคล้ายตัว L ออกแบบมาเพื่อรับแรงดันดินและน้ำ ผลิตในโรงงานมาตรฐาน มอก. ทำให้แข็งแกร่ง สม่ำเสมอ และติดตั้งได้รวดเร็วกว่าการก่อสร้างแบบเทในที่
+              </p>
+              <h3 style="font-size:1.3rem;font-weight:700;color:#1e3a8a;margin-bottom:.75rem;">การใช้งาน</h3>
+              <ul style="color:#374151;line-height:2.1;margin-left:1.5rem;font-size:1rem;">
+                <li>กั้นดินสำหรับโครงการก่อสร้างและภูมิทัศน์</li>
+                <li>ก่อสร้างคลองส่งน้ำและระบบระบายน้ำ</li>
+                <li>งานปรับระดับพื้นที่และเนินดิน</li>
+                <li>สร้างกำแพงกั้นเสียงและความเป็นส่วนตัว</li>
+                <li>งานโครงสร้างถนนและทางเดิน</li>
+              </ul>
+            </div>`,
+          },
+          {
+            type: 'cta',
+            headline: 'สนใจกำแพงกันดินตัว L?',
+            description: 'แจ้งขนาดและความสูงที่ต้องการ วิศวกรของเราจะออกแบบและส่งใบเสนอราคาให้ฟรีภายใน 24 ชั่วโมง',
+            buttonText: 'ขอใบเสนอราคา',
+            buttonUrl: '/contact',
+          },
+        ],
+        seo: {
+          title: 'กำแพงกันดินตัว L ขอนแก่น | L-Shape Retaining Wall คอนกรีตสำเร็จรูป | PCC',
+          description: 'จำหน่ายและติดตั้งกำแพงกันดินตัว L คอนกรีตสำเร็จรูป มาตรฐาน มอก. ขอนแก่นและภาคอีสาน แข็งแกร่ง ทนทาน ติดตั้งรวดเร็ว โทร 063-454-5656',
+        },
+      },
+
+      // ============================
+      // PRIVACY POLICY
       // ============================
       {
         slug: 'privacy-policy',
@@ -426,41 +576,17 @@ export async function GET() {
             type: 'richText',
             content: `<div style="max-width:800px;margin:0 auto;padding:4rem 1.5rem;">
               <h1 style="font-size:2rem;font-weight:700;color:#111827;margin-bottom:0.5rem;">นโยบายความเป็นส่วนตัว</h1>
-              <p style="color:#6b7280;margin-bottom:2.5rem;">อัปเดตล่าสุด: มิถุนายน 2026</p>
-
+              <p style="color:#6b7280;margin-bottom:2.5rem;">อัปเดตล่าสุด: กรกฎาคม 2569 (2026)</p>
               <h2 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;margin-top:2rem;">1. ข้อมูลที่เราเก็บรวบรวม</h2>
-              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">
-                บริษัท พีซีซี โพสเทนชั่น จำกัด ("บริษัทฯ") เก็บรวบรวมข้อมูลส่วนบุคคลที่คุณให้ไว้เมื่อติดต่อเรา ได้แก่ ชื่อ-นามสกุล หมายเลขโทรศัพท์ อีเมล และข้อมูลเกี่ยวกับโครงการของคุณ
-              </p>
-
+              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">บริษัท พีซีซี โพสเทนชั่น จำกัด เก็บรวบรวมข้อมูลส่วนบุคคลที่คุณให้ไว้เมื่อติดต่อเรา ได้แก่ ชื่อ-นามสกุล หมายเลขโทรศัพท์ อีเมล และรายละเอียดโครงการ</p>
               <h2 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;margin-top:2rem;">2. วัตถุประสงค์ในการใช้ข้อมูล</h2>
-              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">
-                บริษัทฯ ใช้ข้อมูลส่วนบุคคลของคุณเพื่อ: ติดต่อกลับตามคำขอ จัดทำใบเสนอราคา ให้บริการหลังการขาย และปรับปรุงการให้บริการของเรา
-              </p>
-
+              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">เราใช้ข้อมูลเพื่อ: ติดต่อกลับตามคำขอ จัดทำใบเสนอราคา ให้บริการหลังการขาย และปรับปรุงการให้บริการ</p>
               <h2 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;margin-top:2rem;">3. การเปิดเผยข้อมูล</h2>
-              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">
-                บริษัทฯ จะไม่เปิดเผยข้อมูลส่วนบุคคลของคุณให้กับบุคคลภายนอก เว้นแต่จะได้รับความยินยอมจากคุณ หรือเป็นการปฏิบัติตามกฎหมาย
-              </p>
-
-              <h2 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;margin-top:2rem;">4. ความปลอดภัยของข้อมูล</h2>
-              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">
-                บริษัทฯ ดำเนินมาตรการที่เหมาะสมเพื่อปกป้องข้อมูลส่วนบุคคลของคุณจากการเข้าถึงโดยไม่ได้รับอนุญาต การเปิดเผย การแก้ไข หรือการทำลาย
-              </p>
-
-              <h2 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;margin-top:2rem;">5. สิทธิ์ของเจ้าของข้อมูล</h2>
-              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">
-                คุณมีสิทธิ์เข้าถึง แก้ไข ลบ หรือขอรับสำเนาข้อมูลส่วนบุคคลของคุณได้ตลอดเวลา โดยติดต่อเราที่ contact@pcc-posttension.com
-              </p>
-
-              <h2 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;margin-top:2rem;">6. คุกกี้</h2>
-              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">
-                เว็บไซต์ของเราอาจใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งาน คุณสามารถปิดการใช้งานคุกกี้ได้จากการตั้งค่าเบราว์เซอร์ของคุณ
-              </p>
-
-              <h2 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;margin-top:2rem;">7. ติดต่อเรา</h2>
+              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">เราจะไม่เปิดเผยข้อมูลส่วนบุคคลของคุณให้กับบุคคลภายนอก เว้นแต่ได้รับความยินยอม หรือเป็นการปฏิบัติตามกฎหมาย</p>
+              <h2 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;margin-top:2rem;">4. สิทธิ์ของเจ้าของข้อมูล</h2>
+              <p style="color:#374151;line-height:1.9;margin-bottom:1rem;">คุณมีสิทธิ์เข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลได้ตลอดเวลา โดยติดต่อที่ contact@pcc-posttension.com</p>
+              <h2 style="font-size:1.35rem;font-weight:700;color:#1e3a8a;margin-bottom:0.75rem;margin-top:2rem;">5. ติดต่อเรา</h2>
               <p style="color:#374151;line-height:1.9;">
-                หากคุณมีคำถามเกี่ยวกับนโยบายความเป็นส่วนตัวนี้ กรุณาติดต่อ:<br/>
                 <strong>บริษัท พีซีซี โพสเทนชั่น จำกัด</strong><br/>
                 เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000<br/>
                 โทร: 063-454-5656 | อีเมล: contact@pcc-posttension.com<br/>
@@ -470,18 +596,17 @@ export async function GET() {
           },
         ],
         seo: {
-          title: 'นโยบายความเป็นส่วนตัว | PCC Post-Tension',
-          description: 'นโยบายความเป็นส่วนตัวของบริษัท พีซีซี โพสเทนชั่น จำกัด ข้อมูลการเก็บรักษาและใช้ข้อมูลส่วนบุคคลของลูกค้า',
+          title: 'นโยบายความเป็นส่วนตัว | PCC Post-Tension ขอนแก่น',
+          description: 'นโยบายความเป็นส่วนตัวของบริษัท พีซีซี โพสเทนชั่น จำกัด การเก็บและใช้ข้อมูลส่วนบุคคลของลูกค้า',
         },
       },
     ];
 
+    // ── 3. Upsert all pages ───────────────────────────────────────────────────
     const results = [];
-
     for (const pageData of seedData) {
       const { slug, title, content, seo } = pageData;
 
-      // Upsert page (insert or update if slug already exists)
       const insertedPages = await db.insert(pages).values({
         slug,
         title,
@@ -495,7 +620,6 @@ export async function GET() {
 
       const pageId = insertedPages[0].id;
 
-      // Upsert SEO metadata
       await db.insert(seoMetadata).values({
         resourceType: 'page',
         resourceId: pageId,
@@ -513,7 +637,8 @@ export async function GET() {
       success: true,
       seededPages: results,
       totalPages: results.length,
-      message: `✅ Successfully seeded ${results.length} pages.`,
+      settingsUpdated: true,
+      message: `✅ Successfully seeded ${results.length} pages + updated navbarLinks + workingHours.`,
     });
 
   } catch (error) {
