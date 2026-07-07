@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 type SpecRow = {
   label: string;
   value: string;
@@ -125,12 +127,12 @@ export default function ProductSpecBlock({ data }: ProductSpecBlockProps) {
             <div className="bg-gradient-to-br from-blue-700 to-blue-900 rounded-2xl p-6 text-white">
               <h3 className="font-bold text-lg mb-2">ต้องการใบเสนอราคา?</h3>
               <p className="text-blue-200 text-sm mb-5">แจ้งขนาดและปริมาณที่ต้องการ เราจะคำนวณราคาให้ฟรีภายใน 24 ชั่วโมง</p>
-              <a
+              <Link
                 href="/contact"
                 className="inline-block bg-white text-blue-700 font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-blue-50 transition-colors"
               >
                 ขอใบเสนอราคาฟรี →
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -219,8 +219,10 @@ export async function GET() {
             buttonUrl: '/contact',
           }
         ],
-        seoTitle: 'ผลงานของเรา | PCC Post-Tension ขอนแก่น',
-        seoDescription: 'รวมผลงานผลิตภัณฑ์คอนกรีตสำเร็จรูป งานโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป โดย PCC Post-Tension ให้บริการในขอนแก่นและทั่วอีสาน',
+        seo: {
+          title: 'ผลงานของเรา | PCC Post-Tension ขอนแก่น',
+          description: 'รวมผลงานผลิตภัณฑ์คอนกรีตสำเร็จรูป งานโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป โดย PCC Post-Tension ให้บริการในขอนแก่นและทั่วอีสาน',
+        }
       },
       // ============================
       // ABOUT PAGE
@@ -690,11 +692,11 @@ export async function GET() {
       await db.insert(seoMetadata).values({
         resourceType: 'page',
         resourceId: pageId,
-        title: seo.title,
-        description: seo.description,
+        title: seo?.title,
+        description: seo?.description,
       }).onConflictDoUpdate({
         target: [seoMetadata.resourceType, seoMetadata.resourceId],
-        set: { title: seo.title, description: seo.description },
+        set: { title: seo?.title, description: seo?.description },
       });
 
       results.push({ slug, id: pageId, status: 'seeded' });

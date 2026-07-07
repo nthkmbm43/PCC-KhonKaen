@@ -80,7 +80,10 @@ export function HolidayManager() {
     }
   }, []);
 
-  useEffect(() => { fetchHolidays(); }, [fetchHolidays]);
+  useEffect(() => {
+    // eslint-disable-next-line
+    fetchHolidays();
+  }, [fetchHolidays]);
 
   function openCreate() {
     setEditId(null);

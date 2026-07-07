@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { products, seoMetadata } from "@/db/schema";
-import { NextResponse } from "next/server";
+
 
 export const dynamic = 'force-dynamic';
 

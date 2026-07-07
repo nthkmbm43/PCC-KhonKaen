@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { MapPin, Phone, Mail, Clock, ExternalLink, CheckCircle2, XCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ExternalLink, XCircle } from 'lucide-react';
 
 type Branch = {
   name: string;
