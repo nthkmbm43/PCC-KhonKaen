@@ -45,6 +45,7 @@ const BRANCHES = [
 const NAVBAR_LINKS = [
   { label: 'หน้าแรก', url: '/' },
   { label: 'สินค้าและบริการ', url: '/products' },
+  { label: 'ผลงานของเรา', url: '/portfolio' },
   { label: 'เกี่ยวกับเรา', url: '/about' },
   { label: 'ติดต่อเรา', url: '/contact' },
 ];
@@ -158,6 +159,69 @@ export async function GET() {
         },
       },
 
+      // ============================
+      // PORTFOLIO PAGE
+      // ============================
+      {
+        slug: 'portfolio',
+        title: 'ผลงานของเรา',
+        content: [
+          {
+            type: 'hero',
+            heading: 'ผลงานที่ผ่านมาของเรา',
+            subheading: 'ความภูมิใจของ PCC Post-Tension ที่ได้รับความไว้วางใจจากโครงการชั้นนำ ทั้งในจังหวัดขอนแก่นและทั่วภาคอีสาน เรามุ่งมั่นส่งมอบโครงสร้างที่แข็งแกร่ง ปลอดภัย และได้มาตรฐาน',
+            buttons: [
+              { label: 'ปรึกษาโครงการของคุณฟรี', url: '/contact', style: 'primary' },
+            ],
+          },
+          {
+            type: 'richText',
+            content: `
+<div style="padding:4rem 1rem;background:#ffffff;">
+  <div style="max-width:1200px;margin:0 auto;">
+    
+    <div style="margin-bottom:4rem;display:flex;flex-direction:column;gap:1.5rem;align-items:center;">
+      <img src="https://pcc-posttension.com/wp-content/uploads/2025/03/%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%A7%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88%E0%B8%A3%E0%B8%B9%E0%B8%9B-min.webp" alt="โครงการหมู่บ้านจัดสรร" style="width:100%;max-width:800px;border-radius:1rem;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);" />
+      <div style="text-align:center;">
+        <span style="display:inline-block;padding:0.25rem 0.75rem;background:#dbeafe;color:#1e40af;font-size:0.875rem;font-weight:600;border-radius:999px;margin-bottom:0.5rem;">รั้วสำเร็จรูป</span>
+        <h3 style="font-size:1.5rem;font-weight:700;color:#111827;">โครงการหมู่บ้านจัดสรร อ.เมือง จ.ขอนแก่น</h3>
+        <p style="color:#6b7280;margin-top:0.5rem;">ผลิตและติดตั้งรั้วสำเร็จรูป ความยาวรวมกว่า 2 กิโลเมตร ส่งมอบงานตรงเวลา ได้แนวรั้วที่สวยงาม แข็งแรง และลดต้นทุนค่าแรงก่อสร้าง</p>
+      </div>
+    </div>
+
+    <div style="margin-bottom:4rem;display:flex;flex-direction:column;gap:1.5rem;align-items:center;">
+      <img src="https://pcc-posttension.com/wp-content/uploads/2025/03/%E0%B8%95%E0%B8%B1%E0%B8%A7L.webp" alt="โครงการโรงงาน" style="width:100%;max-width:800px;border-radius:1rem;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);" />
+      <div style="text-align:center;">
+        <span style="display:inline-block;padding:0.25rem 0.75rem;background:#fef3c7;color:#92400e;font-size:0.875rem;font-weight:600;border-radius:999px;margin-bottom:0.5rem;">กำแพงกันดินตัว L</span>
+        <h3 style="font-size:1.5rem;font-weight:700;color:#111827;">โครงการโรงงาน อ.น้ำพอง จ.ขอนแก่น</h3>
+        <p style="color:#6b7280;margin-top:0.5rem;">ติดตั้งกำแพงกันดินคอนกรีตสำเร็จรูป เพื่อรองรับพื้นที่ต่างระดับและป้องกันดินสไลด์สำหรับลานจอดรถบรรทุกของโรงงาน</p>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.5rem;align-items:center;">
+      <img src="https://pcc-posttension.com/wp-content/uploads/2025/02/%E0%B9%82%E0%B8%9E%E0%B8%AA.jpg" alt="งานโพสเทนชั่น อาคารพาณิชย์" style="width:100%;max-width:800px;border-radius:1rem;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);" />
+      <div style="text-align:center;">
+        <span style="display:inline-block;padding:0.25rem 0.75rem;background:#d1fae5;color:#065f46;font-size:0.875rem;font-weight:600;border-radius:999px;margin-bottom:0.5rem;">งานโพสเทนชั่น</span>
+        <h3 style="font-size:1.5rem;font-weight:700;color:#111827;">อาคารพาณิชย์ 4 ชั้น จ.อุดรธานี</h3>
+        <p style="color:#6b7280;margin-top:0.5rem;">ออกแบบและติดตั้งระบบพื้น Post-Tension ช่วงพาดยาว ช่วยลดจำนวนเสา เพิ่มพื้นที่ใช้สอยภายในอาคารให้กว้างขวางขึ้น</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+            `
+          },
+          {
+            type: 'cta',
+            headline: 'ให้เราเป็นส่วนหนึ่งในความสำเร็จของโครงการคุณ',
+            description: 'ยินดีให้คำปรึกษา แนะนำผลิตภัณฑ์ และประเมินราคาเบื้องต้นโดยทีมวิศวกรผู้เชี่ยวชาญ',
+            buttonText: 'ติดต่อทีมงาน',
+            buttonUrl: '/contact',
+          }
+        ],
+        seoTitle: 'ผลงานของเรา | PCC Post-Tension ขอนแก่น',
+        seoDescription: 'รวมผลงานผลิตภัณฑ์คอนกรีตสำเร็จรูป งานโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป โดย PCC Post-Tension ให้บริการในขอนแก่นและทั่วอีสาน',
+      },
       // ============================
       // ABOUT PAGE
       // ============================
