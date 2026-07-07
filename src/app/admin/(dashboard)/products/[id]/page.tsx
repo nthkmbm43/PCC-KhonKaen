@@ -38,7 +38,7 @@ export default async function ProductEditPage({ params }: { params: Promise<{ id
     }
   }
 
-  const formattedData = initialData ? {
+  const formattedData: any = initialData ? {
     ...initialData,
     description: initialData.description ?? undefined,
     image: initialData.image ?? undefined,
@@ -50,6 +50,8 @@ export default async function ProductEditPage({ params }: { params: Promise<{ id
     workflowState: initialData.workflowState ?? undefined,
     previewTokenHash: initialData.previewTokenHash ?? undefined,
     previewExpiresAt: initialData.previewExpiresAt ?? undefined,
+    imageLayout: initialData.imageLayout ?? undefined,
+    highlights: initialData.highlights ?? undefined,
   } : undefined;
 
   return (

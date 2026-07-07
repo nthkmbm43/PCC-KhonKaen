@@ -56,8 +56,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const phoneNo = settings.contact.mainPhone.replace(/\D/g, "");
   const displayPhone = settings.contact.mainPhone;
 
-  // Type cast for features if it is stored as JSON
   const features = Array.isArray((product as { features?: string[] }).features) ? (product as { features?: string[] }).features : [];
+  const highlights = Array.isArray(product.highlights) ? product.highlights : [];
 
   const productJsonLd = {
     "@context": "https://schema.org",
@@ -101,42 +101,69 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       )}
 
       {/* Product Hero */}
-      <div className="relative bg-slate-900 pt-20 pb-32 lg:pt-40 lg:pb-40 overflow-hidden group">
-        <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay transition-transform duration-[10s] group-hover:scale-110">
+      {product.imageLayout === 'full-width' ? (
+        <div className="w-full relative h-[60vh] min-h-[500px] overflow-hidden">
           <Image 
             src={product.image || '/images/hero.jpg'} 
             alt={product.title} 
             fill
-            className="object-cover blur-sm" 
+            className="object-cover" 
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent z-0"></div>
+          <div className="absolute bottom-0 left-0 w-full z-10 p-8 lg:p-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <Link href="/products" className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-all hover:-translate-x-1 mb-6 bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+                <ArrowLeft size={18} /> กลับไปหน้าสินค้าทั้งหมด
+              </Link>
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-4 drop-shadow-2xl tracking-tight">
+                {product.title}
+              </h1>
+              <p className="text-xl lg:text-2xl text-slate-200 max-w-4xl drop-shadow-md leading-relaxed">
+                {product.description}
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent opacity-90 z-0"></div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Link href="/products" className="inline-flex items-center gap-2 text-brand-400 font-semibold hover:text-white transition-all hover:-translate-x-1 mb-8 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-            <ArrowLeft size={18} /> กลับไปหน้าสินค้าทั้งหมด
-          </Link>
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 drop-shadow-2xl tracking-tight">
-            {product.title}
-          </h1>
-          <p className="text-xl lg:text-2xl text-slate-300 max-w-4xl mx-auto drop-shadow-md leading-relaxed">
-            {product.description}
-          </p>
+      ) : (
+        <div className="relative bg-slate-900 pt-20 pb-32 lg:pt-40 lg:pb-40 overflow-hidden group">
+          <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay transition-transform duration-[10s] group-hover:scale-110">
+            <Image 
+              src={product.image || '/images/hero.jpg'} 
+              alt={product.title} 
+              fill
+              className="object-cover blur-sm" 
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent opacity-90 z-0"></div>
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <Link href="/products" className="inline-flex items-center gap-2 text-brand-400 font-semibold hover:text-white transition-all hover:-translate-x-1 mb-8 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+              <ArrowLeft size={18} /> กลับไปหน้าสินค้าทั้งหมด
+            </Link>
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 drop-shadow-2xl tracking-tight">
+              {product.title}
+            </h1>
+            <p className="text-xl lg:text-2xl text-slate-300 max-w-4xl mx-auto drop-shadow-md leading-relaxed">
+              {product.description}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative -mt-20 z-20">
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-20 ${product.imageLayout === 'full-width' ? '' : '-mt-20'}`}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            <div className="rounded-[2.5rem] shadow-2xl overflow-hidden mb-16 border-4 border-white bg-white group cursor-default">
-              <Image 
-                src={product.image || '/images/hero.jpg'} 
-                alt={product.title}
-                width={1200}
-                height={675}
-                className="w-full object-cover aspect-video group-hover:scale-105 transition-transform duration-700 ease-out" 
-              />
-            </div>
+            {product.imageLayout !== 'full-width' && (
+              <div className="rounded-[2.5rem] shadow-2xl overflow-hidden mb-16 border-4 border-white bg-white group cursor-default">
+                <Image 
+                  src={product.image || '/images/hero.jpg'} 
+                  alt={product.title}
+                  width={1200}
+                  height={675}
+                  className="w-full object-cover aspect-video group-hover:scale-105 transition-transform duration-700 ease-out" 
+                />
+              </div>
+            )}
 
             <div className="space-y-20">
               {sections.map((section: { type?: string; id?: string; title?: string; content?: string; image?: string; bullets?: string[] }, idx: number) => {
@@ -215,19 +242,23 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <div className="sticky top-32 bg-white rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-gray-100 p-8 overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-shadow duration-500">
               <div className="absolute top-0 right-0 w-40 h-40 bg-brand-100 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
               
-              <h3 className="text-2xl font-bold text-gray-900 mb-8 relative z-10 flex items-center gap-3">
-                <div className="w-2 h-8 bg-brand-500 rounded-full"></div>
-                จุดเด่นของบริการ
-              </h3>
-              
-              <ul className="space-y-5 mb-12 relative z-10">
-                {(features || []).map((feature: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-3 group">
-                    <CheckCircle2 size={24} className="text-[#06C755] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                    <span className="text-gray-700 font-medium text-lg group-hover:text-gray-900 transition-colors">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+              {highlights.length > 0 && (
+                <>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-8 relative z-10 flex items-center gap-3">
+                    <div className="w-2 h-8 bg-brand-500 rounded-full"></div>
+                    จุดเด่นของบริการ
+                  </h3>
+                  
+                  <ul className="space-y-5 mb-12 relative z-10">
+                    {highlights.map((feature: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-3 group">
+                        <CheckCircle2 size={24} className="text-[#06C755] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                        <span className="text-gray-700 font-medium text-lg group-hover:text-gray-900 transition-colors">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
 
               <div className="space-y-4 relative z-10 pt-8 border-t border-gray-100">
                 <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100">

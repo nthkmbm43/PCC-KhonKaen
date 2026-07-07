@@ -35,6 +35,10 @@ const productSchema = z.object({
   isFeatured: z.boolean(),
   status: z.enum(['draft', 'published']),
   
+  // Layout & Styling
+  imageLayout: z.enum(['normal', 'full-width']),
+  highlights: z.array(z.string()),
+  
   // SEO
   seoTitle: z.string().optional(),
   seoDescription: z.string().optional(),
@@ -47,12 +51,13 @@ const productSchema = z.object({
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
-export function ProductForm({ initialData, productId }: { initialData?: Omit<Partial<ProductFormValues>, 'isFeatured' | 'content'> & { isFeatured?: string | boolean; workflowState?: string; status?: string; content?: unknown }; productId: string }) {
+export function ProductForm({ initialData, productId }: { initialData?: Omit<Partial<ProductFormValues>, 'isFeatured' | 'content'> & { isFeatured?: string | boolean; workflowState?: string; status?: string; content?: unknown; imageLayout?: string; highlights?: unknown }; productId: string }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const isNew = productId === "new";
 
   const form = useForm<ProductFormValues>({
+    // @ts-expect-error - zod mismatch
     resolver: zodResolver(productSchema),
     mode: 'onChange',
     defaultValues: {
@@ -70,6 +75,10 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
       seoKeywords: initialData?.seoKeywords || "",
       ogImage: initialData?.ogImage || "",
       
+      imageLayout: (initialData?.imageLayout as 'normal' | 'full-width') || "normal",
+      highlights: (Array.isArray(initialData?.highlights) ? initialData.highlights : 
+                  (typeof initialData?.highlights === 'string' ? JSON.parse(initialData.highlights) : [])) as string[],
+
       content: initialData?.content ? (typeof initialData.content === 'string' ? JSON.parse(initialData.content) : initialData.content) : [],
     },
   });
@@ -77,6 +86,11 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
   const { fields: contentBlocks, append: appendBlock, remove: removeBlock } = useFieldArray({
     control: form.control,
     name: "content",
+  });
+
+  const { fields: highlightFields, append: appendHighlight, remove: removeHighlight } = useFieldArray({
+    control: form.control,
+    name: "highlights" as never, // cast due to zod string array
   });
 
   async function onSubmit(data: ProductFormValues) {
@@ -123,8 +137,47 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
     });
   };
 
+  const handlePreview = async () => {
+    // Force status to draft for preview if it's new (or we can just save current state)
+    // Actually, we can just save it. The backend will generate a preview token if needed, or we just save the form and redirect to preview.
+    setIsSaving(true);
+    try {
+      const data = form.getValues();
+      const url = isNew ? `/api/products` : `/api/products/${productId}`;
+      const method = isNew ? "POST" : "PUT";
+      
+      const payload: Record<string, unknown> = {
+        ...data,
+        content: data.content,
+      };
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const saved = await res.json();
+        const slug = saved.slug || data.slug;
+        toast.success("บันทึกฉบับร่างและกำลังเปิด Preview");
+        window.open(`/api/preview?slug=${slug}&type=product`, "_blank");
+        if (isNew) {
+          router.push(`/admin/products/${saved.id}`);
+        }
+      } else {
+        toast.error("เกิดข้อผิดพลาดในการบันทึก Preview");
+      }
+    } catch (_err) {
+      toast.error("เกิดข้อผิดพลาด");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <FormProvider {...form}>
+      {/* @ts-expect-error - mismatch in hook form types */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-4xl mx-auto pb-20">
         
         {/* Header Actions */}
@@ -149,6 +202,17 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                 onCheckedChange={(checked) => form.setValue("status", checked ? "published" : "draft")}
               />
             </div>
+            
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isSaving}
+              onClick={handlePreview}
+              className="rounded-xl px-6"
+            >
+              Preview
+            </Button>
+
             <Button
               type="submit"
               disabled={isSaving}
@@ -196,6 +260,38 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                     className="flex min-h-[100px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     placeholder="คำอธิบายสรุปจุดเด่นของสินค้า"
                   />
+                </div>
+
+                {/* Highlights Array */}
+                <div className="space-y-3 pt-4 border-t border-slate-100">
+                  <div className="flex items-center justify-between">
+                    <Label>จุดเด่นของบริการ (Service Highlights)</Label>
+                    <Button type="button" variant="outline" size="sm" onClick={() => appendHighlight("จุดเด่นใหม่")} className="gap-1 h-8">
+                      <Plus className="w-3.5 h-3.5" /> เพิ่มจุดเด่น
+                    </Button>
+                  </div>
+                  {highlightFields.length === 0 && (
+                    <p className="text-sm text-slate-400 italic">ยังไม่มีจุดเด่นบริการ</p>
+                  )}
+                  <div className="space-y-2">
+                    {highlightFields.map((field, index) => (
+                      <div key={field.id} className="flex items-center gap-2">
+                        <Input
+                          {...form.register(`highlights.${index}` as const)}
+                          placeholder="เช่น แข็งแรง ทนทาน"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeHighlight(index)}
+                          className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -288,6 +384,17 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
               <h2 className="text-lg font-semibold text-slate-800 border-b pb-4">การแสดงผล</h2>
               
               <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="imageLayout">รูปแบบการแสดงผลรูปภาพ (Image Display Layout)</Label>
+                  <select id="imageLayout"
+                    {...form.register("imageLayout")} 
+                    className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    <option value="normal">ปกติ (Normal - จัดให้อยู่ในกรอบ)</option>
+                    <option value="full-width">กว้างเต็มจอ (Full-Width - ภาพขนาดใหญ่ด้านบนสุด)</option>
+                  </select>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="category">หมวดหมู่ (Category)</Label>
                   <select id="category"

@@ -177,8 +177,10 @@ export const products = pgTable('products', {
   description: text('description'),
   content: jsonb('content').default('[]'),
   image: text('image'),
+  imageLayout: text('image_layout', { enum: ['normal', 'full-width'] }).default('normal'),
   category: text('category').default('general'),
   isFeatured: text('is_featured').default('false'),
+  highlights: jsonb('highlights').default('[]'),
   
   // Legacy SEO columns
   seoTitle: text('seo_title'),
