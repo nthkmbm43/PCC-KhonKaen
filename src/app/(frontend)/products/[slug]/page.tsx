@@ -154,13 +154,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           {/* Main Content */}
           <div className="lg:col-span-2">
             {product.imageLayout !== 'full-width' && (
-              <div className="rounded-[2.5rem] shadow-2xl overflow-hidden mb-16 border-4 border-white bg-white group cursor-default">
+              <div className="relative aspect-video rounded-[2.5rem] shadow-2xl overflow-hidden mb-16 border-4 border-white bg-slate-50 group cursor-default">
                 <Image 
                   src={product.image || '/images/hero.jpg'} 
                   alt={product.title}
-                  width={1200}
-                  height={675}
-                  className="w-full object-cover aspect-video group-hover:scale-105 transition-transform duration-700 ease-out" 
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                  className="object-contain group-hover:scale-105 transition-transform duration-700 ease-out" 
                 />
               </div>
             )}
