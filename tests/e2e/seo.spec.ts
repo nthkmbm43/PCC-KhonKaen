@@ -8,11 +8,12 @@ test.describe('SEO Metadata Sync', { tag: ['@test.regression'] }, () => {
     await page.goto('/');
 
     const response = await page.evaluate(async () => {
+      const slug = 'test-seo-sync-' + Date.now();
       const res = await fetch('/api/pages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          slug: 'test-seo-sync-' + Date.now(),
+          slug,
           title: 'Test SEO Sync',
           content: [],
           seoTitle: 'SEO Title Example',
@@ -20,9 +21,20 @@ test.describe('SEO Metadata Sync', { tag: ['@test.regression'] }, () => {
           status: 'draft',
         })
       });
-      // We are unauthenticated in this pure evaluate without session, so it returns 401.
-      // But the endpoint is hit.
-      return { status: res.status };
+      
+      const status = res.status;
+      if (res.ok) {
+        try {
+          const data = await res.json();
+          // Cleanup immediately so we don't pollute the database
+          if (data && data.id) {
+            await fetch(`/api/pages/${data.id}`, { method: 'DELETE' });
+          }
+        } catch (_e) {
+          // Ignore
+        }
+      }
+      return { status };
     });
 
     // In a real E2E test we would seed a session or use a logged-in context
