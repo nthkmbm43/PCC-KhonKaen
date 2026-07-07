@@ -134,18 +134,21 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
               </div>
 
               {/* Live open/closed badge */}
-              {status && (
-                <div className={`flex items-center gap-2.5 px-4 py-3.5 rounded-xl border text-sm font-bold shadow-sm ${
-                  status.isOpen
+              <div className={`flex items-center gap-2.5 px-4 py-3.5 rounded-xl border text-sm font-bold shadow-sm ${
+                !status
+                  ? 'bg-slate-50 border-slate-100 text-slate-400'
+                  : status.isOpen
                     ? 'bg-green-50 border-green-200 text-green-700'
                     : 'bg-gray-50 border-gray-200 text-gray-700'
-                }`}>
-                  {status.isOpen
-                    ? <><div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" /> <span className="flex-1 text-base">ตอนนี้เปิดทำการ</span></>
-                    : <><div className="w-2.5 h-2.5 bg-red-500 rounded-full" /> <span className="flex-1 text-base">ตอนนี้ปิดทำการ</span></>
-                  }
-                </div>
-              )}
+              }`}>
+                {!status ? (
+                  <><div className="w-2.5 h-2.5 bg-slate-300 rounded-full animate-pulse" /> <span className="flex-1 text-base">กำลังโหลดสถานะ...</span></>
+                ) : status.isOpen ? (
+                  <><div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" /> <span className="flex-1 text-base">ตอนนี้เปิดทำการ</span></>
+                ) : (
+                  <><div className="w-2.5 h-2.5 bg-red-500 rounded-full" /> <span className="flex-1 text-base">ตอนนี้ปิดทำการ</span></>
+                )}
+              </div>
 
               {/* Smart Upcoming Holiday Notice */}
               {activeOrSoonHoliday && (
