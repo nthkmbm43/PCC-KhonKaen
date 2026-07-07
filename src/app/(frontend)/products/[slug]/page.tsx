@@ -125,7 +125,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
       ) : (
-        <div className="relative bg-slate-900 pt-24 pb-24 lg:pt-40 lg:pb-40 overflow-hidden group">
+        <div className="relative bg-slate-900 pt-20 pb-20 lg:pt-40 lg:pb-40 overflow-hidden group">
           <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay transition-transform duration-[10s] group-hover:scale-110">
             <Image 
               src={product.image || '/images/hero.jpg'} 
@@ -149,7 +149,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         </div>
       )}
 
-      <div className={`max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-24 relative z-20 ${product.imageLayout === 'full-width' ? 'mt-0' : '-mt-12 lg:-mt-20'}`}>
+      <div className={`max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 lg:pb-24 relative z-20 ${product.imageLayout === 'full-width' ? 'pt-8 lg:pt-24 mt-0' : 'pt-0 lg:pt-0 -mt-12 lg:-mt-24'}`}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Main Content */}
           <div className="lg:col-span-8 flex flex-col gap-8 lg:gap-12">
@@ -260,19 +260,21 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 </>
               )}
 
-              <div className="space-y-4 relative z-10 pt-8 border-t border-gray-100">
-                <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100">
-                  {prevProduct ? (
-                    <Link href={`/products/${prevProduct.slug}`} className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-bold transition-colors group/nav">
-                      <ArrowLeft size={20} className="group-hover/nav:-translate-x-1 transition-transform" /> {prevProduct.shortTitle}
-                    </Link>
-                  ) : <div></div>}
-                  {nextProduct ? (
-                    <Link href={`/products/${nextProduct.slug}`} className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-bold transition-colors group/nav">
-                      {nextProduct.shortTitle} <ArrowRight size={20} className="group-hover/nav:translate-x-1 transition-transform" />
-                    </Link>
-                  ) : <div></div>}
-                </div>
+              <div className="space-y-4 relative z-10 pt-6">
+                {(prevProduct || nextProduct) && (
+                  <div className={`flex flex-col sm:flex-row sm:justify-between items-center gap-4 pb-8 mb-4 border-b border-gray-100 ${highlights.length > 0 ? 'pt-8 border-t mt-4' : ''}`}>
+                    {prevProduct ? (
+                      <Link href={`/products/${prevProduct.slug}`} className="w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2 text-brand-600 hover:text-brand-700 font-bold transition-colors group/nav bg-brand-50 sm:bg-transparent py-3 sm:py-0 rounded-xl sm:rounded-none">
+                        <ArrowLeft size={20} className="group-hover/nav:-translate-x-1 transition-transform" /> <span className="truncate max-w-[200px]">{prevProduct.shortTitle}</span>
+                      </Link>
+                    ) : <div className="hidden sm:block"></div>}
+                    {nextProduct ? (
+                      <Link href={`/products/${nextProduct.slug}`} className="w-full sm:w-auto flex items-center justify-center sm:justify-end gap-2 text-brand-600 hover:text-brand-700 font-bold transition-colors group/nav bg-brand-50 sm:bg-transparent py-3 sm:py-0 rounded-xl sm:rounded-none">
+                        <span className="truncate max-w-[200px]">{nextProduct.shortTitle}</span> <ArrowRight size={20} className="group-hover/nav:translate-x-1 transition-transform" />
+                      </Link>
+                    ) : <div className="hidden sm:block"></div>}
+                  </div>
+                )}
                 <div className="bg-brand-50 text-brand-700 px-4 py-2 rounded-xl text-center font-bold text-sm mb-6 border border-brand-100 flex items-center justify-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
                   จัดส่งด่วนทั่วอีสานตอนบนและเชียงใหม่
