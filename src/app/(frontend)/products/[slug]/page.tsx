@@ -125,7 +125,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
       ) : (
-        <div className="relative bg-slate-900 pt-20 pb-20 lg:pt-40 lg:pb-40 overflow-hidden group">
+        <div className="relative bg-slate-900 pt-20 pb-12 lg:pt-40 lg:pb-16 overflow-hidden group">
           <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay transition-transform duration-[10s] group-hover:scale-110">
             <Image 
               src={product.image || '/images/hero.jpg'} 
@@ -149,7 +149,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         </div>
       )}
 
-      <div className={`max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8 lg:pb-24 relative z-20 ${product.imageLayout === 'full-width' ? 'pt-8 lg:pt-24 mt-0' : 'pt-0 lg:pt-0 -mt-12 lg:-mt-24'}`}>
+      <div className={`max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-24 relative z-20 mt-0`}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Main Content */}
           <div className="lg:col-span-8 flex flex-col gap-8 lg:gap-12">
