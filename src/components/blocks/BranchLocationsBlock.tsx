@@ -17,6 +17,7 @@ type BusinessStatus = {
   reason: string;
   googleMapsEmbedUrl?: string;
   companyAddress?: string;
+  todayThai?: string;
 };
 
 type BranchLocationsBlockProps = {
@@ -115,19 +116,6 @@ export default function BranchLocationsBlock({ data }: BranchLocationsBlockProps
               <div className="p-6 sm:p-8 space-y-4">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="text-xl font-bold text-gray-900">{branch.name}</h3>
-                  {branch.isPrimary && status && (
-                    <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border whitespace-nowrap ${
-                      status.isOpen 
-                        ? 'bg-green-50 border-green-200 text-green-700' 
-                        : 'bg-red-50 border-red-200 text-red-700'
-                    }`}>
-                      {status.isOpen ? (
-                        <><span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" /> เปิดทำการ</>
-                      ) : (
-                        <><XCircle size={12} className="text-red-500" /> ปิดทำการ</>
-                      )}
-                    </div>
-                  )}
                 </div>
 
                 <div className="space-y-3">
@@ -151,12 +139,25 @@ export default function BranchLocationsBlock({ data }: BranchLocationsBlockProps
                       </a>
                     </div>
                   )}
-                  {branch.hours && (
+                  {branch.isPrimary && status ? (
+                    <div className="flex items-start gap-3">
+                      <Clock size={18} className={status.isOpen ? "text-green-500 flex-shrink-0 mt-0.5" : "text-red-500 flex-shrink-0 mt-0.5"} />
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold text-gray-900">
+                          วันนี้{status.todayThai}: <span className={status.isOpen ? "text-green-600" : "text-red-600"}>
+                            {status.isOpen ? 'เปิดทำการ' : 'ปิดทำการ'}
+                          </span>
+                        </span>
+                        <span className="text-xs font-medium text-gray-500 mt-0.5">{status.isOpen ? '08:00 - 17:00 น.' : status.reason}</span>
+                        {branch.hours && <span className="text-xs text-gray-400 mt-1">{branch.hours}</span>}
+                      </div>
+                    </div>
+                  ) : branch.hours ? (
                     <div className="flex items-center gap-3 text-gray-600">
                       <Clock size={18} className="text-blue-500 flex-shrink-0" />
                       <span className="text-sm">{branch.hours}</span>
                     </div>
-                  )}
+                  ) : null}
                 </div>
 
                 {branch.mapUrl && (

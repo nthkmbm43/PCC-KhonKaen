@@ -110,6 +110,9 @@ export async function GET() {
       )
       .orderBy(businessHolidayClosures.startDate);
 
+    const daysThai = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+    const todayThai = daysThai[dayOfWeek];
+
     return NextResponse.json({
       isOpen,
       reason,
@@ -118,6 +121,7 @@ export async function GET() {
       upcomingHolidays,
       googleMapsEmbedUrl: formatGoogleMapsUrl(settings?.googleMapsUrl) || null,
       companyAddress: settings?.companyAddress || null,
+      todayThai,
       debug: {
         bangkokTime: nowBKK.toISOString(),
         dayOfWeek,

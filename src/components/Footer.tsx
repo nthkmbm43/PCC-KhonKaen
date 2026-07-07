@@ -148,7 +148,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
 
             <section className={sectionBase}>
               <FooterHeading eyebrow="Location">แผนที่</FooterHeading>
-              <div className="relative h-56 overflow-hidden border border-white/15 bg-slate-900 sm:h-64">
+              <div className="relative h-56 overflow-hidden border border-white/15 bg-slate-900 sm:h-64 rounded-xl">
                 <iframe
                   src={contact.googleMapsUrl}
                   width="100%"
@@ -161,10 +161,19 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
                   className="absolute inset-0"
                 />
               </div>
-              <a href={contact.googleMapsUrl || "#"} target="_blank" className="mt-4 flex items-start gap-2 border-t border-white/10 pt-4 text-sm leading-6 text-slate-400 hover:text-brand-300 transition-colors">
-                <MapPin size={17} className="mt-1 shrink-0 text-brand-400" />
-                {contact.companyAddress ? "เปิดใน Google Maps" : siteConfig.offices[0].address}
-              </a>
+              <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
+                <div className="flex items-start gap-3 text-slate-400">
+                  <MapPin size={18} className="text-brand-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm leading-relaxed whitespace-pre-line">
+                    {contact.companyAddress || siteConfig.offices[0].addressLines.join('\n')}
+                  </span>
+                </div>
+                {contact.googleMapsUrl && (
+                  <a href={contact.googleMapsUrl} target="_blank" className="inline-flex items-center gap-2 text-brand-400 font-semibold text-sm hover:text-brand-300 transition-colors pl-7">
+                    เปิดใน Google Maps
+                  </a>
+                )}
+              </div>
             </section>
 
             <section className={`${sectionBase} flex flex-col md:col-span-2 lg:col-span-3 lg:col-start-2`}>
