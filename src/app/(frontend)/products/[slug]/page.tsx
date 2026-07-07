@@ -125,7 +125,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
       ) : (
-        <div className="relative bg-slate-900 pt-20 pb-32 lg:pt-40 lg:pb-40 overflow-hidden group">
+        <div className="relative bg-slate-900 pt-24 pb-24 lg:pt-40 lg:pb-40 overflow-hidden group">
           <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay transition-transform duration-[10s] group-hover:scale-110">
             <Image 
               src={product.image || '/images/hero.jpg'} 
@@ -149,10 +149,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         </div>
       )}
 
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-20 ${product.imageLayout === 'full-width' ? '' : '-mt-20'}`}>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+      <div className={`max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-24 relative z-20 ${product.imageLayout === 'full-width' ? 'mt-0' : '-mt-12 lg:-mt-20'}`}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Main Content */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-8 flex flex-col gap-8 lg:gap-12">
             {product.imageLayout !== 'full-width' && (
               <div className="rounded-[2.5rem] shadow-2xl overflow-hidden mb-16 border-4 border-white group cursor-default">
                 <Image 
@@ -165,7 +165,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </div>
             )}
 
-            <div className="space-y-20">
+            <div className="space-y-12 lg:space-y-20">
               {sections.map((section: { type?: string; id?: string; title?: string; content?: string; image?: string; bullets?: string[] }, idx: number) => {
                 if (section.type === 'text') {
                   return (
@@ -177,8 +177,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   );
                 } else if (section.type === 'image') {
                   return (
-                    <div key={idx} className="mb-10 rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                      <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
+                    <div key={idx} className="mb-8 lg:mb-10 rounded-[2rem] overflow-hidden shadow-lg border-4 border-white">
+                      <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" />
                     </div>
                   );
                 } else if (section.type === 'html') {
@@ -194,8 +194,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                       <p className="text-xl text-gray-700 leading-relaxed mb-8">{section.content}</p>
                       
                       {section.image && (
-                        <div className="mb-10 rounded-3xl overflow-hidden shadow-lg border-4 border-white">
-                          <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} className="w-full object-cover hover:scale-105 transition-transform duration-700" />
+                        <div className="mb-8 lg:mb-10 rounded-[2rem] overflow-hidden shadow-lg border-4 border-white">
+                          <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" />
                         </div>
                       )}
                       
@@ -216,7 +216,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
 
             {/* Engineering Standards Box */}
-            <div className="mt-16 bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 lg:p-10 text-white relative overflow-hidden shadow-2xl">
+            <div className="mt-12 lg:mt-16 bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 lg:p-10 text-white relative overflow-hidden shadow-2xl">
               <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500 rounded-full blur-[80px] opacity-20 -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
               <h3 className="text-2xl lg:text-3xl font-bold mb-6 flex items-center gap-4">
                 <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center shrink-0">
@@ -238,8 +238,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Sidebar CTA */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-32 bg-white rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-gray-100 p-8 overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-shadow duration-500">
+          <div className="lg:col-span-4">
+            <div className="sticky top-24 lg:top-32 bg-white rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-gray-100 p-6 lg:p-8 overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-shadow duration-500">
               <div className="absolute top-0 right-0 w-40 h-40 bg-brand-100 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
               
               {highlights.length > 0 && (
