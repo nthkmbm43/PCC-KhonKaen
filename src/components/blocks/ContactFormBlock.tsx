@@ -57,6 +57,29 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
     setSubmitStatus('success');
   };
 
+  // Helper for reopening calculation
+  const getReopenMessage = (endDateStr: string) => {
+    if (!endDateStr) return '';
+    const parts = endDateStr.split('-');
+    const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    d.setDate(d.getDate() + 1); // next day
+    if (d.getDay() === 0) d.setDate(d.getDate() + 1); // skip sunday
+    
+    const daysTH = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+    const monthsTH = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    return `${daysTH[d.getDay()]}ที่ ${d.getDate()} ${monthsTH[d.getMonth()]}`;
+  };
+
+  let activeOrSoonHoliday = status?.currentHoliday || null;
+  if (!activeOrSoonHoliday && status?.upcomingHolidays?.length) {
+    const nextH = status.upcomingHolidays[0];
+    const diffTime = new Date(nextH.startDate).getTime() - new Date().getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 7) {
+      activeOrSoonHoliday = nextH as any;
+    }
+  }
+
   return (
     <section className="py-20 sm:py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -105,68 +128,54 @@ export default function ContactFormBlock({ data }: ContactFormBlockProps) {
 
             {/* ─── Business hours + Live status ─────────────────────────── */}
             <div className="bg-white rounded-xl border border-gray-100 p-5 space-y-4">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-2">
                 <Clock size={16} className="text-blue-500" />
                 <h4 className="font-semibold text-gray-900 text-sm">เวลาทำการ</h4>
               </div>
 
               {/* Live open/closed badge */}
               {status && (
-                <div className={`flex items-center gap-2.5 px-4 py-3 rounded-xl border text-sm font-semibold ${
+                <div className={`flex items-center gap-2.5 px-4 py-3.5 rounded-xl border text-sm font-bold shadow-sm ${
                   status.isOpen
                     ? 'bg-green-50 border-green-200 text-green-700'
-                    : 'bg-red-50 border-red-200 text-red-700'
+                    : 'bg-gray-50 border-gray-200 text-gray-700'
                 }`}>
                   {status.isOpen
-                    ? <><CheckCircle2 size={18} className="text-green-600 flex-shrink-0" /> <span className="flex-1">เปิดทำการอยู่</span> <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" /></>
-                    : <><XCircle size={18} className="text-red-500 flex-shrink-0" /> <span className="flex-1">{status.reason}</span></>
+                    ? <><div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]" /> <span className="flex-1 text-base">ตอนนี้เปิดทำการ</span></>
+                    : <><div className="w-2.5 h-2.5 bg-red-500 rounded-full" /> <span className="flex-1 text-base">ตอนนี้ปิดทำการ</span></>
                   }
                 </div>
               )}
 
-              {/* Regular hours */}
-              <div className="space-y-1.5 text-sm text-gray-600">
-                <div className="flex justify-between">
-                  <span>จันทร์ – เสาร์</span>
-                  <span className="font-medium text-gray-900">08:00 – 17:00 น.</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>อาทิตย์</span>
-                  <span className="text-red-500 font-medium">ปิดทำการ</span>
-                </div>
-              </div>
-
-              {/* Current holiday notice */}
-              {status?.currentHoliday && (
-                <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2.5">
-                  <AlertCircle size={15} className="text-red-500 flex-shrink-0 mt-0.5" />
+              {/* Smart Upcoming Holiday Notice */}
+              {activeOrSoonHoliday && (
+                <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4 shadow-sm">
+                  <AlertCircle size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-bold text-red-700">{status.currentHoliday.title}</p>
-                    <p className="text-xs text-red-600 mt-0.5">
-                      {formatDateTH(status.currentHoliday.startDate)}
-                      {status.currentHoliday.startDate !== status.currentHoliday.endDate &&
-                        <> – {formatDateTH(status.currentHoliday.endDate)}</>
+                    <p className="text-sm font-bold text-amber-900">⚠️ แจ้งวันหยุด: {activeOrSoonHoliday.title}</p>
+                    <p className="text-sm text-amber-800 mt-1.5 leading-relaxed">
+                      ปิดทำการช่วง {formatDateTH(activeOrSoonHoliday.startDate)}
+                      {activeOrSoonHoliday.startDate !== activeOrSoonHoliday.endDate &&
+                        ` - ${formatDateTH(activeOrSoonHoliday.endDate)}`
                       }
+                      <br/>
+                      จะเปิดให้บริการตามปกติใน<span className="font-bold underline underline-offset-2 ml-1">{getReopenMessage(activeOrSoonHoliday.endDate)}</span>
                     </p>
                   </div>
                 </div>
               )}
 
-              {/* Upcoming holidays */}
-              {status?.upcomingHolidays && status.upcomingHolidays.length > 0 && (
-                <div className="border-t border-gray-100 pt-3">
-                  <p className="text-xs font-semibold text-gray-500 mb-2">วันหยุดที่จะมาถึง</p>
-                  <div className="space-y-1.5">
-                    {status.upcomingHolidays.slice(0, 3).map(h => (
-                      <div key={h.id} className="flex items-center gap-2 text-xs text-gray-500">
-                        <div className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-                        <span className="font-medium text-gray-700">{h.title}</span>
-                        <span className="ml-auto whitespace-nowrap">{formatDateTH(h.startDate)}{h.startDate !== h.endDate && <>–{formatDateTH(h.endDate)}</>}</span>
-                      </div>
-                    ))}
-                  </div>
+              {/* Regular hours (Neutral Styling) */}
+              <div className="space-y-2 text-sm text-gray-600 pt-2">
+                <div className="flex justify-between items-center py-1">
+                  <span>จันทร์ – เสาร์</span>
+                  <span className="font-medium text-gray-900">08:00 – 17:00 น.</span>
                 </div>
-              )}
+                <div className="flex justify-between items-center py-1">
+                  <span>อาทิตย์</span>
+                  <span className="text-gray-500 font-medium bg-gray-100 px-2 py-0.5 rounded text-xs">ปิดทำการ</span>
+                </div>
+              </div>
             </div>
           </div>
 
