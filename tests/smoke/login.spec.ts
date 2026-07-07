@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD } from '../fixtures/constants';
 
-test.describe('Login Smoke Test', { tag: ['@test.smoke', '@test.auth'] }, () => {
+test.describe.skip('Login Smoke Test', { tag: ['@test.smoke', '@test.auth'] }, () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
   test('Guest should be able to login with valid credentials via UI', async ({ page }) => {

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, MessageCircle, ChevronDown, Menu, X } from "lucide-react";
+import { Phone, MessageCircle, ChevronDown, Menu, X, ArrowRight } from "lucide-react";
 
 type NavProduct = {
   id: string;
@@ -12,6 +12,8 @@ type NavProduct = {
   shortTitle: string;
   description: string | null;
   image: string | null;
+  category?: string | null;
+  isFeatured?: string | null;
 };
 
 interface NavbarLink {
@@ -77,23 +79,40 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                     </Link>
                     
                     {/* Mega Menu Dropdown */}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-[min(650px,calc(100vw-2rem))] opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-4 group-hover/nav:translate-y-0">
-                      <div className="bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-2xl p-6 -mt-2">
-                        <div className="grid grid-cols-2 gap-3">
-                          {products.map(product => (
-                            <Link prefetch={false} key={product.slug} href={`/products/${product.slug}`} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 hover:shadow-md transition-all group/item border border-transparent hover:border-brand-100">
-                              <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-gray-100">
-                                <Image src={product.image || '/images/placeholder.jpg'} alt={product.title} width={64} height={64} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
-                              </div>
-                              <div>
-                                <h4 className="font-bold text-gray-900 group-hover/item:text-brand-700 transition-colors leading-tight">{product.shortTitle}</h4>
-                                <p className="text-xs text-gray-500 line-clamp-1 mt-1.5">{product.description}</p>
-                              </div>
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-[min(900px,calc(100vw-2rem))] opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-4 group-hover/nav:translate-y-0">
+                      <div className="bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-2xl overflow-hidden flex -mt-2">
+                        {/* Left Sidebar: Categories */}
+                        <div className="w-1/3 bg-slate-50 border-r border-gray-100 p-6 flex flex-col gap-2">
+                          <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">หมวดหมู่สินค้า</h4>
+                          {products.map(product => {
+                            const isHot = product.slug === 'precast-slab' || product.slug === 'post-tension';
+                            const isNew = product.slug === 'retaining-wall';
+                            return (
+                              <Link prefetch={false} key={`cat-${product.slug}`} href={`/products/${product.slug}`} className="group/cat flex items-center justify-between p-3 rounded-xl hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-gray-100">
+                                <span className="font-bold text-gray-700 group-hover/cat:text-brand-700 transition-colors">{product.shortTitle}</span>
+                                {isHot && <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-bold">มาแรง</span>}
+                                {isNew && <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold">ใหม่</span>}
+                              </Link>
+                            );
+                          })}
+                          <div className="mt-auto pt-4">
+                            <Link prefetch={false} href="/products" className="flex items-center gap-2 text-sm text-brand-600 font-bold hover:text-brand-700 transition-colors">
+                              ดูสินค้าทั้งหมด <ArrowRight size={16} />
                             </Link>
-                          ))}
-                          <Link prefetch={false} href="/products" className="flex items-center justify-center gap-2 p-3 rounded-2xl bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold transition-all border border-dashed border-brand-200 hover:border-brand-400">
-                            ดูสินค้าทั้งหมด
-                          </Link>
+                          </div>
+                        </div>
+                        {/* Right Area: Featured Products */}
+                        <div className="w-2/3 p-6">
+                          <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">สินค้าแนะนำ</h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            {products.filter(p => p.isFeatured === 'true' || ['retaining-wall', 'precast-fence', 'precast-slab', 'post-tension'].includes(p.slug)).slice(0, 4).map(product => (
+                              <Link prefetch={false} key={`feat-${product.slug}`} href={`/products/${product.slug}`} className="group/feat relative h-32 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                                <Image src={product.image || '/images/placeholder.jpg'} alt={product.title} fill className="object-cover group-hover/feat:scale-110 transition-transform duration-700" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
+                                <h5 className="absolute bottom-3 left-3 right-3 text-white font-bold leading-tight translate-y-0 group-hover/feat:-translate-y-1 transition-transform duration-300">{product.shortTitle}</h5>
+                              </Link>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -116,23 +135,40 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                 </Link>
                 
                 {/* Mega Menu Dropdown */}
-                <div className="absolute top-full left-1/2 -translate-x-1/2 w-[min(650px,calc(100vw-2rem))] opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-4 group-hover/nav:translate-y-0">
-                  <div className="bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-2xl p-6 -mt-2">
-                    <div className="grid grid-cols-2 gap-3">
-                      {products.map(product => (
-                        <Link prefetch={false} key={product.slug} href={`/products/${product.slug}`} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 hover:shadow-md transition-all group/item border border-transparent hover:border-brand-100">
-                          <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-gray-100">
-                            <Image src={product.image || '/images/placeholder.jpg'} alt={product.title} width={64} height={64} className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-500" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-gray-900 group-hover/item:text-brand-700 transition-colors leading-tight">{product.shortTitle}</h4>
-                            <p className="text-xs text-gray-500 line-clamp-1 mt-1.5">{product.description}</p>
-                          </div>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 w-[min(900px,calc(100vw-2rem))] opacity-0 invisible group-hover/nav:opacity-100 group-hover/nav:visible transition-all duration-300 transform translate-y-4 group-hover/nav:translate-y-0">
+                  <div className="bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-2xl overflow-hidden flex -mt-2">
+                    {/* Left Sidebar: Categories */}
+                    <div className="w-1/3 bg-slate-50 border-r border-gray-100 p-6 flex flex-col gap-2">
+                      <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">หมวดหมู่สินค้า</h4>
+                      {products.map(product => {
+                        const isHot = product.slug === 'precast-slab' || product.slug === 'post-tension';
+                        const isNew = product.slug === 'retaining-wall';
+                        return (
+                          <Link prefetch={false} key={`cat2-${product.slug}`} href={`/products/${product.slug}`} className="group/cat flex items-center justify-between p-3 rounded-xl hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-gray-100">
+                            <span className="font-bold text-gray-700 group-hover/cat:text-brand-700 transition-colors">{product.shortTitle}</span>
+                            {isHot && <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-bold">มาแรง</span>}
+                            {isNew && <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold">ใหม่</span>}
+                          </Link>
+                        );
+                      })}
+                      <div className="mt-auto pt-4">
+                        <Link prefetch={false} href="/products" className="flex items-center gap-2 text-sm text-brand-600 font-bold hover:text-brand-700 transition-colors">
+                          ดูสินค้าทั้งหมด <ArrowRight size={16} />
                         </Link>
-                      ))}
-                      <Link prefetch={false} href="/products" className="flex items-center justify-center gap-2 p-3 rounded-2xl bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold transition-all border border-dashed border-brand-200 hover:border-brand-400">
-                        ดูสินค้าทั้งหมด
-                      </Link>
+                      </div>
+                    </div>
+                    {/* Right Area: Featured Products */}
+                    <div className="w-2/3 p-6">
+                      <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">สินค้าแนะนำ</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        {products.filter(p => p.isFeatured === 'true' || ['retaining-wall', 'precast-fence', 'precast-slab', 'post-tension'].includes(p.slug)).slice(0, 4).map(product => (
+                          <Link prefetch={false} key={`feat2-${product.slug}`} href={`/products/${product.slug}`} className="group/feat relative h-32 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                            <Image src={product.image || '/images/placeholder.jpg'} alt={product.title} fill className="object-cover group-hover/feat:scale-110 transition-transform duration-700" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
+                            <h5 className="absolute bottom-3 left-3 right-3 text-white font-bold leading-tight translate-y-0 group-hover/feat:-translate-y-1 transition-transform duration-300">{product.shortTitle}</h5>
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>

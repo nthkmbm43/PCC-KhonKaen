@@ -45,6 +45,8 @@ export const getPublishedProducts = unstable_cache(
         shortTitle: products.shortTitle,
         description: products.description,
         image: products.image,
+        category: products.category,
+        isFeatured: products.isFeatured,
         updatedAt: products.updatedAt,
       })
       .from(products)
