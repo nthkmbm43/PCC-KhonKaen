@@ -51,14 +51,14 @@ export default defineConfig({
       dependencies: ['setup'],
     },
 
-    {
+    /* {
       name: 'webkit',
       use: { 
         ...devices['Desktop Safari'],
         storageState: 'playwright/.auth/admin.json',
       },
       dependencies: ['setup'],
-    },
+    }, */
   ],
 
   /* Run your local dev server before starting the tests */

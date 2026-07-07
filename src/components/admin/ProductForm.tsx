@@ -57,7 +57,6 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
   const isNew = productId === "new";
 
   const form = useForm<ProductFormValues>({
-    // @ts-expect-error - zod mismatch
     resolver: zodResolver(productSchema),
     mode: 'onChange',
     defaultValues: {
@@ -177,7 +176,6 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
 
   return (
     <FormProvider {...form}>
-      {/* @ts-expect-error - mismatch in hook form types */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-4xl mx-auto pb-20">
         
         {/* Header Actions */}
