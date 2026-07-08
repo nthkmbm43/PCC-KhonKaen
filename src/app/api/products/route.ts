@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { products, seoMetadata } from "@/db/schema";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
+import crypto from "crypto";
 
 export async function GET() {
   try {
@@ -27,10 +28,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Title and Slug are required" }, { status: 400 });
     }
 
+    let generatedRawToken: string | null = null;
+
     const newProduct = await db.transaction(async (tx) => {
+      generatedRawToken = crypto.randomBytes(16).toString('hex');
+      const tokenHash = crypto.createHash('sha256').update(generatedRawToken).digest('hex');
+
       const inserted = await tx.insert(products).values({
         ...data,
         isFeatured: data.isFeatured ? 'true' : 'false',
+        previewTokenHash: tokenHash,
+        previewExpiresAt: new Date(Date.now() + 1000 * 60 * 60), // 1 hour
       }).returning();
 
       // Dual-write SEO Metadata
@@ -57,7 +65,7 @@ export async function POST(req: Request) {
       return inserted;
     });
 
-    return NextResponse.json(newProduct[0], { status: 201 });
+    return NextResponse.json({ ...newProduct[0], rawPreviewToken: generatedRawToken }, { status: 201 });
   } catch (error) {
     console.error("Error creating product:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

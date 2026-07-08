@@ -159,8 +159,15 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
       if (res.ok) {
         const saved = await res.json();
         const slug = saved.slug || data.slug;
+        const token = saved.rawPreviewToken;
         toast.success("บันทึกฉบับร่างและกำลังเปิด Preview");
-        window.open(`/api/preview?slug=${slug}&type=product`, "_blank");
+        
+        let previewUrl = `/api/preview?slug=${slug}&type=product`;
+        if (token) {
+          previewUrl += `&token=${token}`;
+        }
+        
+        window.open(previewUrl, "_blank");
         if (isNew) {
           router.push(`/admin/products/${saved.id}`);
         }

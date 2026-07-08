@@ -5,6 +5,7 @@ import { eq, and, desc } from "drizzle-orm";
 import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { logAudit } from "@/lib/audit";
+import crypto from "crypto";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -31,6 +32,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   try {
     const { id } = await params;
     const data = await req.json();
+    let generatedRawToken: string | null = null;
     
     const updatedProduct = await db.transaction(async (tx) => {
       const beforeState = await tx.select().from(products).where(eq(products.id, id)).limit(1);
@@ -44,17 +46,17 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       delete productData.seoDescription;
       delete productData.seoKeywords;
       delete productData.ogImage;
+      delete productData.generatePreviewToken; // In case frontend sends it
 
       // Map form's 'status' field to DB's 'workflowState'
       if (status) {
         productData.workflowState = status;
       }
 
-      // Invalidate preview token if publishing
-      if (productData.workflowState === 'published') {
-        productData.previewTokenHash = null;
-        productData.previewExpiresAt = null;
-      }
+      // Always generate a fresh preview token on save
+      generatedRawToken = crypto.randomBytes(16).toString('hex');
+      productData.previewTokenHash = crypto.createHash('sha256').update(generatedRawToken).digest('hex');
+      productData.previewExpiresAt = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
 
       const updated = await tx
         .update(products)
@@ -135,7 +137,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
     revalidatePath('/', 'layout');
 
-    return NextResponse.json(updatedProduct[0]);
+    return NextResponse.json({ ...updatedProduct[0], rawPreviewToken: generatedRawToken });
   } catch (error) {
     console.error("Error updating product:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
