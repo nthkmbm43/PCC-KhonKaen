@@ -49,7 +49,7 @@ export async function PUT(req: Request) {
         .returning();
       
       revalidatePath('/', 'layout');
-      revalidateTag('site-settings');
+      revalidateTag('site-settings', { expire: 0 });
       
       return NextResponse.json(updatedSettings[0]);
     }
