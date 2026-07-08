@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronRight, Package, ShieldCheck, Zap } from "lucide-react";
+import { ArrowUpRight, ChevronRight, Package, ShieldCheck, Zap, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getPublishedProducts } from "@/lib/repositories/product";
@@ -30,6 +30,7 @@ export default async function FeatureGridBlock({ data }: { data?: Record<string,
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-8">
           {allProducts.map((product, idx) => {
             const isHot = product.badge === 'มาแรง';
+            const isNew = product.badge === 'ใหม่';
             return (
               <Link 
                 key={product.slug} 
@@ -42,6 +43,12 @@ export default async function FeatureGridBlock({ data }: { data?: Record<string,
                   {isHot && (
                     <div className="absolute top-6 left-6 z-20 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
                       <Zap size={14} /> มาแรง
+                    </div>
+                  )}
+
+                  {isNew && (
+                    <div className="absolute top-6 left-6 z-20 bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+                      <Sparkles size={14} /> ใหม่
                     </div>
                   )}
 

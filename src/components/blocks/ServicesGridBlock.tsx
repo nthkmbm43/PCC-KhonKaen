@@ -1,4 +1,4 @@
-import { ArrowUpRight, ChevronRight } from "lucide-react";
+import { ArrowUpRight, ChevronRight, Zap, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getPublishedProducts } from "@/lib/repositories/product";
@@ -22,12 +22,25 @@ export default async function ServicesGridBlock() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 xl:grid-cols-3 xl:gap-8">
-          {allProducts.map((product) => (
+          {allProducts.map((product) => {
+            const isHot = product.badge === 'มาแรง';
+            const isNew = product.badge === 'ใหม่';
+            return (
             <div key={product.slug} className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 flex flex-col relative">
               <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md w-12 h-12 rounded-full flex items-center justify-center text-brand-600 opacity-100 translate-y-0 lg:opacity-0 lg:group-hover:opacity-100 lg:translate-y-4 lg:group-hover:translate-y-0 transition-all duration-500 shadow-lg cursor-pointer">
                 <ArrowUpRight size={24} />
               </div>
               <div className="h-64 bg-slate-200 relative overflow-hidden">
+                {isHot && (
+                  <div className="absolute top-4 left-4 z-20 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+                    <Zap size={14} /> มาแรง
+                  </div>
+                )}
+                {isNew && (
+                  <div className="absolute top-4 left-4 z-20 bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+                    <Sparkles size={14} /> ใหม่
+                  </div>
+                )}
                 {product.image ? (
                   <Image 
                     src={product.image} 
@@ -49,7 +62,8 @@ export default async function ServicesGridBlock() {
                 </Link>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
