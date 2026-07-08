@@ -33,6 +33,7 @@ const productSchema = z.object({
   image: z.string().optional(),
   category: z.string().optional(),
   badge: z.string().optional(),
+  sortOrder: z.coerce.number().optional(),
   isFeatured: z.boolean(),
   status: z.enum(['draft', 'published']),
   
@@ -52,13 +53,13 @@ const productSchema = z.object({
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
-export function ProductForm({ initialData, productId }: { initialData?: Omit<Partial<ProductFormValues>, 'isFeatured' | 'content'> & { isFeatured?: string | boolean; workflowState?: string; status?: string; content?: unknown; imageLayout?: string; highlights?: unknown; badge?: string | null }; productId: string }) {
+export function ProductForm({ initialData, productId }: { initialData?: Omit<Partial<ProductFormValues>, 'isFeatured' | 'content'> & { isFeatured?: string | boolean; workflowState?: string; status?: string; content?: unknown; imageLayout?: string; highlights?: unknown; badge?: string | null; sortOrder?: number | null }; productId: string }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const isNew = productId === "new";
 
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(productSchema) as any,
     mode: 'onChange',
     defaultValues: {
       title: initialData?.title || "",
@@ -68,6 +69,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
       image: initialData?.image || "",
       category: initialData?.category || "general",
       badge: initialData?.badge || "",
+      sortOrder: initialData?.sortOrder ?? 0,
       isFeatured: initialData?.isFeatured === true || initialData?.isFeatured === 'true',
       status: (initialData?.workflowState ?? initialData?.status ?? "published") as "draft" | "published",
       
@@ -185,7 +187,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-4xl mx-auto pb-20">
+      <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-6 max-w-4xl mx-auto pb-20">
         
         {/* Header Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
@@ -424,6 +426,16 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                     <option value="มาแรง">มาแรง (Hot)</option>
                     <option value="ใหม่">ใหม่ (New)</option>
                   </select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="sortOrder">ลำดับการแสดงผล (ยิ่งน้อยยิ่งขึ้นก่อน)</Label>
+                  <Input 
+                    id="sortOrder" 
+                    type="number" 
+                    {...form.register("sortOrder", { valueAsNumber: true })} 
+                    placeholder="เช่น 1, 2, 3" 
+                  />
                 </div>
 
                 <div className="flex items-center justify-between bg-slate-50 p-3 rounded-lg border border-slate-100">

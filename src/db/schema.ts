@@ -182,6 +182,7 @@ export const products = pgTable('products', {
   badge: text('badge'), // e.g. 'hot', 'new', or null
   isFeatured: text('is_featured').default('false'),
   highlights: jsonb('highlights').default('[]'),
+  sortOrder: integer('sort_order').default(0),
   
   // Legacy SEO columns
   seoTitle: text('seo_title'),

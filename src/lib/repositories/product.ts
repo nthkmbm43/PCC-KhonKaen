@@ -48,6 +48,7 @@ export const getPublishedProducts = unstable_cache(
         category: products.category,
         isFeatured: products.isFeatured,
         badge: products.badge,
+        sortOrder: products.sortOrder,
         updatedAt: products.updatedAt,
       })
       .from(products)
@@ -62,7 +63,14 @@ export const getPublishedProducts = unstable_cache(
     return result.sort((a, b) => {
       const aPriority = badgePriority[a.badge || ""] || 3;
       const bPriority = badgePriority[b.badge || ""] || 3;
-      return aPriority - bPriority;
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority;
+      }
+      
+      // If priority is the same, use sortOrder (lower comes first)
+      const aSort = a.sortOrder ?? 0;
+      const bSort = b.sortOrder ?? 0;
+      return aSort - bSort;
     });
   },
   ['published-products'],
