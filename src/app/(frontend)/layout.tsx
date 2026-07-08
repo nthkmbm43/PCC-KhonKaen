@@ -14,8 +14,14 @@ const prompt = Prompt({
   subsets: ["latin", "thai"],
 });
 
+import parse from "html-react-parser";
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
+  
+  // Extract Google Site Verification from custom head code if present
+  const verificationMatch = settings.rawSettings?.customHeadCode?.match(/<meta\s+name=["']google-site-verification["']\s+content=["']([^"']+)["']/i);
+  const googleVerification = verificationMatch ? verificationMatch[1] : undefined;
   
   return {
     ...createSeoMetadata({
@@ -33,6 +39,9 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: settings.contact.faviconUrl || settings.contact.logoUrl || "/images/logo.png",
       shortcut: settings.contact.faviconUrl || settings.contact.logoUrl || "/images/logo.png",
       apple: settings.contact.faviconUrl || settings.contact.logoUrl || "/images/logo.png",
+    },
+    verification: {
+      google: googleVerification,
     }
   };
 }
@@ -48,9 +57,7 @@ export default async function RootLayout({
   return (
     <html lang="th" className={`${prompt.variable} antialiased scroll-smooth`}>
       <head>
-        {settings.rawSettings?.customHeadCode ? (
-          <div dangerouslySetInnerHTML={{ __html: settings.rawSettings.customHeadCode }} />
-        ) : null}
+        {settings.rawSettings?.customHeadCode ? parse(settings.rawSettings.customHeadCode) : null}
       </head>
       <body className="min-h-screen flex flex-col">
         <JsonLd data={organizationJsonLd(settings.contact)} />
