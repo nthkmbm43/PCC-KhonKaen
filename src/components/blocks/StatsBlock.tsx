@@ -72,7 +72,7 @@ export default function StatsBlock({ data }: StatsBlockProps) {
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-400 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-400 rounded-full blur-[120px]" />
       </div>
-      <div className="absolute inset-0 bg-[url('/images/concrete-texture.webp')] bg-cover opacity-5" />
+      <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-center text-blue-300 font-semibold tracking-widest uppercase text-sm mb-3">
