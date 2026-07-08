@@ -179,6 +179,7 @@ export const products = pgTable('products', {
   image: text('image'),
   imageLayout: text('image_layout', { enum: ['normal', 'full-width'] }).default('normal'),
   category: text('category').default('general'),
+  badge: text('badge'), // e.g. 'hot', 'new', or null
   isFeatured: text('is_featured').default('false'),
   highlights: jsonb('highlights').default('[]'),
   

@@ -74,7 +74,7 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
       seoTitle: initialData?.seoTitle ?? "",
       seoDescription: initialData?.seoDescription ?? "",
       status: (initialData?.workflowState ?? initialData?.status ?? "published") as "draft" | "published",
-      content: Array.isArray(initialData?.content) ? initialData.content : [],
+      content: Array.isArray(initialData?.content) ? initialData.content.map((b: any) => ({ ...b, blockType: b.blockType || b.type })) : [],
     },
   });
 

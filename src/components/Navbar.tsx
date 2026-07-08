@@ -14,6 +14,7 @@ type NavProduct = {
   image: string | null;
   category?: string | null;
   isFeatured?: string | null;
+  badge?: string | null;
 };
 
 interface NavbarLink {
@@ -85,8 +86,8 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                         <div className="w-1/3 bg-slate-50 border-r border-gray-100 p-6 flex flex-col gap-2">
                           <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">หมวดหมู่สินค้า</h4>
                           {products.map(product => {
-                            const isHot = product.slug === 'precast-slab' || product.slug === 'post-tension';
-                            const isNew = product.slug === 'retaining-wall';
+                            const isHot = product.badge === 'มาแรง';
+                            const isNew = product.badge === 'ใหม่';
                             return (
                               <Link prefetch={false} key={`cat-${product.slug}`} href={`/products/${product.slug}`} className="group/cat flex items-center justify-between p-3 rounded-xl hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-gray-100">
                                 <span className="font-bold text-gray-700 group-hover/cat:text-brand-700 transition-colors">{product.shortTitle}</span>

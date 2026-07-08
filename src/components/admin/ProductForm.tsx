@@ -32,6 +32,7 @@ const productSchema = z.object({
   description: z.string().optional(),
   image: z.string().optional(),
   category: z.string().optional(),
+  badge: z.string().optional(),
   isFeatured: z.boolean(),
   status: z.enum(['draft', 'published']),
   
@@ -51,7 +52,7 @@ const productSchema = z.object({
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
-export function ProductForm({ initialData, productId }: { initialData?: Omit<Partial<ProductFormValues>, 'isFeatured' | 'content'> & { isFeatured?: string | boolean; workflowState?: string; status?: string; content?: unknown; imageLayout?: string; highlights?: unknown }; productId: string }) {
+export function ProductForm({ initialData, productId }: { initialData?: Omit<Partial<ProductFormValues>, 'isFeatured' | 'content'> & { isFeatured?: string | boolean; workflowState?: string; status?: string; content?: unknown; imageLayout?: string; highlights?: unknown; badge?: string | null }; productId: string }) {
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const isNew = productId === "new";
@@ -66,6 +67,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
       description: initialData?.description || "",
       image: initialData?.image || "",
       category: initialData?.category || "general",
+      badge: initialData?.badge || "",
       isFeatured: initialData?.isFeatured === true || initialData?.isFeatured === 'true',
       status: (initialData?.workflowState ?? initialData?.status ?? "published") as "draft" | "published",
       
@@ -409,6 +411,18 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                     <option value="general">ทั่วไป (General)</option>
                     <option value="precast">พรีแคสท์ (Precast)</option>
                     <option value="service">บริการ (Service)</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="badge">ป้ายกำกับ (Badge)</Label>
+                  <select id="badge"
+                    {...form.register("badge")} 
+                    className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  >
+                    <option value="">ไม่มี (None)</option>
+                    <option value="มาแรง">มาแรง (Hot)</option>
+                    <option value="ใหม่">ใหม่ (New)</option>
                   </select>
                 </div>
 

@@ -29,7 +29,7 @@ export default async function FeatureGridBlock({ data }: { data?: Record<string,
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-8">
           {allProducts.map((product, idx) => {
-            const isHot = product.slug === 'precast-slab' || product.slug === 'post-tension';
+            const isHot = product.badge === 'มาแรง';
             return (
               <Link 
                 key={product.slug} 
