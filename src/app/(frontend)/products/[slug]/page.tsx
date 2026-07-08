@@ -2,6 +2,15 @@ import { getProductWithSeo, getPublishedProducts } from "@/lib/repositories/prod
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  Breadcrumbs,
+  BreadcrumbsList,
+  BreadcrumbsItem,
+  BreadcrumbsLink,
+  BreadcrumbsSeparator,
+  BreadcrumbsPage,
+} from "@/components/ui/breadcrumbs";
+import ExitPreviewButton from '@/components/ExitPreviewButton';
 import { CheckCircle2, MessageCircle, Phone, ArrowLeft, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
 import { getSiteSettings } from "@/lib/getSiteSettings";
@@ -126,10 +135,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       {isDraftMode && (
         <div className="bg-amber-100 text-amber-800 text-center text-xs py-1.5 font-semibold sticky top-0 z-50 flex justify-center items-center gap-4">
           <span>Preview Mode: You are viewing unpublished changes.</span>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/api/exit-preview" className="bg-amber-200 hover:bg-amber-300 text-amber-900 px-3 py-1 rounded-full transition-colors underline-none">
-            Exit Preview
-          </a>
+          <ExitPreviewButton />
         </div>
       )}
 

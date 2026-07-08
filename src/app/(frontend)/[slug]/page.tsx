@@ -5,6 +5,7 @@ import { createSeoMetadata } from '@/lib/seo'
 import { getPageWithSeo } from '@/lib/repositories/page'
 import { getSiteSettings } from '@/lib/getSiteSettings'
 import { draftMode } from 'next/headers'
+import ExitPreviewButton from '@/components/ExitPreviewButton'
 
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
@@ -75,10 +76,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
       {isDraftMode && (
         <div className="bg-amber-100 text-amber-800 text-center text-xs py-1.5 font-semibold sticky top-0 z-50 flex justify-center items-center gap-4">
           <span>Preview Mode: You are viewing unpublished changes.</span>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/api/exit-preview" className="bg-amber-200 hover:bg-amber-300 text-amber-900 px-3 py-1 rounded-full transition-colors underline-none">
-            Exit Preview
-          </a>
+          <ExitPreviewButton />
         </div>
       )}
       <BlockRenderer layout={layout} />
