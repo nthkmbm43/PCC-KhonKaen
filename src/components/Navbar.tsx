@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, MessageCircle, ChevronDown, Menu, X, ArrowRight } from "lucide-react";
+import { Phone, MessageCircle, ChevronDown, Menu, X, ArrowRight, Zap, Sparkles } from "lucide-react";
 
 type NavProduct = {
   id: string;
@@ -106,13 +106,29 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                         <div className="w-2/3 p-6">
                           <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">สินค้าแนะนำ</h4>
                           <div className="grid grid-cols-2 gap-4">
-                            {products.filter(p => p.isFeatured === 'true' || ['retaining-wall', 'precast-fence', 'precast-slab', 'post-tension'].includes(p.slug)).slice(0, 4).map(product => (
-                              <Link prefetch={false} key={`feat-${product.slug}`} href={`/products/${product.slug}`} className="group/feat relative h-32 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
-                                <Image src={product.image || '/images/placeholder.jpg'} alt={product.title} fill className="object-cover group-hover/feat:scale-110 transition-transform duration-700" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
-                                <h5 className="absolute bottom-3 left-3 right-3 text-white font-bold leading-tight translate-y-0 group-hover/feat:-translate-y-1 transition-transform duration-300">{product.shortTitle}</h5>
-                              </Link>
-                            ))}
+                            {products.filter(p => p.isFeatured === 'true' || ['retaining-wall', 'precast-fence', 'precast-slab', 'post-tension'].includes(p.slug)).slice(0, 4).map(product => {
+                              const isHot = product.badge === 'มาแรง';
+                              const isNew = product.badge === 'ใหม่';
+                              return (
+                                <Link prefetch={false} key={`feat-${product.slug}`} href={`/products/${product.slug}`} className="group/feat relative h-32 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                                  <Image src={product.image || '/images/placeholder.jpg'} alt={product.title} fill className="object-cover group-hover/feat:scale-110 transition-transform duration-700" />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
+                                  
+                                  {isHot && (
+                                    <div className="absolute top-2 left-2 z-20 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md flex items-center gap-1">
+                                      <Zap size={10} /> มาแรง
+                                    </div>
+                                  )}
+                                  {isNew && (
+                                    <div className="absolute top-2 left-2 z-20 bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md flex items-center gap-1">
+                                      <Sparkles size={10} /> ใหม่
+                                    </div>
+                                  )}
+
+                                  <h5 className="absolute bottom-3 left-3 right-3 text-white font-bold leading-tight translate-y-0 group-hover/feat:-translate-y-1 transition-transform duration-300">{product.shortTitle}</h5>
+                                </Link>
+                              );
+                            })}
                           </div>
                         </div>
                       </div>
