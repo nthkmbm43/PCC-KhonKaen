@@ -209,10 +209,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         </div>
       )}
 
-      <div className={`max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-24 relative z-20 mt-0`}>
-        <div className="flex flex-col gap-12 lg:gap-16">
+      <div className={`max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-24 relative z-20 mt-0`}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Main Content */}
-          <div className="flex flex-col gap-8 lg:gap-12">
+          <div className="lg:col-span-8 flex flex-col gap-8 lg:gap-12">
             {product.imageLayout !== 'full-width' && (
               <div className="rounded-[2.5rem] shadow-2xl overflow-hidden mb-16 border-4 border-white group cursor-default">
                 <Image 
@@ -321,8 +321,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Sidebar CTA */}
-          <div className="w-full">
-            <div className="bg-white rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-gray-100 p-6 lg:p-10 overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-shadow duration-500 relative">
+          <div className="lg:col-span-4">
+            <div className="sticky top-24 lg:top-32 bg-white rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] border border-gray-100 p-6 lg:p-8 overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] transition-shadow duration-500">
               <div className="absolute top-0 right-0 w-40 h-40 bg-brand-100 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
               
               {highlights.length > 0 && (
