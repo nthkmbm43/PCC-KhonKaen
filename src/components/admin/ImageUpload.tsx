@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import imageCompression from 'browser-image-compression';
 
 import { Button } from "@/components/ui/button";
 import { Loader2, UploadCloud, X } from "lucide-react";
@@ -15,6 +16,7 @@ interface ImageUploadProps {
 
 export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [isCompressing, setIsCompressing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -27,17 +29,35 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      setError("ขนาดไฟล์ต้องไม่เกิน 5MB");
+    if (file.size > 20 * 1024 * 1024) {
+      setError("ขนาดไฟล์ก่อนบีบอัดต้องไม่เกิน 20MB");
       return;
     }
 
-    setIsUploading(true);
     setError(null);
+    setIsCompressing(true);
+    let fileToUpload = file;
+
+    try {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
+      fileToUpload = await imageCompression(file, options);
+    } catch (err) {
+      console.error("Compression error:", err);
+      setError("เกิดข้อผิดพลาดในการบีบอัดรูปภาพ");
+      setIsCompressing(false);
+      return;
+    }
+
+    setIsCompressing(false);
+    setIsUploading(true);
 
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", fileToUpload);
       
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -84,16 +104,16 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
         <Button 
           type="button" 
           variant="secondary" 
-          disabled={disabled || isUploading}
+          disabled={disabled || isUploading || isCompressing}
           onClick={() => fileInputRef.current?.click()}
           className="shrink-0"
         >
-          {isUploading ? (
+          {(isUploading || isCompressing) ? (
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
           ) : (
             <UploadCloud className="w-4 h-4 mr-2" />
           )}
-          {isUploading ? "Uploading..." : "อัปโหลดภาพ"}
+          {isCompressing ? "Compressing image..." : isUploading ? "Uploading..." : "อัปโหลดภาพ"}
         </Button>
       </div>
       
