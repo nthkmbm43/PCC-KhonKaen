@@ -2,14 +2,7 @@ import { getProductWithSeo, getPublishedProducts } from "@/lib/repositories/prod
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Breadcrumbs,
-  BreadcrumbsList,
-  BreadcrumbsItem,
-  BreadcrumbsLink,
-  BreadcrumbsSeparator,
-  BreadcrumbsPage,
-} from "@/components/ui/breadcrumbs";
+
 import ExitPreviewButton from '@/components/ExitPreviewButton';
 import { CheckCircle2, MessageCircle, Phone, ArrowLeft, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
