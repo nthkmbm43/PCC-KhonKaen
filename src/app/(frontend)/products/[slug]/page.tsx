@@ -345,17 +345,29 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
               <div className="space-y-4 relative z-10 pt-6">
                 {(prevProduct || nextProduct) && (
-                  <div className={`flex flex-col sm:flex-row sm:justify-between items-center gap-4 pb-8 mb-4 border-b border-gray-100 ${highlights.length > 0 ? 'pt-8 border-t mt-4' : ''}`}>
-                    {prevProduct ? (
-                      <Link href={`/products/${prevProduct.slug}`} className="w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2 text-brand-600 hover:text-brand-700 font-bold transition-colors group/nav bg-brand-50 sm:bg-transparent py-3 sm:py-0 rounded-xl sm:rounded-none">
-                        <ArrowLeft size={20} className="group-hover/nav:-translate-x-1 transition-transform" /> <span className="truncate max-w-[200px]">{prevProduct.shortTitle}</span>
+                  <div className={`flex flex-col gap-3 pb-8 mb-4 border-b border-gray-100 ${highlights.length > 0 ? 'pt-8 border-t mt-4' : ''}`}>
+                    {prevProduct && (
+                      <Link href={`/products/${prevProduct.slug}`} title={prevProduct.title} className="w-full flex items-center gap-3 text-brand-600 hover:text-brand-700 font-bold transition-all group/nav bg-brand-50 hover:bg-brand-100/70 p-3 rounded-xl border border-brand-100/50">
+                        <div className="bg-white p-2 rounded-lg shadow-sm group-hover/nav:shadow shrink-0">
+                          <ArrowLeft size={16} className="group-hover/nav:-translate-x-0.5 transition-transform" />
+                        </div>
+                        <div className="flex flex-col overflow-hidden">
+                          <span className="text-[10px] sm:text-xs text-brand-500/80 font-semibold mb-0.5 uppercase tracking-wider">สินค้าก่อนหน้า</span>
+                          <span className="truncate w-full text-sm">{prevProduct.shortTitle || prevProduct.title}</span>
+                        </div>
                       </Link>
-                    ) : <div className="hidden sm:block"></div>}
-                    {nextProduct ? (
-                      <Link href={`/products/${nextProduct.slug}`} className="w-full sm:w-auto flex items-center justify-center sm:justify-end gap-2 text-brand-600 hover:text-brand-700 font-bold transition-colors group/nav bg-brand-50 sm:bg-transparent py-3 sm:py-0 rounded-xl sm:rounded-none">
-                        <span className="truncate max-w-[200px]">{nextProduct.shortTitle}</span> <ArrowRight size={20} className="group-hover/nav:translate-x-1 transition-transform" />
+                    )}
+                    {nextProduct && (
+                      <Link href={`/products/${nextProduct.slug}`} title={nextProduct.title} className="w-full flex items-center justify-end gap-3 text-brand-600 hover:text-brand-700 font-bold transition-all group/nav bg-brand-50 hover:bg-brand-100/70 p-3 rounded-xl border border-brand-100/50 text-right">
+                        <div className="flex flex-col overflow-hidden items-end">
+                          <span className="text-[10px] sm:text-xs text-brand-500/80 font-semibold mb-0.5 uppercase tracking-wider">สินค้าถัดไป</span>
+                          <span className="truncate w-full text-sm">{nextProduct.shortTitle || nextProduct.title}</span>
+                        </div>
+                        <div className="bg-white p-2 rounded-lg shadow-sm group-hover/nav:shadow shrink-0">
+                          <ArrowRight size={16} className="group-hover/nav:translate-x-0.5 transition-transform" />
+                        </div>
                       </Link>
-                    ) : <div className="hidden sm:block"></div>}
+                    )}
                   </div>
                 )}
                 <div className="bg-brand-50 text-brand-700 px-4 py-2 rounded-xl text-center font-bold text-sm mb-6 border border-brand-100 flex items-center justify-center gap-2">
