@@ -54,7 +54,16 @@ export const getPublishedProducts = unstable_cache(
       .where(eq(products.workflowState, "published"))
       .orderBy(products.createdAt); // Or some manual order if needed
 
-    return result;
+    const badgePriority: Record<string, number> = {
+      "มาแรง": 1,
+      "ใหม่": 2,
+    };
+
+    return result.sort((a, b) => {
+      const aPriority = badgePriority[a.badge || ""] || 3;
+      const bPriority = badgePriority[b.badge || ""] || 3;
+      return aPriority - bPriority;
+    });
   },
   ['published-products'],
   { tags: ['products'], revalidate: 3600 }
