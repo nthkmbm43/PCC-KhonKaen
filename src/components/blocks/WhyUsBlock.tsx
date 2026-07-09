@@ -10,6 +10,7 @@ type WhyUsBlockProps = {
   data: {
     headline?: string;
     subheadline?: string;
+    description?: string;
     items?: WhyItem[];
   };
 };
@@ -59,7 +60,7 @@ const defaultItems: WhyItem[] = [
 
 export default function WhyUsBlock({ data }: WhyUsBlockProps) {
   const headline = data?.headline || 'ทำไมต้องเลือก PCC Post-Tension?';
-  const subheadline = data?.subheadline || 'เราไม่ใช่แค่ผู้ขาย แต่เป็นพันธมิตรที่คุณไว้วางใจได้ตลอดโครงการ';
+  const subheadline = data?.subheadline || data?.description || 'เราไม่ใช่แค่ผู้ขาย แต่เป็นพันธมิตรที่คุณไว้วางใจได้ตลอดโครงการ';
   const items = data?.items || defaultItems;
 
   return (

@@ -8,7 +8,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Save, ArrowLeft, Plus, Trash2, GripVertical, Image as ImageIcon } from "lucide-react";
+import { Save, ArrowLeft, Plus, Trash2, GripVertical, Image as ImageIcon, ArrowUp, ArrowDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ImageUpload } from "./ImageUpload";
 import toast from "react-hot-toast";
@@ -86,7 +86,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
     },
   });
 
-  const { fields: contentBlocks, append: appendBlock, remove: removeBlock } = useFieldArray({
+  const { fields: contentBlocks, append: appendBlock, remove: removeBlock, move: moveBlock } = useFieldArray({
     control: form.control,
     name: "content",
   });
@@ -343,9 +343,31 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                         { }
                         {form.watch(`content.${index}.type`)} BLOCK
                       </span>
-                      <Button type="button" variant="ghost" size="icon" onClick={() => removeBlock(index)} className="w-6 h-6 text-slate-400 hover:text-red-600 hover:bg-red-50 -mt-1 -mr-1">
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
+                      <div className="flex gap-1 -mt-1 -mr-1">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => { e.stopPropagation(); moveBlock(index, index - 1); }}
+                          disabled={index === 0}
+                          className="w-6 h-6 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                        >
+                          <ArrowUp className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => { e.stopPropagation(); moveBlock(index, index + 1); }}
+                          disabled={index === contentBlocks.length - 1}
+                          className="w-6 h-6 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                        >
+                          <ArrowDown className="w-3.5 h-3.5" />
+                        </Button>
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeBlock(index)} className="w-6 h-6 text-slate-400 hover:text-red-600 hover:bg-red-50">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
                     </div>
 
                     {form.watch(`content.${index}.type`) === 'text' && (

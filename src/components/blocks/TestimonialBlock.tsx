@@ -13,6 +13,7 @@ type TestimonialBlockProps = {
   data: {
     headline?: string;
     subheadline?: string;
+    description?: string;
     testimonials?: Testimonial[];
   };
 };
@@ -46,7 +47,7 @@ const defaultTestimonials: Testimonial[] = [
 
 export default function TestimonialBlock({ data }: TestimonialBlockProps) {
   const headline = data?.headline || 'ลูกค้าพูดถึงเรา';
-  const subheadline = data?.subheadline || 'ความไว้วางใจจากลูกค้าคือรางวัลสูงสุดที่เราภาคภูมิใจ';
+  const subheadline = data?.subheadline || data?.description || 'ความไว้วางใจจากลูกค้าคือรางวัลสูงสุดที่เราภาคภูมิใจ';
   const testimonials = data?.testimonials || defaultTestimonials;
 
   return (

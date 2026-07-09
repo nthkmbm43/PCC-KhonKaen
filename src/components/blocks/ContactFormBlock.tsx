@@ -14,6 +14,7 @@ type ContactFormBlockProps = {
   data: {
     headline?: string;
     subheadline?: string;
+    description?: string;
     phone?: string;
     lineUrl?: string;
     workingHours?: string;
@@ -31,7 +32,7 @@ function formatDateTH(dateStr: string): string {
 
 export default function ContactFormBlock({ data, initialStatus }: ContactFormBlockProps) {
   const headline    = data?.headline    || 'ส่งข้อความหาเรา';
-  const subheadline = data?.subheadline || 'กรอกข้อมูลด้านล่าง ทีมงานของเราจะติดต่อกลับภายใน 24 ชั่วโมงในวันทำการ';
+  const subheadline = data?.subheadline || data?.description || 'กรอกข้อมูลด้านล่าง ทีมงานของเราจะติดต่อกลับภายใน 24 ชั่วโมงในวันทำการ';
   const phone       = data?.phone       || '063-454-5656';
   const lineUrl     = data?.lineUrl     || '#';
 

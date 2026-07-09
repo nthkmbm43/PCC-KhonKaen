@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2, ArrowLeft, GripVertical, Settings, FileText, Image as ImageIcon, Unlock } from "lucide-react";
+import { Plus, Trash2, ArrowLeft, GripVertical, Settings, FileText, Image as ImageIcon, Unlock, ArrowUp, ArrowDown } from "lucide-react";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import {
@@ -78,7 +78,7 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     name: "content",
     control: form.control,
   });
@@ -244,18 +244,39 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                               </div>
                             </div>
                           </AccordionTrigger>
-                          <AlertDialog>
-                            <AlertDialogTrigger render={
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="mr-4 text-red-500 hover:text-red-600 hover:bg-red-50 h-8 w-8 rounded-full transition-colors"
-                                disabled={!isEditMode}
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            } />
+                          <div className="flex items-center">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={(e) => { e.stopPropagation(); move(index, index - 1); }}
+                              disabled={!isEditMode || index === 0}
+                              className="text-slate-400 hover:text-blue-600 hover:bg-blue-50 h-8 w-8 rounded-full transition-colors mr-1"
+                            >
+                              <ArrowUp className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={(e) => { e.stopPropagation(); move(index, index + 1); }}
+                              disabled={!isEditMode || index === fields.length - 1}
+                              className="text-slate-400 hover:text-blue-600 hover:bg-blue-50 h-8 w-8 rounded-full transition-colors mr-2"
+                            >
+                              <ArrowDown className="w-4 h-4" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger render={
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="mr-4 text-red-500 hover:text-red-600 hover:bg-red-50 h-8 w-8 rounded-full transition-colors"
+                                  disabled={!isEditMode}
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              } />
                             <AlertDialogContent>
                               <AlertDialogHeader>
                                 <AlertDialogTitle>ลบ Block นี้?</AlertDialogTitle>
@@ -270,17 +291,18 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
-                          </AlertDialog>
+                            </AlertDialog>
+                          </div>
                         </div>
                         <AccordionContent className="pt-2 pb-6 px-6 border-t bg-slate-50/30">
-                          {["hero", "cta"].includes(blockType) && (
+                          {!["text", "image", "customCode"].includes(blockType) && (
                             <div className="space-y-6 pt-4">
                               <div className="space-y-2">
-                                <Label htmlFor={`content.${index}.headline`} className="text-slate-600">Headline</Label>
+                                <Label htmlFor={`content.${index}.headline`} className="text-slate-600">Headline (หัวข้อหลัก)</Label>
                                 <Input id={`content.${index}.headline`} className="bg-white" {...form.register(`content.${index}.headline` as const)} />
                               </div>
                               <div className="space-y-2">
-                                <Label htmlFor={`content.${index}.description`} className="text-slate-600">Description</Label>
+                                <Label htmlFor={`content.${index}.description`} className="text-slate-600">Description (คำอธิบายเพิ่มเติม)</Label>
                                 <Textarea id={`content.${index}.description`} className="bg-white h-24" {...form.register(`content.${index}.description` as const)} />
                               </div>
                             </div>

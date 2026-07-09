@@ -8,6 +8,7 @@ type ProcessBlockProps = {
   data: {
     headline?: string;
     subheadline?: string;
+    description?: string;
     steps?: Step[];
     theme?: 'light' | 'dark';
   };
@@ -38,7 +39,7 @@ const defaultSteps: Step[] = [
 
 export default function ProcessBlock({ data }: ProcessBlockProps) {
   const headline = data?.headline || 'ขั้นตอนการทำงานของเรา';
-  const subheadline = data?.subheadline || 'ขั้นตอนที่ชัดเจน โปร่งใส และได้มาตรฐาน ตั้งแต่เริ่มต้นจนส่งมอบงาน';
+  const subheadline = data?.subheadline || data?.description || 'ขั้นตอนที่ชัดเจน โปร่งใส และได้มาตรฐาน ตั้งแต่เริ่มต้นจนส่งมอบงาน';
   const steps = data?.steps || defaultSteps;
   const isDark = data?.theme === 'dark';
 

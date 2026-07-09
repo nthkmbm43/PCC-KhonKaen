@@ -11,6 +11,7 @@ type Stat = {
 type StatsBlockProps = {
   data: {
     headline?: string;
+    description?: string;
     stats?: Stat[];
   };
 };
@@ -63,6 +64,7 @@ const defaultStats: Stat[] = [
 
 export default function StatsBlock({ data }: StatsBlockProps) {
   const headline = data?.headline || 'ตัวเลขที่บอกเล่าความสำเร็จของเรา';
+  const subheadline = data?.description || 'ความน่าเชื่อถือ';
   const stats = data?.stats || defaultStats;
 
   return (
@@ -76,7 +78,7 @@ export default function StatsBlock({ data }: StatsBlockProps) {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-center text-blue-300 font-semibold tracking-widest uppercase text-sm mb-3">
-          ความน่าเชื่อถือ
+          {subheadline}
         </p>
         <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-16 leading-tight">
           {headline}
