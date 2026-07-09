@@ -40,7 +40,16 @@ const defaultSteps: Step[] = [
 export default function ProcessBlock({ data }: ProcessBlockProps) {
   const headline = data?.headline || 'ขั้นตอนการทำงานของเรา';
   const subheadline = data?.subheadline || data?.description || 'ขั้นตอนที่ชัดเจน โปร่งใส และได้มาตรฐาน ตั้งแต่เริ่มต้นจนส่งมอบงาน';
-  const steps = data?.steps || defaultSteps;
+  
+  const customItems = Array.isArray((data as any)?.items) && (data as any).items.length > 0
+    ? (data as any).items.filter((item: any) => item.isVisible !== false).map((item: any, idx: number) => ({
+        number: item.stepNumber || idx + 1,
+        title: item.title,
+        description: item.description,
+      }))
+    : null;
+
+  const steps = customItems || data?.steps || defaultSteps;
   const isDark = data?.theme === 'dark';
 
   return (
@@ -81,7 +90,7 @@ export default function ProcessBlock({ data }: ProcessBlockProps) {
           <div className="hidden lg:block absolute top-10 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-blue-200 to-transparent" />
 
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-6">
-            {steps.map((step, i) => (
+            {steps.map((step: Step, i: number) => (
               <div key={i} className="relative flex flex-col items-center text-center group">
                 {/* Mobile connector */}
                 {i < steps.length - 1 && (

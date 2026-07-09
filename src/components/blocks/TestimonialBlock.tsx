@@ -48,7 +48,19 @@ const defaultTestimonials: Testimonial[] = [
 export default function TestimonialBlock({ data }: TestimonialBlockProps) {
   const headline = data?.headline || 'ลูกค้าพูดถึงเรา';
   const subheadline = data?.subheadline || data?.description || 'ความไว้วางใจจากลูกค้าคือรางวัลสูงสุดที่เราภาคภูมิใจ';
-  const testimonials = data?.testimonials || defaultTestimonials;
+  
+  const customItems = Array.isArray((data as any)?.items) && (data as any).items.length > 0
+    ? (data as any).items.filter((item: any) => item.isVisible !== false).map((item: any) => ({
+        name: item.name || 'ลูกค้า',
+        role: item.role,
+        company: item.company,
+        message: item.quote,
+        rating: item.rating || 5,
+        avatarInitials: item.avatarInitials,
+      }))
+    : null;
+
+  const testimonials = customItems || data?.testimonials || defaultTestimonials;
 
   return (
     <section className="py-20 sm:py-24 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
@@ -69,7 +81,7 @@ export default function TestimonialBlock({ data }: TestimonialBlockProps) {
 
         {/* Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {testimonials.map((t, i) => (
+          {testimonials.map((t: any, i: number) => (
             <div
               key={i}
               className="bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 flex flex-col gap-5 relative"

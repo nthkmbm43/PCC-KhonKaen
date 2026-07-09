@@ -65,7 +65,16 @@ const defaultStats: Stat[] = [
 export default function StatsBlock({ data }: StatsBlockProps) {
   const headline = data?.headline || 'ตัวเลขที่บอกเล่าความสำเร็จของเรา';
   const subheadline = data?.description || 'ความน่าเชื่อถือ';
-  const stats = data?.stats || defaultStats;
+  
+  const customItems = Array.isArray((data as any)?.items) && (data as any).items.length > 0
+    ? (data as any).items.filter((item: any) => item.isVisible !== false).map((item: any) => ({
+        value: Number(item.value) || 0,
+        suffix: item.suffix,
+        label: item.label,
+      }))
+    : null;
+
+  const stats = customItems || data?.stats || defaultStats;
 
   return (
     <section className="relative py-20 overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-900">
@@ -85,7 +94,7 @@ export default function StatsBlock({ data }: StatsBlockProps) {
         </h2>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-          {stats.map((stat, i) => (
+          {stats.map((stat: any, i: number) => (
             <div
               key={i}
               className="relative group bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8 text-center hover:bg-white/10 hover:border-white/20 transition-all duration-500 hover:-translate-y-1"

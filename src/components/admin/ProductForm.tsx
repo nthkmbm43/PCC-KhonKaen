@@ -14,15 +14,25 @@ import { ImageUpload } from "./ImageUpload";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+} from "@/components/ui/accordion";
+import { BlockHeader } from "./cms/BlockHeader";
+import { FileText } from "lucide-react";
 
 // Schema for a rich text / modular block
 const blockSchema = z.object({
   id: z.string(),
   type: z.string(),
+  isVisible: z.boolean().optional().default(true),
   title: z.string().optional(),
   content: z.string().optional(),
   image: z.string().optional(),
   bullets: z.array(z.string()).optional(),
+  layout: z.string().optional(),
+  backgroundStyle: z.string().optional(),
 });
 
 const productSchema = z.object({
@@ -82,11 +92,11 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
       highlights: (Array.isArray(initialData?.highlights) ? initialData.highlights : 
                   (typeof initialData?.highlights === 'string' ? JSON.parse(initialData.highlights) : [])) as string[],
 
-      content: initialData?.content ? (typeof initialData.content === 'string' ? JSON.parse(initialData.content) : initialData.content) : [],
+      content: initialData?.content ? (typeof initialData.content === 'string' ? JSON.parse(initialData.content) : initialData.content).map((b: any) => ({ ...b, id: b.id || Math.random().toString(36).substring(7), isVisible: b.isVisible !== false })) : [],
     },
   });
 
-  const { fields: contentBlocks, append: appendBlock, remove: removeBlock, move: moveBlock } = useFieldArray({
+  const { fields: contentBlocks, append: appendBlock, remove: removeBlock, move: moveBlock, insert: insertBlock } = useFieldArray({
     control: form.control,
     name: "content",
   });
@@ -133,6 +143,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
     appendBlock({
       id: Math.random().toString(36).substring(7),
       type,
+      isVisible: true,
       title: "",
       content: "",
       image: "",
@@ -332,76 +343,70 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                   </div>
                 )}
                 
-                {contentBlocks.map((block, index) => (
-                  <div key={block.id} className="relative group bg-slate-50 border border-slate-200 rounded-xl p-4 pl-10">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 cursor-grab active:cursor-grabbing hover:text-slate-500">
-                      <GripVertical className="w-5 h-5" />
-                    </div>
-                    
-                    <div className="flex justify-between items-start mb-3">
-                      <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded uppercase tracking-wider">
-                        { }
-                        {form.watch(`content.${index}.type`)} BLOCK
-                      </span>
-                      <div className="flex gap-1 -mt-1 -mr-1">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => { e.stopPropagation(); moveBlock(index, index - 1); }}
-                          disabled={index === 0}
-                          className="w-6 h-6 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                        >
-                          <ArrowUp className="w-3.5 h-3.5" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => { e.stopPropagation(); moveBlock(index, index + 1); }}
-                          disabled={index === contentBlocks.length - 1}
-                          className="w-6 h-6 text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                        >
-                          <ArrowDown className="w-3.5 h-3.5" />
-                        </Button>
-                        <Button type="button" variant="ghost" size="icon" onClick={() => removeBlock(index)} className="w-6 h-6 text-slate-400 hover:text-red-600 hover:bg-red-50">
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </Button>
-                      </div>
-                    </div>
+                {contentBlocks.length > 0 && (
+                  <Accordion className="space-y-4">
+                    {contentBlocks.map((field, index) => {
+                      const blockType = form.watch(`content.${index}.type`);
+                      const blockTitle = form.watch(`content.${index}.title`) || `${blockType} block`;
 
-                    {form.watch(`content.${index}.type`) === 'text' && (
-                      <div className="space-y-3">
-                        <Input {...form.register(`content.${index}.title`)} placeholder="หัวข้อ (ถ้ามี)" className="bg-white font-medium" />
-                        <textarea 
-                          {...form.register(`content.${index}.content`)} 
-                          className="flex min-h-[120px] w-full rounded-lg border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          placeholder="พิมพ์เนื้อหาที่นี่..."
-                        />
-                      </div>
-                    )}
+                      return (
+                        <AccordionItem key={field.id} value={field.id} className={`bg-slate-50 border rounded-xl shadow-sm px-2 ${form.watch(`content.${index}.isVisible`) === false ? 'opacity-70' : ''}`}>
+                          <BlockHeader
+                            title={blockType}
+                            subtitle={blockTitle}
+                            icon={blockType === "image" ? <ImageIcon className="w-4 h-4" /> : blockType === "html" ? <span className="font-mono font-bold text-[10px]">{"</>"}</span> : <FileText className="w-4 h-4" />}
+                            isEditMode={true}
+                            isVisible={form.watch(`content.${index}.isVisible`)}
+                            canMoveUp={index > 0}
+                            canMoveDown={index < contentBlocks.length - 1}
+                            onMoveUp={() => moveBlock(index, index - 1)}
+                            onMoveDown={() => moveBlock(index, index + 1)}
+                            onRemove={() => removeBlock(index)}
+                            onDuplicate={() => {
+                              const currentData = form.getValues(`content.${index}`);
+                              const newIndex = index + 1;
+                              insertBlock(newIndex, { ...currentData, id: Math.random().toString(36).substring(7) });
+                            }}
+                            onToggleVisibility={(visible) => form.setValue(`content.${index}.isVisible`, visible, { shouldDirty: true })}
+                          />
 
-                    {form.watch(`content.${index}.type`) === 'image' && (
-                      <div className="space-y-3">
-                        <ImageUpload 
-                          value={form.watch(`content.${index}.image`) || ""} 
-                          onChange={(val) => form.setValue(`content.${index}.image`, val)} 
-                        />
-                        <Input {...form.register(`content.${index}.title`)} placeholder="คำอธิบายรูปภาพ (Alt Text)" className="bg-white" />
-                      </div>
-                    )}
+                          <AccordionContent className="pt-2 pb-6 px-6 border-t bg-slate-50/30">
+                            {blockType === 'text' && (
+                              <div className="space-y-3 pt-4">
+                                <Input {...form.register(`content.${index}.title`)} placeholder="หัวข้อ (ถ้ามี)" className="bg-white font-medium" />
+                                <textarea 
+                                  {...form.register(`content.${index}.content`)} 
+                                  className="flex min-h-[120px] w-full rounded-lg border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                  placeholder="พิมพ์เนื้อหาที่นี่..."
+                                />
+                              </div>
+                            )}
 
-                    {form.watch(`content.${index}.type`) === 'html' && (
-                      <div className="space-y-3">
-                        <textarea 
-                          {...form.register(`content.${index}.content`)} 
-                          className="flex min-h-[150px] w-full rounded-lg border border-input bg-slate-900 text-green-400 font-mono px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                          placeholder="<div>Your Raw HTML Code</div>"
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
+                            {blockType === 'image' && (
+                              <div className="space-y-3 pt-4">
+                                <ImageUpload 
+                                  value={form.watch(`content.${index}.image`) || ""} 
+                                  onChange={(val) => form.setValue(`content.${index}.image`, val)} 
+                                />
+                                <Input {...form.register(`content.${index}.title`)} placeholder="คำอธิบายรูปภาพ (Alt Text)" className="bg-white" />
+                              </div>
+                            )}
+
+                            {blockType === 'html' && (
+                              <div className="space-y-3 pt-4">
+                                <textarea 
+                                  {...form.register(`content.${index}.content`)} 
+                                  className="flex min-h-[150px] w-full rounded-lg border border-input bg-slate-900 text-green-400 font-mono px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                  placeholder="<div>Your Raw HTML Code</div>"
+                                />
+                              </div>
+                            )}
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
+                  </Accordion>
+                )}
               </div>
             </div>
 

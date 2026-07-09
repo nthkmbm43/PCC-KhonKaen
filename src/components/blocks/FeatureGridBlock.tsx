@@ -37,10 +37,22 @@ export default async function FeatureGridBlock({ data }: { data?: Record<string,
     selectedProducts.push(...normalProducts.slice(0, 6 - selectedProducts.length));
   }
   
-  const allProducts = selectedProducts;
-
   const headline = (data?.headline as string) || "สินค้าและบริการของเรา";
   const description = (data?.description as string) || "ผู้เชี่ยวชาญด้านงานคอนกรีตอัดแรงและผลิตภัณฑ์สำเร็จรูป พร้อมตอบสนองทุกความต้องการของโครงการก่อสร้าง";
+
+  const customItems = Array.isArray(data?.items) && data.items.length > 0
+    ? data.items.filter((item: any) => item.isVisible !== false).map((item: any, idx: number) => ({
+        slug: item.href?.replace('/products/', '') || item.id || `custom-item-${idx}`,
+        href: item.href,
+        badge: item.badgeText || '',
+        title: item.title,
+        shortTitle: item.title,
+        image: item.image,
+        description: item.description,
+      }))
+    : null;
+
+  const allProducts = customItems || selectedProducts;
 
   return (
     <section className="py-20 bg-slate-50 relative overflow-hidden sm:py-24 lg:py-32" id="services">
@@ -68,7 +80,7 @@ export default async function FeatureGridBlock({ data }: { data?: Record<string,
             return (
               <Link 
                 key={product.slug} 
-                href={`/products/${product.slug}`}
+                href={(product as any).href || `/products/${product.slug}`}
                 className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2"
               >
                 <div className="relative h-72 sm:h-80 overflow-hidden bg-slate-100 p-2">

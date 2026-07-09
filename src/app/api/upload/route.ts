@@ -64,8 +64,44 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     const uniqueFilename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
 
+    let processedBuffer: any = buffer;
+    let finalWidth = width;
+    let finalHeight = height;
+
+    try {
+      let imageProcessor = sharp(buffer);
+      
+      // Resize for SEO if larger than 2048px, retaining sharpness
+      if ((width && width > 2048) || (height && height > 2048)) {
+        imageProcessor = imageProcessor.resize({
+          width: 2048,
+          height: 2048,
+          fit: 'inside',
+          withoutEnlargement: true
+        });
+      }
+
+      // Optimize file size while maintaining highest quality (no visual loss)
+      if (format === 'jpeg' || format === 'jpg') {
+        processedBuffer = await imageProcessor.jpeg({ quality: 90, mozjpeg: true, chromaSubsampling: '4:4:4' }).toBuffer();
+      } else if (format === 'png') {
+        processedBuffer = await imageProcessor.png({ compressionLevel: 9, adaptiveFiltering: true }).toBuffer();
+      } else if (format === 'webp') {
+        processedBuffer = await imageProcessor.webp({ quality: 90, effort: 6 }).toBuffer();
+      } else if (format !== 'gif') {
+        processedBuffer = await imageProcessor.toBuffer();
+      }
+      
+      // Update dimensions after possible resize
+      const newMeta = await sharp(processedBuffer).metadata();
+      finalWidth = newMeta.width;
+      finalHeight = newMeta.height;
+    } catch (e) {
+      console.warn("Failed to process image with sharp, using original buffer", e);
+    }
+
     // Upload to Vercel Blob
-    const blob = await put(uniqueFilename, buffer, {
+    const blob = await put(uniqueFilename, processedBuffer, {
       access: 'public',
       contentType: detectedMime,
     });
@@ -76,9 +112,9 @@ export async function POST(req: Request): Promise<NextResponse> {
         filename: uniqueFilename,
         originalName: file.name,
         mimeType: detectedMime,
-        size: file.size,
-        width: width,
-        height: height,
+        size: processedBuffer.length,
+        width: finalWidth,
+        height: finalHeight,
         blobUrl: blob.url,
         alt: file.name,
         createdBy: activeSession.user.id || 'admin',

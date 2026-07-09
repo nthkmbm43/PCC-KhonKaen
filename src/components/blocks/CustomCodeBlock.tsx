@@ -4,6 +4,10 @@ import React, { useEffect, useRef } from 'react';
 
 export default function CustomCodeBlock({ data }: { data?: Record<string, any> }) {
   const content = data?.code || data?.html || data?.description || data?.customHeadCode || '';
+  const backgroundStyle = data?.backgroundStyle || '';
+  const paddingTop = data?.paddingTop || '';
+  const paddingBottom = data?.paddingBottom || '';
+  const customCss = data?.customCss || '';
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,6 +26,8 @@ export default function CustomCodeBlock({ data }: { data?: Record<string, any> }
   if (!content) return null;
   
   return (
-    <div ref={containerRef} className="custom-code-widget w-full" dangerouslySetInnerHTML={{ __html: content }} />
+    <div className={`w-full ${backgroundStyle} ${paddingTop} ${paddingBottom}`} style={customCss ? { cssText: customCss } as any : undefined}>
+      <div ref={containerRef} className="custom-code-widget w-full" dangerouslySetInnerHTML={{ __html: content }} />
+    </div>
   );
 }

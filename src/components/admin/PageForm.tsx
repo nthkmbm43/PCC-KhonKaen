@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/accordion";
 import { RichTextEditor } from "./RichTextEditor";
 import { ImageUpload } from "./ImageUpload";
+import { BlockHeader } from "./cms/BlockHeader";
+import { NestedItemsList } from "./cms/NestedItemsList";
 import toast from "react-hot-toast";
 import {
   AlertDialog,
@@ -43,13 +45,31 @@ const pageSchema = z.object({
   status: z.enum(["draft", "published"]),
   content: z.array(
     z.object({
+      id: z.string().optional(),
       blockType: z.string(),
+      isVisible: z.boolean().optional().default(true),
       headline: z.string().optional(),
       description: z.string().optional(),
+      eyebrow: z.string().optional(),
       image: z.string().optional(),
       backgroundImage: z.string().optional(),
       ctaText: z.string().optional(),
       ctaHref: z.string().optional(),
+      secondaryCtaText: z.string().optional(),
+      secondaryCtaHref: z.string().optional(),
+      layout: z.string().optional(),
+      backgroundStyle: z.string().optional(),
+      textAlign: z.string().optional(),
+      paddingTop: z.string().optional(),
+      paddingBottom: z.string().optional(),
+      marginTop: z.string().optional(),
+      marginBottom: z.string().optional(),
+      animation: z.string().optional(),
+      overlayOpacity: z.number().optional(),
+      textColor: z.string().optional(),
+      badgeText: z.string().optional(),
+      customCss: z.string().optional(),
+      items: z.array(z.any()).optional(),
       columns: z.array(
         z.object({
           size: z.string().optional(),
@@ -57,7 +77,18 @@ const pageSchema = z.object({
         })
       ).optional(),
     })
-  ),
+  ).superRefine((blocks, ctx) => {
+    // Add validations for specific block types if needed
+    blocks.forEach((block, index) => {
+      if (block.blockType === "hero" && !block.headline) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Hero headline is required",
+          path: [index, "headline"],
+        });
+      }
+    });
+  }),
 });
 
 type PageFormValues = z.infer<typeof pageSchema>;
@@ -68,7 +99,7 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
   const [isEditMode, setIsEditMode] = useState(false);
 
   const form = useForm<PageFormValues>({
-    resolver: zodResolver(pageSchema),
+    resolver: zodResolver(pageSchema) as any,
     mode: "onChange",
     defaultValues: {
       title: initialData?.title ?? "",
@@ -76,11 +107,11 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
       seoTitle: initialData?.seoTitle ?? "",
       seoDescription: initialData?.seoDescription ?? "",
       status: (initialData?.workflowState ?? initialData?.status ?? "published") as "draft" | "published",
-      content: Array.isArray(initialData?.content) ? initialData.content.map((b: any) => ({ ...b, blockType: b.blockType || b.type })) : [],
+      content: Array.isArray(initialData?.content) ? initialData.content.map((b: any) => ({ ...b, id: b.id || Math.random().toString(36).substring(7), blockType: b.blockType || b.type, isVisible: b.isVisible !== false })) : [],
     },
   });
 
-  const { fields, append, remove, move } = useFieldArray({
+  const { fields, append, remove, move, insert } = useFieldArray({
     name: "content",
     control: form.control,
   });
@@ -110,7 +141,7 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200">
           <div className="flex items-center gap-4">
             <Link href="/admin/pages">
@@ -158,7 +189,7 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                      <AlertDialogAction onClick={form.handleSubmit(onSubmit)} className="bg-blue-600 hover:bg-blue-700">
+                      <AlertDialogAction onClick={form.handleSubmit(onSubmit as any)} className="bg-blue-600 hover:bg-blue-700">
                         ยืนยันการบันทึก
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -203,37 +234,37 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                   {isEditMode && (
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm text-slate-500 font-medium mr-2">เพิ่มบล็อก:</span>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'hero' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'hero', isVisible: true })}>
                         <ImageIcon className="w-3.5 h-3.5 mr-1" /> Hero
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'text' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'text', isVisible: true })}>
                         <FileText className="w-3.5 h-3.5 mr-1" /> Rich Text
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'image' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'image', isVisible: true })}>
                         <ImageIcon className="w-3.5 h-3.5 mr-1" /> Image
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'cta' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'cta', isVisible: true })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> CTA Banner
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'featureGrid' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'featureGrid', isVisible: true })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> Products
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'whyUs' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'whyUs', isVisible: true })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> Why Us
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'process' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'process', isVisible: true })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> Process
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'testimonial' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'testimonial', isVisible: true })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> Testimonial
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'stats' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'stats', isVisible: true })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> Stats
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'contactForm' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'contactForm', isVisible: true })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> Contact Form
                       </Button>
-                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'customCode' })}>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'customCode', isVisible: true })}>
                         <span className="font-mono font-bold text-[10px] mr-1">{"</>"}</span> HTML/CSS
                       </Button>
                     </div>
@@ -248,72 +279,24 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                     const blockTitle = blockType === "hero" ? form.watch(`content.${index}.headline`) || "Hero Block" : "Content Block";
                     
                     return (
-                      <AccordionItem key={field.id} value={field.id} className="bg-white border rounded-lg shadow-sm px-2">
-                        <div className="flex items-center">
-                          <div className="p-3 cursor-move text-slate-400 hover:text-slate-600 transition-colors">
-                            <GripVertical className="w-5 h-5" />
-                          </div>
-                          <AccordionTrigger className="flex-1 hover:no-underline py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-md bg-blue-50 flex items-center justify-center text-blue-600">
-                                {blockType === "hero" ? <ImageIcon className="w-4 h-4" /> : blockType === "customCode" ? <span className="font-mono font-bold text-xs">{"</>"}</span> : <FileText className="w-4 h-4" />}
-                              </div>
-                              <div className="text-left">
-                                <p className="font-semibold text-slate-700 capitalize">{blockType}</p>
-                                <p className="text-sm text-slate-400 truncate max-w-[200px] sm:max-w-xs">{blockTitle}</p>
-                              </div>
-                            </div>
-                          </AccordionTrigger>
-                          <div className="flex items-center">
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={(e) => { e.stopPropagation(); move(index, index - 1); }}
-                              disabled={!isEditMode || index === 0}
-                              className="text-slate-400 hover:text-blue-600 hover:bg-blue-50 h-8 w-8 rounded-full transition-colors mr-1"
-                            >
-                              <ArrowUp className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={(e) => { e.stopPropagation(); move(index, index + 1); }}
-                              disabled={!isEditMode || index === fields.length - 1}
-                              className="text-slate-400 hover:text-blue-600 hover:bg-blue-50 h-8 w-8 rounded-full transition-colors mr-2"
-                            >
-                              <ArrowDown className="w-4 h-4" />
-                            </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger render={
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon"
-                                  className="mr-4 text-red-500 hover:text-red-600 hover:bg-red-50 h-8 w-8 rounded-full transition-colors"
-                                  disabled={!isEditMode}
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              } />
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>ลบ Block นี้?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  คุณแน่ใจหรือไม่ที่จะลบ Block นี้ออกจากเพจ? ข้อมูลใน Block นี้จะสูญหาย
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => remove(index)} className="bg-red-600 hover:bg-red-700">
-                                  ลบเลย
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                            </AlertDialog>
-                          </div>
-                        </div>
+                      <AccordionItem key={field.id} value={field.id} className={`bg-white border rounded-lg shadow-sm px-2 ${form.watch(`content.${index}.isVisible`) === false ? 'opacity-70' : ''}`}>
+                        <BlockHeader
+                          title={blockType}
+                          subtitle={blockTitle}
+                          icon={blockType === "hero" || blockType === "image" ? <ImageIcon className="w-4 h-4" /> : blockType === "customCode" ? <span className="font-mono font-bold text-xs">{"</>"}</span> : <FileText className="w-4 h-4" />}
+                          isEditMode={isEditMode}
+                          isVisible={form.watch(`content.${index}.isVisible`)}
+                          canMoveUp={index > 0}
+                          canMoveDown={index < fields.length - 1}
+                          onMoveUp={() => move(index, index - 1)}
+                          onMoveDown={() => move(index, index + 1)}
+                          onRemove={() => remove(index)}
+                          onDuplicate={() => {
+                            const currentData = form.getValues(`content.${index}`);
+                            insert(index + 1, { ...currentData, id: Math.random().toString(36).substring(7) });
+                          }}
+                          onToggleVisibility={(visible) => form.setValue(`content.${index}.isVisible`, visible, { shouldDirty: true })}
+                        />
                         <AccordionContent className="pt-2 pb-6 px-6 border-t bg-slate-50/30">
                           {!["text", "image", "customCode"].includes(blockType) && (
                             <div className="space-y-6 pt-4">
@@ -394,7 +377,17 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                             </div>
                           )}
 
-
+                          {/* Common Block Settings / Nested Items */}
+                          {["featureGrid", "whyUs", "process", "stats", "testimonial"].includes(blockType) && (
+                            <NestedItemsList 
+                              nestIndex={index} 
+                              control={form.control as any} 
+                              blockType={blockType} 
+                              watch={form.watch as any} 
+                              setValue={form.setValue} 
+                              isEditMode={isEditMode}
+                            />
+                          )}
                         </AccordionContent>
                       </AccordionItem>
                     );

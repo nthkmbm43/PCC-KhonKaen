@@ -226,7 +226,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             )}
 
             <div className="space-y-12 lg:space-y-20">
-              {sections.map((section: { type?: string; id?: string; title?: string; content?: string; image?: string; bullets?: string[] }, idx: number) => {
+              {sections.filter((s: any) => s.isVisible !== false).map((section: { type?: string; id?: string; title?: string; content?: string; image?: string; bullets?: string[] }, idx: number) => {
                 if (section.type === 'text') {
                   return (
                     <div key={idx} id={section.id} className="relative group">

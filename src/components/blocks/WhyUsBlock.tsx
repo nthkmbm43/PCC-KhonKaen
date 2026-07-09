@@ -61,7 +61,16 @@ const defaultItems: WhyItem[] = [
 export default function WhyUsBlock({ data }: WhyUsBlockProps) {
   const headline = data?.headline || 'ทำไมต้องเลือก PCC Post-Tension?';
   const subheadline = data?.subheadline || data?.description || 'เราไม่ใช่แค่ผู้ขาย แต่เป็นพันธมิตรที่คุณไว้วางใจได้ตลอดโครงการ';
-  const items = data?.items || defaultItems;
+  
+  const customItems = Array.isArray((data as any)?.items) && (data as any).items.length > 0
+    ? (data as any).items.filter((item: any) => item.isVisible !== false).map((item: any) => ({
+        title: item.title,
+        description: item.description,
+        icon: item.icon?.replace('lucide-', '') || 'check',
+      }))
+    : null;
+
+  const items = customItems || data?.items || defaultItems;
 
   return (
     <section className="py-20 sm:py-24 bg-gray-50 relative overflow-hidden">
@@ -81,7 +90,7 @@ export default function WhyUsBlock({ data }: WhyUsBlockProps) {
 
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {items.map((item, i) => (
+          {items.map((item: any, i: number) => (
             <div
               key={i}
               className="group bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-500 hover:-translate-y-1 flex flex-col gap-4"
