@@ -109,7 +109,7 @@ export const mainNavigation: NavItem[] = [
       },
       {
         label: "งานโพสเทนชั่น",
-        href: "/products/post-tension",
+        href: "/products/post-tension-slab-khon-kaen",
         description: "ออกแบบและติดตั้งพื้นโพสเทนชั่น มาตรฐาน ACI",
       },
     ],
@@ -122,8 +122,8 @@ export const mainNavigation: NavItem[] = [
 export const footerProductLinks = [
   { label: "กำแพงกันดิน", href: "/products/retaining-wall" },
   { label: "รั้วสำเร็จรูป", href: "/products/precast-fence" },
-  { label: "แผ่นพื้นสำเร็จรูป", href: "/products/precast-slab" },
-  { label: "โพสเทนชั่น", href: "/products/post-tension" },
+  { label: "แผ่นพื้นสำเร็จรูป", href: "/products/precast-wall-khon-kaen" },
+  { label: "โพสเทนชั่น", href: "/products/post-tension-slab-khon-kaen" },
 ];
 
 export const footerQuickLinks = [

@@ -4,8 +4,40 @@ import Image from "next/image";
 import { getPublishedProducts } from "@/lib/repositories/product";
 
 export default async function ServicesGridBlock() {
-  const allProducts = await getPublishedProducts();
+  const rawProducts = await getPublishedProducts();
 
+  const hotProducts = rawProducts.filter(p => p.badge === 'มาแรง');
+  const newProducts = rawProducts.filter(p => p.badge === 'ใหม่');
+  const normalProducts = rawProducts.filter(p => p.badge !== 'มาแรง' && p.badge !== 'ใหม่');
+
+  const selectedProducts = [];
+  
+  // Pick up to 3 hot products
+  const selectedHot = hotProducts.slice(0, 3);
+  selectedProducts.push(...selectedHot);
+  
+  // Pick up to 3 new products
+  const selectedNew = newProducts.slice(0, 3);
+  selectedProducts.push(...selectedNew);
+  
+  // If < 6, add more hot products
+  if (selectedProducts.length < 6) {
+    const remainingHot = hotProducts.slice(selectedHot.length);
+    selectedProducts.push(...remainingHot.slice(0, 6 - selectedProducts.length));
+  }
+  
+  // If < 6, add more new products
+  if (selectedProducts.length < 6) {
+    const remainingNew = newProducts.slice(selectedNew.length);
+    selectedProducts.push(...remainingNew.slice(0, 6 - selectedProducts.length));
+  }
+  
+  // If < 6, fill with normal products
+  if (selectedProducts.length < 6) {
+    selectedProducts.push(...normalProducts.slice(0, 6 - selectedProducts.length));
+  }
+  
+  const allProducts = selectedProducts;
   return (
     <section className="py-16 bg-white relative overflow-hidden sm:py-20 lg:py-24" id="services">
       <div className="absolute top-0 right-0 h-[360px] w-[360px] bg-brand-50 rounded-full blur-[100px] opacity-60 -translate-y-1/2 translate-x-1/3 pointer-events-none sm:h-[560px] sm:w-[560px] lg:h-[800px] lg:w-[800px]"></div>

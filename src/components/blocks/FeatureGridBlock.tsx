@@ -4,7 +4,41 @@ import Image from "next/image";
 import { getPublishedProducts } from "@/lib/repositories/product";
 
 export default async function FeatureGridBlock({ data }: { data?: Record<string, unknown> }) {
-  const allProducts = await getPublishedProducts();
+  const rawProducts = await getPublishedProducts();
+  
+  const hotProducts = rawProducts.filter(p => p.badge === 'มาแรง');
+  const newProducts = rawProducts.filter(p => p.badge === 'ใหม่');
+  const normalProducts = rawProducts.filter(p => p.badge !== 'มาแรง' && p.badge !== 'ใหม่');
+
+  const selectedProducts = [];
+  
+  // Pick up to 3 hot products
+  const selectedHot = hotProducts.slice(0, 3);
+  selectedProducts.push(...selectedHot);
+  
+  // Pick up to 3 new products
+  const selectedNew = newProducts.slice(0, 3);
+  selectedProducts.push(...selectedNew);
+  
+  // If < 6, add more hot products
+  if (selectedProducts.length < 6) {
+    const remainingHot = hotProducts.slice(selectedHot.length);
+    selectedProducts.push(...remainingHot.slice(0, 6 - selectedProducts.length));
+  }
+  
+  // If < 6, add more new products
+  if (selectedProducts.length < 6) {
+    const remainingNew = newProducts.slice(selectedNew.length);
+    selectedProducts.push(...remainingNew.slice(0, 6 - selectedProducts.length));
+  }
+  
+  // If < 6, fill with normal products
+  if (selectedProducts.length < 6) {
+    selectedProducts.push(...normalProducts.slice(0, 6 - selectedProducts.length));
+  }
+  
+  const allProducts = selectedProducts;
+
   const headline = (data?.headline as string) || "สินค้าและบริการของเรา";
   const description = (data?.description as string) || "ผู้เชี่ยวชาญด้านงานคอนกรีตอัดแรงและผลิตภัณฑ์สำเร็จรูป พร้อมตอบสนองทุกความต้องการของโครงการก่อสร้าง";
 
