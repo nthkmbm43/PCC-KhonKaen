@@ -13,6 +13,7 @@ import ContactFormBlock from './ContactFormBlock'
 import BranchLocationsBlock from './BranchLocationsBlock'
 import TestimonialBlock from './TestimonialBlock'
 import ProductSpecBlock from './ProductSpecBlock'
+import CustomCodeBlock from './CustomCodeBlock'
 
 const blockComponents = {
   // Core blocks
@@ -20,6 +21,7 @@ const blockComponents = {
   richText: RichTextBlock,
   image: ImageBlock,
   cta: CtaBlock,
+  customCode: CustomCodeBlock,
   featureGrid: FeatureGridBlock,
   mapBlock: MapBlock,
   // New blocks (Phase 1)
@@ -33,6 +35,7 @@ const blockComponents = {
   // Legacy aliases for backward compatibility
   homeHero: HeroBlock,
   content: RichTextBlock,
+  text: RichTextBlock,
 }
 
 import { getBusinessStatus } from '@/lib/getBusinessStatus'

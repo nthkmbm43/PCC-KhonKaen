@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 
-export default function CustomCodeBlock({ description, code, html }: { description?: string, code?: string, html?: string }) {
-  const content = code || html || description;
+export default function CustomCodeBlock({ data }: { data?: Record<string, any> }) {
+  const content = data?.code || data?.html || data?.description || data?.customHeadCode || '';
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

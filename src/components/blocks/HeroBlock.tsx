@@ -6,7 +6,7 @@ type HeroBlockProps = {
   data: {
     heading?: string
     subheading?: string
-    backgroundImage?: { url?: string; alt?: string; [key: string]: unknown }
+    backgroundImage?: any // string from CMS, or object from older PayloadCMS
     buttons?: {
       label: string
       url: string
@@ -22,12 +22,18 @@ type HeroBlockProps = {
         appearance?: 'primary' | 'secondary' | 'outline'
       }
     }[]
+    headline?: string
+    description?: string
+    ctaText?: string
+    ctaHref?: string
   }
 }
 
 export default function HeroBlock({ data }: HeroBlockProps) {
-  const { heading, subheading, backgroundImage, buttons, links } = data || {}
-  const imageUrl = backgroundImage?.url || '/images/hero-banner.webp'
+  const { heading, subheading, backgroundImage, buttons, links, headline, description, ctaText, ctaHref } = data || {}
+  const imageUrl = typeof backgroundImage === 'string' ? backgroundImage : (backgroundImage?.url || '/images/hero-banner.webp')
+  const actualHeading = heading || headline || "PCC Post-Tension";
+  const actualSubheading = subheading || description || "ผู้นำด้านผลิตภัณฑ์คอนกรีตอัดแรงและเสาเข็มคุณภาพสูง มาตรฐาน มอก.";
 
   return (
     <section className="relative overflow-hidden bg-slate-900 pt-20 pb-24 group sm:pt-28 sm:pb-32 lg:pt-40 lg:pb-48">
@@ -35,7 +41,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
 
       <div className="absolute inset-0 z-0 opacity-30 mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110">
         {imageUrl ? (
-          <Image src={imageUrl} alt={backgroundImage?.alt || heading || ''} fill className="object-cover" />
+          <Image src={imageUrl} alt={typeof backgroundImage === 'object' ? (backgroundImage?.alt || actualHeading || '') : (actualHeading || '')} fill className="object-cover" />
         ) : null}
       </div>
       
@@ -51,15 +57,21 @@ export default function HeroBlock({ data }: HeroBlockProps) {
           </span>
         </div>
         <h1 className="text-4xl font-extrabold text-white mb-6 leading-[1.15] drop-shadow-2xl sm:text-5xl md:text-6xl lg:text-[5rem] lg:mb-8 tracking-tight">
-          {heading}
+          {actualHeading}
         </h1>
-        {subheading && (
+        {actualSubheading && (
           <p className="mt-6 text-lg text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed drop-shadow-md sm:text-xl lg:mb-14">
-            {subheading}
+            {actualSubheading}
           </p>
         )}
         
         <div className="flex flex-col sm:flex-row justify-center gap-5 sm:gap-6">
+          {ctaText ? (
+            <Link href={ctaHref || "#"} className="relative overflow-hidden bg-[#00B900] hover:bg-[#009900] text-white px-8 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-3 transition-all duration-300 hover:scale-105 shadow-[0_8px_30px_rgba(0,185,0,0.3)] hover:shadow-[0_12px_40px_rgba(0,185,0,0.5)] group">
+              <Phone size={22} className="group-hover:rotate-12 transition-transform" />
+              {ctaText}
+            </Link>
+          ) : null}
           {links && links.length > 0 ? (
             links.map(({ link }, index) => {
               const href = link.type === 'reference' && link.reference?.value?.slug 

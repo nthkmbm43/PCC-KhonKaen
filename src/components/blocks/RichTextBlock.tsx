@@ -7,7 +7,7 @@ type RichTextBlockProps = {
 
 export default function RichTextBlock({ data }: RichTextBlockProps) {
   // Extract content from data, default to empty string if not found
-  const htmlContent = data?.content || data?.html || '';
+  const htmlContent = data?.content || data?.html || data?.description || '';
   
   if (!htmlContent || typeof htmlContent !== 'string') {
     return null;

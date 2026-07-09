@@ -48,6 +48,8 @@ const pageSchema = z.object({
       description: z.string().optional(),
       image: z.string().optional(),
       backgroundImage: z.string().optional(),
+      ctaText: z.string().optional(),
+      ctaHref: z.string().optional(),
       columns: z.array(
         z.object({
           size: z.string().optional(),
@@ -213,6 +215,24 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                       <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'cta' })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> CTA Banner
                       </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'featureGrid' })}>
+                        <Plus className="w-3.5 h-3.5 mr-1" /> Products
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'whyUs' })}>
+                        <Plus className="w-3.5 h-3.5 mr-1" /> Why Us
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'process' })}>
+                        <Plus className="w-3.5 h-3.5 mr-1" /> Process
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'testimonial' })}>
+                        <Plus className="w-3.5 h-3.5 mr-1" /> Testimonial
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'stats' })}>
+                        <Plus className="w-3.5 h-3.5 mr-1" /> Stats
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'contactForm' })}>
+                        <Plus className="w-3.5 h-3.5 mr-1" /> Contact Form
+                      </Button>
                       <Button type="button" variant="outline" size="sm" onClick={() => append({ blockType: 'customCode' })}>
                         <span className="font-mono font-bold text-[10px] mr-1">{"</>"}</span> HTML/CSS
                       </Button>
@@ -321,13 +341,23 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                           )}
 
                           {["hero", "cta"].includes(blockType) && (
-                            <div className="space-y-6 pt-4">
+                            <div className="space-y-6 pt-4 border-t border-slate-200 mt-4">
                               <div className="space-y-2">
                                 <Label className="text-slate-600">Background Image</Label>
                                 <ImageUpload 
                                   value={form.watch(`content.${index}.backgroundImage`) || ""}
                                   onChange={(val) => form.setValue(`content.${index}.backgroundImage`, val, { shouldDirty: true })}
                                 />
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <Label htmlFor={`content.${index}.ctaText`} className="text-slate-600">CTA Text (ปุ่ม)</Label>
+                                  <Input id={`content.${index}.ctaText`} placeholder="เช่น ติดต่อเรา" className="bg-white" {...form.register(`content.${index}.ctaText` as const)} />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor={`content.${index}.ctaHref`} className="text-slate-600">CTA Link (ลิงก์)</Label>
+                                  <Input id={`content.${index}.ctaHref`} placeholder="เช่น /contact หรือ https://..." className="bg-white" {...form.register(`content.${index}.ctaHref` as const)} />
+                                </div>
                               </div>
                             </div>
                           )}
