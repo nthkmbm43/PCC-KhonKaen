@@ -100,8 +100,12 @@ export async function POST(req: Request): Promise<NextResponse> {
       console.warn("Failed to process image with sharp, using original buffer", e);
     }
 
+    // Convert Buffer to a standard Blob to avoid "SharedArrayBuffer is not allowed" error in Fetch API
+    const safeBuffer = Buffer.from(processedBuffer);
+    const fileBlob = new Blob([safeBuffer], { type: detectedMime });
+
     // Upload to Vercel Blob
-    const blob = await put(uniqueFilename, processedBuffer, {
+    const blob = await put(uniqueFilename, fileBlob, {
       access: 'public',
       contentType: detectedMime,
     });
