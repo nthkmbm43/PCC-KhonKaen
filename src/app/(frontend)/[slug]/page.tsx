@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
-import { createSeoMetadata } from '@/lib/seo'
+import { breadcrumbJsonLd, createSeoMetadata, JsonLd } from '@/lib/seo'
 import { getPageWithSeo } from '@/lib/repositories/page'
 import { getSiteSettings } from '@/lib/getSiteSettings'
 import { draftMode } from 'next/headers'
@@ -34,12 +34,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function DynamicPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const decodedSlug = decodeURIComponent(slug);
-  
-  console.log(`[DynamicPage] Raw slug: "${slug}", Decoded slug: "${decodedSlug}"`);
 
   // Home page is handled by /page.tsx
   if (decodedSlug === 'home') {
-    console.log(`[DynamicPage] Slug is 'home', returning notFound`);
     notFound();
   }
 
@@ -47,7 +44,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
     getPageWithSeo(decodedSlug),
     getSiteSettings(),
   ])
-  console.log(`[DynamicPage] DB result for "${decodedSlug}":`, page ? `FOUND (ID: ${page.id}, Status: ${page.workflowState})` : 'NOT_FOUND');
 
   const isDraftMode = (await draftMode()).isEnabled
 
@@ -73,6 +69,12 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="flex flex-col min-h-screen">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Home', url: '/' },
+          { name: page.title || decodedSlug, url: `/${page.slug}` },
+        ])}
+      />
       {isDraftMode && (
         <div className="bg-amber-100 text-amber-800 text-center text-xs py-1.5 font-semibold sticky top-0 z-50 flex justify-center items-center gap-4">
           <span>Preview Mode: You are viewing unpublished changes.</span>

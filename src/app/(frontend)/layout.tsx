@@ -1,18 +1,11 @@
 import type { Metadata } from "next";
-import { Prompt } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StickyFloatingLineBtn from "@/components/ui/StickyFloatingLineBtn";
-import { createSeoMetadata, JsonLd, organizationJsonLd } from "@/lib/seo";
+import { createSeoMetadata, JsonLd, organizationJsonLd, serviceCatalogJsonLd, websiteJsonLd } from "@/lib/seo";
 import { getPublishedProducts } from "@/lib/repositories/product";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 import "../globals.css";
-
-const prompt = Prompt({
-  variable: "--font-prompt",
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin", "thai"],
-});
 
 import parse from "html-react-parser";
 
@@ -55,12 +48,14 @@ export default async function RootLayout({
   const settings = await getSiteSettings();
   
   return (
-    <html lang="th" className={`${prompt.variable} antialiased scroll-smooth`}>
+    <html lang="th" className="antialiased scroll-smooth">
       <head>
         {settings.rawSettings?.customHeadCode ? parse(settings.rawSettings.customHeadCode) : null}
       </head>
       <body className="min-h-screen flex flex-col">
         <JsonLd data={organizationJsonLd(settings.contact)} />
+        <JsonLd data={websiteJsonLd()} />
+        <JsonLd data={serviceCatalogJsonLd()} />
         <Navbar products={products} contact={settings.contact} navbarLinks={settings.navbarLinks as { label: string; url: string }[]} />
         <main className="flex-grow flex flex-col">{children}</main>
         <Footer contact={settings.contact} footerData={settings.footerData as { footerLogoUrl?: string; description?: string; copyright?: string }} />

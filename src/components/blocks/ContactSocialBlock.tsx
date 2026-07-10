@@ -12,6 +12,7 @@ export default async function ContactSocialBlock({ headline, description }: Cont
   const settings = await getSiteSettings();
   const lineUrl = settings.contact.lineUrl;
   const facebookUrl = settings.contact.facebookUrl || siteConfig.social?.facebook?.url || "#";
+  const tiktokUrl = settings.contact.tiktokUrl || siteConfig.social?.tiktok?.url;
 
   const title = headline || "ติดตามและติดต่อผ่านช่องทางออนไลน์";
   const desc = description || "ช่องทางติดต่อหลักของ พีซีซี โพสเทนชั่น ขอนแก่น พร้อมลิงก์จริงและไอคอน SVG ฝังในหน้า";
@@ -47,13 +48,13 @@ export default async function ContactSocialBlock({ headline, description }: Cont
           </p>
         </a>
 
-        <a href={siteConfig.social?.tiktok?.url || "#"} target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-black hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group text-center flex flex-col items-center">
+        {tiktokUrl ? <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-black hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group text-center flex flex-col items-center">
           <Image src="/images/social/tiktok.png" alt="TikTok" width={64} height={64} className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />
           <h3 className="text-xl font-bold font-sans text-gray-900 mb-3 w-full text-left">TikTok</h3>
           <p className="text-gray-600 text-sm leading-relaxed w-full text-left">
             ชมวิดีโอผลงานติดตั้ง การยกวาง การจัดส่ง และบรรยากาศหน้างานจริง
           </p>
-        </a>
+        </a> : null}
 
         <a href="https://www.google.com/maps/place/16.476942,102.774184" target="_blank" rel="noopener noreferrer" className="block bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 border-t-4 border-t-[#EA4335] hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group text-center flex flex-col items-center">
           <Image src="/images/social/google-map.png" alt="Google Map" width={64} height={64} className="w-16 h-16 object-contain mb-4 group-hover:scale-110 transition-transform" />

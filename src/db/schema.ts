@@ -142,6 +142,7 @@ export const siteSettings = pgTable('site_settings', {
   lineUrl: text('line_url'),
   googleMapsUrl: text('google_maps_url'),
   facebookUrl: text('facebook_url'),
+  tiktokUrl: text('tiktok_url'),
   workingHours: text('working_hours'),
   holidayNotice: text('holiday_notice'),
   companyAddress: text('company_address'),

@@ -1,0 +1,11 @@
+/* TEAM */
+Company: PCC Post-Tension Co., Ltd.
+Location: Khon Kaen, Thailand
+Contact: contact@pcc-posttension.com
+
+/* SITE */
+Language: Thai
+Canonical: https://pcc-posttension.com
+Sitemap: https://pcc-posttension.com/sitemap.xml
+AI guide: https://pcc-posttension.com/llms.txt
+

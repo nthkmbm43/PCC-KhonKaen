@@ -43,6 +43,7 @@ const settingsSchema = z.object({
   lineUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   googleMapsUrl: z.string().optional(),
   facebookUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
+  tiktokUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   workingHours: z.string().optional(),
   holidayNotice: z.string().optional(),
   companyAddress: z.string().optional(),
@@ -74,6 +75,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
       lineUrl: initialData?.lineUrl || "",
       googleMapsUrl: initialData?.googleMapsUrl || "",
       facebookUrl: initialData?.facebookUrl || "",
+      tiktokUrl: initialData?.tiktokUrl || "",
       workingHours: initialData?.workingHours || "",
       holidayNotice: initialData?.holidayNotice || "",
       companyAddress: initialData?.companyAddress || "",
@@ -395,6 +397,19 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
                 />
                 {form.formState.errors.facebookUrl && (
                   <p className="text-sm text-red-500">{form.formState.errors.facebookUrl.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-sm font-semibold text-slate-700">TikTok URL</Label>
+                <Input
+                  placeholder="https://www.tiktok.com/@..."
+                  {...form.register("tiktokUrl")}
+                  className="bg-white"
+                  readOnly={!isEditMode}
+                />
+                {form.formState.errors.tiktokUrl && (
+                  <p className="text-sm text-red-500">{form.formState.errors.tiktokUrl.message}</p>
                 )}
               </div>
 

@@ -3,7 +3,7 @@ export const siteConfig = {
   legalName: "บริษัท พีซีซี โพสเทนชั่น จำกัด",
   description:
     "บริษัท พีซีซี โพสเทนชั่น จำกัด ให้บริการงานคอนกรีตสำเร็จรูปครบวงจร ทั้งกำแพงกันดินตัว L รั้วสำเร็จรูป แผ่นพื้นสำเร็จรูป เสารั้วลวดหนาม และงานโพสเทนชั่น สำหรับบ้าน โครงการ โรงงาน และงานก่อสร้างทุกขนาด",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://pcc-khon-kaen.vercel.app",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://pcc-posttension.com",
   locale: "th_TH",
   phone: "063-454-5656",
   phoneSecondary: "091-553-2624",
@@ -46,7 +46,7 @@ export const siteConfig = {
       label: "Facebook",
     },
     tiktok: {
-      url: "https://lin.ee/5O8rHvD",
+      url: "",
       label: "TikTok",
     },
   },
@@ -89,22 +89,22 @@ export const mainNavigation: NavItem[] = [
     children: [
       {
         label: "กำแพงกันดินตัว L",
-        href: "/products/retaining-wall",
+        href: "/products/l-shape-retaining-wall-khon-kaen",
         description: "ป้องกันดินสไลด์ รั้วพัง งานปรับระดับพื้นที่",
       },
       {
         label: "รั้วสำเร็จรูป",
-        href: "/products/precast-fence",
+        href: "/products/precast-fence-khon-kaen",
         description: "รั้วคอนกรีตสำเร็จรูป แข็งแรง ติดตั้งไว",
       },
       {
         label: "แผ่นพื้นสำเร็จรูป",
-        href: "/products/precast-slab",
+        href: "/products/precast-concrete-slab-khon-kaen",
         description: "แผ่นพื้นคอนกรีต มาตรฐาน มอก. 828-2546",
       },
       {
         label: "เสารั้วลวดหนาม",
-        href: "/products/barbed-wire-post",
+        href: "/products/barbed-wire-fence-post-khon-kaen",
         description: "เสารั้วคอนกรีต งานล้อมพื้นที่ สวน ฟาร์ม",
       },
       {
@@ -120,9 +120,9 @@ export const mainNavigation: NavItem[] = [
 ];
 
 export const footerProductLinks = [
-  { label: "กำแพงกันดิน", href: "/products/retaining-wall" },
-  { label: "รั้วสำเร็จรูป", href: "/products/precast-fence" },
-  { label: "แผ่นพื้นสำเร็จรูป", href: "/products/precast-wall-khon-kaen" },
+  { label: "กำแพงกันดิน", href: "/products/l-shape-retaining-wall-khon-kaen" },
+  { label: "รั้วสำเร็จรูป", href: "/products/precast-fence-khon-kaen" },
+  { label: "แผ่นพื้นสำเร็จรูป", href: "/products/precast-concrete-slab-khon-kaen" },
   { label: "โพสเทนชั่น", href: "/products/post-tension-slab-khon-kaen" },
 ];
 

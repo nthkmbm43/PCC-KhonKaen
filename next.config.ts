@@ -2,6 +2,80 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["sharp"],
+  async redirects() {
+    return [
+      {
+        source: '/products/retaining-wall',
+        destination: '/products/l-shape-retaining-wall-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/retaining-wall-l-series',
+        destination: '/products/l-shape-retaining-wall-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/precast-fence',
+        destination: '/products/precast-fence-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/precast-wall',
+        destination: '/products/precast-wall-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/fence-pcc-postension-khonkaen',
+        destination: '/products/precast-fence-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/precast-slab',
+        destination: '/products/precast-concrete-slab-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/pre-stressed-concrete-slab',
+        destination: '/products/precast-concrete-slab-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/barbed-wire-post',
+        destination: '/products/barbed-wire-fence-post-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/barbed-wire-fence-post',
+        destination: '/products/barbed-wire-fence-post-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/posttension',
+        destination: '/products/post-tension-slab-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/post-tension',
+        destination: '/products/post-tension-slab-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/hollow-core-slab',
+        destination: '/products/precast-concrete-slab-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/concrete-pile',
+        destination: '/products/concrete-pile-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/products/stake',
+        destination: '/products/concrete-pile-khon-kaen',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     qualities: [75, 85, 90, 95, 100],

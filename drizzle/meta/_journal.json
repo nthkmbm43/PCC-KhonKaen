@@ -36,6 +36,13 @@
       "when": 1783043414112,
       "tag": "0004_cms_epic_features",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1783710000000,
+      "tag": "0005_add_tiktok_url_to_site_settings",
+      "breakpoints": true
     }
   ]
 }

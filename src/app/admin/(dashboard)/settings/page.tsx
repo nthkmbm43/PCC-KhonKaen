@@ -15,6 +15,7 @@ export default async function SettingsPage() {
     mainPhone: settings.mainPhone ?? undefined,
     lineUrl: settings.lineUrl ?? undefined,
     facebookUrl: settings.facebookUrl ?? undefined,
+    tiktokUrl: settings.tiktokUrl ?? undefined,
     googleMapsUrl: settings.googleMapsUrl ?? undefined,
     vercelDeployHookUrl: settings.vercelDeployHookUrl ?? undefined,
     workingHours: settings.workingHours ?? undefined,
