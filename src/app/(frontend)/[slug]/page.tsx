@@ -66,6 +66,21 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
     }
     return block
   })
+  const hasContactSocial = layout.some((block) => {
+    const blockType = (block as Record<string, unknown>).type || (block as Record<string, unknown>).blockType
+    return blockType === 'contactSocial'
+  })
+  const renderedLayout =
+    decodedSlug === 'contact' && !hasContactSocial
+      ? [
+          ...layout,
+          {
+            type: 'contactSocial',
+            headline: 'ติดต่อเราได้ทุกช่องทาง',
+            description: 'เลือก LINE, Facebook, TikTok หรือ Google Map แล้วกดเพื่อเปิดลิงก์ได้ทันที',
+          },
+        ]
+      : layout
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -81,7 +96,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
           <ExitPreviewButton />
         </div>
       )}
-      <BlockRenderer layout={layout} />
+      <BlockRenderer layout={renderedLayout} />
     </div>
   )
 }
