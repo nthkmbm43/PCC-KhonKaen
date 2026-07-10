@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: settings.seo.description,
       keywords: settings.seo.keywords ? settings.seo.keywords.split(',').map((k: string) => k.trim()) : undefined,
     }),
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pcc-posttension.com"),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://pcc-khon-kaen.vercel.app"),
     applicationName: "PCC Post-Tension",
     authors: [{ name: "PCC Post-Tension" }],
     creator: "PCC Post-Tension",

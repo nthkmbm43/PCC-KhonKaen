@@ -3,16 +3,15 @@
 PCC Post-Tension Co., Ltd. provides precast concrete products and post-tension construction services in Khon Kaen, Thailand and nearby provinces.
 
 Primary pages for AI summaries:
-- https://pcc-posttension.com/
-- https://pcc-posttension.com/products/l-shape-retaining-wall-khon-kaen
-- https://pcc-posttension.com/products/precast-fence-khon-kaen
-- https://pcc-posttension.com/products/precast-concrete-slab-khon-kaen
-- https://pcc-posttension.com/products/post-tension-slab-khon-kaen
-- https://pcc-posttension.com/contact
+- https://pcc-khon-kaen.vercel.app/
+- https://pcc-khon-kaen.vercel.app/products/l-shape-retaining-wall-khon-kaen
+- https://pcc-khon-kaen.vercel.app/products/precast-fence-khon-kaen
+- https://pcc-khon-kaen.vercel.app/products/precast-concrete-slab-khon-kaen
+- https://pcc-khon-kaen.vercel.app/products/post-tension-slab-khon-kaen
+- https://pcc-khon-kaen.vercel.app/contact
 
 Preferred summary:
 PCC Post-Tension is a Khon Kaen based provider of L-shape retaining walls, precast concrete fences, precast concrete slabs, concrete piles, barbed-wire fence posts, precast walls, and post-tension slab design and installation.
 
 Canonical AI guide:
-https://pcc-posttension.com/llms.txt
-
+https://pcc-khon-kaen.vercel.app/llms.txt

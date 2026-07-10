@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Mail,
   MapPin,
-  MessageCircle,
   Phone,
 } from "lucide-react";
 import {
@@ -71,6 +70,8 @@ function FooterLinkList({
 interface ContactInfo {
   logoUrl?: string;
   lineUrl: string;
+  facebookUrl?: string;
+  tiktokUrl?: string;
   mainPhone: string;
   googleMapsUrl?: string;
   companyAddress?: string;
@@ -86,6 +87,29 @@ interface FooterData {
 
 export default function Footer({ contact, footerData }: { contact: ContactInfo, footerData?: FooterData }) {
   const currentYear = new Date().getFullYear();
+  const socialLinks = [
+    {
+      label: "LINE",
+      href: contact.lineUrl,
+      icon: "/images/social/line.png",
+      className: "border-line-app/40 bg-line-app/10 hover:border-line-app",
+    },
+    {
+      label: "Facebook",
+      href: contact.facebookUrl || siteConfig.social.facebook.url,
+      icon: "/images/social/facebook.png",
+      className: "border-[#1877F2]/40 bg-[#1877F2]/10 hover:border-[#1877F2]",
+    },
+    contact.tiktokUrl
+      ? {
+          label: "TikTok",
+          href: contact.tiktokUrl,
+          icon: "/images/social/tiktok.png",
+          className: "border-white/20 bg-white/[0.03] hover:border-white/50",
+        }
+      : null,
+  ].filter((item): item is NonNullable<typeof item> => Boolean(item?.href));
+
   return (
     <footer className="bg-slate-950 pt-16 text-slate-300 border-t-4 border-brand-500">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -194,7 +218,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
         </div>
 
         <div className="border-b border-white/15 py-8">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
             <a
               href={`mailto:${siteConfig.email}`}
               className="flex items-center gap-3 border border-white/10 bg-white/[0.03] px-5 py-4 font-semibold text-white transition-colors hover:border-brand-400/50"
@@ -209,14 +233,18 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
               <Phone size={20} className="text-brand-300" />
               {contact.mainPhone}
             </a>
-            <a
-              href={contact.lineUrl}
-              target="_blank"
-              className="flex items-center gap-3 border border-line-app/40 bg-line-app/10 px-5 py-4 font-semibold text-white transition-colors hover:border-line-app"
-            >
-              <MessageCircle size={20} className="text-line-app" />
-              แอดไลน์สอบถาม
-            </a>
+            {socialLinks.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-3 border px-5 py-4 font-semibold text-white transition-colors ${item.className}`}
+              >
+                <Image src={item.icon} alt={item.label} width={22} height={22} className="h-5 w-5 object-contain" />
+                {item.label}
+              </a>
+            ))}
           </div>
         </div>
 

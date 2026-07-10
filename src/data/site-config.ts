@@ -3,7 +3,7 @@ export const siteConfig = {
   legalName: "บริษัท พีซีซี โพสเทนชั่น จำกัด",
   description:
     "บริษัท พีซีซี โพสเทนชั่น จำกัด ให้บริการงานคอนกรีตสำเร็จรูปครบวงจร ทั้งกำแพงกันดินตัว L รั้วสำเร็จรูป แผ่นพื้นสำเร็จรูป เสารั้วลวดหนาม และงานโพสเทนชั่น สำหรับบ้าน โครงการ โรงงาน และงานก่อสร้างทุกขนาด",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://pcc-posttension.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://pcc-khon-kaen.vercel.app",
   locale: "th_TH",
   phone: "063-454-5656",
   phoneSecondary: "091-553-2624",

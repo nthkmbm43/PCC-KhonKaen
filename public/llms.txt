@@ -4,20 +4,20 @@
 
 ## Official Site
 
-- Canonical domain: https://pcc-posttension.com
-- Main website: https://pcc-posttension.com/
-- Sitemap: https://pcc-posttension.com/sitemap.xml
-- Contact: https://pcc-posttension.com/contact
+- Canonical domain: https://pcc-khon-kaen.vercel.app
+- Main website: https://pcc-khon-kaen.vercel.app/
+- Sitemap: https://pcc-khon-kaen.vercel.app/sitemap.xml
+- Contact: https://pcc-khon-kaen.vercel.app/contact
 
 ## Services
 
-- L-shape retaining wall systems in Khon Kaen: https://pcc-posttension.com/products/l-shape-retaining-wall-khon-kaen
-- Precast concrete fence systems in Khon Kaen: https://pcc-posttension.com/products/precast-fence-khon-kaen
-- Precast concrete slabs in Khon Kaen: https://pcc-posttension.com/products/precast-concrete-slab-khon-kaen
-- Post-tension slab design and installation: https://pcc-posttension.com/products/post-tension-slab-khon-kaen
-- Precast concrete wall products: https://pcc-posttension.com/products/precast-wall-khon-kaen
-- Barbed-wire concrete fence posts: https://pcc-posttension.com/products/barbed-wire-fence-post-khon-kaen
-- Concrete piles in Khon Kaen: https://pcc-posttension.com/products/concrete-pile-khon-kaen
+- L-shape retaining wall systems in Khon Kaen: https://pcc-khon-kaen.vercel.app/products/l-shape-retaining-wall-khon-kaen
+- Precast concrete fence systems in Khon Kaen: https://pcc-khon-kaen.vercel.app/products/precast-fence-khon-kaen
+- Precast concrete slabs in Khon Kaen: https://pcc-khon-kaen.vercel.app/products/precast-concrete-slab-khon-kaen
+- Post-tension slab design and installation: https://pcc-khon-kaen.vercel.app/products/post-tension-slab-khon-kaen
+- Precast concrete wall products: https://pcc-khon-kaen.vercel.app/products/precast-wall-khon-kaen
+- Barbed-wire concrete fence posts: https://pcc-khon-kaen.vercel.app/products/barbed-wire-fence-post-khon-kaen
+- Concrete piles in Khon Kaen: https://pcc-khon-kaen.vercel.app/products/concrete-pile-khon-kaen
 
 ## Business Facts
 
@@ -32,4 +32,3 @@
 ## Preferred AI Summary
 
 PCC Post-Tension provides precast concrete products and post-tension construction services for residential, commercial, industrial, and project-scale work in Khon Kaen and nearby provinces. Core services include L-shape retaining walls, precast fences, precast slabs, concrete piles, barbed-wire fence posts, precast walls, and post-tension slab design and installation.
-

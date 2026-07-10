@@ -10,6 +10,8 @@ import StatsBlock from './StatsBlock'
 import WhyUsBlock from './WhyUsBlock'
 import ProcessBlock from './ProcessBlock'
 import ContactFormBlock from './ContactFormBlock'
+import ContactInfoBlock from './ContactInfoBlock'
+import ContactSocialBlock from './ContactSocialBlock'
 import BranchLocationsBlock from './BranchLocationsBlock'
 import TestimonialBlock from './TestimonialBlock'
 import ProductSpecBlock from './ProductSpecBlock'
@@ -28,6 +30,8 @@ const blockComponents = {
   stats: StatsBlock,
   whyUs: WhyUsBlock,
   process: ProcessBlock,
+  contactInfo: ContactInfoBlock,
+  contactSocial: ContactSocialBlock,
   contactForm: ContactFormBlock,
   branchLocations: BranchLocationsBlock,
   testimonial: TestimonialBlock,

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from "next/image";
 import { MapPin, Phone, Clock, MessageCircle } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
 import { getSiteSettings } from "@/lib/getSiteSettings";
@@ -11,8 +12,38 @@ interface ContactInfoBlockProps {
 export default async function ContactInfoBlock({ headline, description }: ContactInfoBlockProps) {
   const settings = await getSiteSettings();
   const lineUrl = settings.contact.lineUrl;
+  const facebookUrl = settings.contact.facebookUrl || siteConfig.social.facebook.url;
+  const tiktokUrl = settings.contact.tiktokUrl || siteConfig.social.tiktok.url;
   const phoneNo = settings.contact.mainPhone.replace(/\D/g, "");
   const displayPhone = settings.contact.mainPhone;
+  const socialLinks = [
+    {
+      label: "LINE Official",
+      href: lineUrl,
+      icon: "/images/social/line.png",
+      colorClass: "bg-[#06C755]/10",
+      textClass: "hover:text-[#06C755]",
+      text: "แอดเพื่อนเพื่อคุยกับเซลส์",
+    },
+    {
+      label: "Facebook",
+      href: facebookUrl,
+      icon: "/images/social/facebook.png",
+      colorClass: "bg-[#1877F2]/10",
+      textClass: "hover:text-[#1877F2]",
+      text: "ติดตามผลงานและข่าวสาร",
+    },
+    tiktokUrl
+      ? {
+          label: "TikTok",
+          href: tiktokUrl,
+          icon: "/images/social/tiktok.png",
+          colorClass: "bg-black/10",
+          textClass: "hover:text-black",
+          text: "ชมวิดีโอผลงานหน้างาน",
+        }
+      : null,
+  ].filter((item): item is NonNullable<typeof item> => Boolean(item?.href));
 
   const title = headline || "ติดต่อเรา";
   const desc = description || "ทีมวิศวกรของเราพร้อมให้คำปรึกษาและประเมินราคาฟรี ไม่มีค่าใช้จ่าย";
@@ -49,7 +80,7 @@ export default async function ContactInfoBlock({ headline, description }: Contac
 
               <div className="flex gap-4">
                 <div className="w-12 h-12 bg-[#06C755]/10 rounded-full flex items-center justify-center shrink-0 text-[#06C755]">
-                  <MessageCircle size={24} />
+                  <Image src="/images/social/line.png" alt="LINE Official" width={28} height={28} className="h-7 w-7 object-contain" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-bold uppercase tracking-wider mb-1">LINE Official</p>
@@ -58,6 +89,20 @@ export default async function ContactInfoBlock({ headline, description }: Contac
                   </a>
                 </div>
               </div>
+
+              {socialLinks.filter((item) => item.label !== "LINE Official").map((item) => (
+                <div key={item.label} className="flex gap-4">
+                  <div className={`w-12 h-12 ${item.colorClass} rounded-full flex items-center justify-center shrink-0`}>
+                    <Image src={item.icon} alt={item.label} width={28} height={28} className="h-7 w-7 object-contain" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 font-bold uppercase tracking-wider mb-1">{item.label}</p>
+                    <a href={item.href} target="_blank" rel="noopener noreferrer" className={`text-lg font-bold text-gray-900 ${item.textClass} transition-colors`}>
+                      {item.text}
+                    </a>
+                  </div>
+                </div>
+              ))}
 
               {settings.contact.holidayNotice && (
                 <div className="flex gap-4 p-4 bg-orange-50 border border-orange-100 rounded-2xl">
