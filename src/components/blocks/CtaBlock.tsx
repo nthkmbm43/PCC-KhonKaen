@@ -29,7 +29,7 @@ export default function CtaBlock({ data }: CtaBlockProps) {
     <div className={`relative py-24 overflow-hidden flex flex-col ${alignmentClass}`} data-analytics={`cta-block-${headline ? headline.substring(0, 15) : 'default'}`}>
       {backgroundImage && (
         <div className="absolute inset-0 z-0">
-          <Image src={backgroundImage} alt="" fill className="object-cover" />
+          <Image src={backgroundImage} alt="" fill quality={95} sizes="100vw" className="object-cover" />
           <div className="absolute inset-0 bg-slate-900" style={{ opacity: bgOpacity }}></div>
         </div>
       )}

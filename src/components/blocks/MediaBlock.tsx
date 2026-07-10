@@ -19,6 +19,8 @@ export const MediaBlock = ({ media }: MediaProps) => {
           alt={media.alt || 'Media'}
           width={media.width || 1200}
           height={media.height || 800}
+          quality={95}
+          sizes="(max-width: 1024px) 100vw, 1024px"
           className="w-full h-auto object-cover"
         />
       </div>

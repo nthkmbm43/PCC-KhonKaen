@@ -139,6 +139,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             src={product.image || '/images/hero.jpg'} 
             alt={product.title} 
             fill
+            quality={95}
+            sizes="100vw"
             className="object-cover" 
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent z-0"></div>
@@ -177,6 +179,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               src={product.image || '/images/hero.jpg'} 
               alt={product.title} 
               fill
+              quality={95}
+              sizes="100vw"
               className="object-cover blur-sm" 
             />
           </div>
@@ -220,6 +224,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   alt={product.title}
                   width={1200}
                   height={1600}
+                  quality={95}
+                  sizes="(max-width: 1024px) 100vw, 66vw"
                   className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
                 />
               </div>
@@ -245,7 +251,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 } else if (section.type === 'image') {
                   return (
                     <div key={idx} className="mb-8 lg:mb-10 rounded-[2rem] overflow-hidden shadow-lg border-4 border-white">
-                      <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" />
+                      <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} quality={95} sizes="(max-width: 1024px) 100vw, 66vw" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" />
                     </div>
                   );
                 } else if (section.type === 'html') {
@@ -269,7 +275,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                       
                       {section.image && (
                         <div className="mb-8 lg:mb-12 mt-8 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white">
-                          <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" />
+                          <Image src={section.image || '/images/placeholder.jpg'} alt={section.title || product.title} width={1200} height={800} quality={95} sizes="(max-width: 1024px) 100vw, 66vw" className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700" />
                         </div>
                       )}
                       

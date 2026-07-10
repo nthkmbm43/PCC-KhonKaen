@@ -31,6 +31,8 @@ export default async function PortfolioGridBlock() {
                   src={portfolio.image} 
                   alt={portfolio.title}
                   fill
+                  quality={95}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                   className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
                 />
                 <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs font-bold text-brand-700 shadow-sm transform translate-y-0 opacity-100 lg:-translate-y-full lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 transition-all duration-300">

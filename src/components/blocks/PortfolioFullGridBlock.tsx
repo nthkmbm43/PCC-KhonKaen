@@ -34,6 +34,8 @@ export default async function PortfolioFullGridBlock({ headline, description }: 
                 src={item.image} 
                 alt={item.title}
                 fill
+                quality={95}
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                 className="object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent transition-opacity duration-500 opacity-80 group-hover:opacity-90"></div>

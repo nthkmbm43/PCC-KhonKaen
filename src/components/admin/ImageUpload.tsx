@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import imageCompression from 'browser-image-compression';
 
 import { Button } from "@/components/ui/button";
 import { Loader2, UploadCloud, X } from "lucide-react";
@@ -16,7 +15,6 @@ interface ImageUploadProps {
 
 export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [isCompressing, setIsCompressing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,29 +33,11 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
     }
 
     setError(null);
-    setIsCompressing(true);
-    let fileToUpload = file;
-
-    try {
-      const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true,
-      };
-      fileToUpload = await imageCompression(file, options);
-    } catch (err) {
-      console.error("Compression error:", err);
-      setError("เกิดข้อผิดพลาดในการบีบอัดรูปภาพ");
-      setIsCompressing(false);
-      return;
-    }
-
-    setIsCompressing(false);
     setIsUploading(true);
 
     try {
       const formData = new FormData();
-      formData.append("file", fileToUpload);
+      formData.append("file", file);
       
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -104,16 +84,16 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
         <Button 
           type="button" 
           variant="secondary" 
-          disabled={disabled || isUploading || isCompressing}
+          disabled={disabled || isUploading}
           onClick={() => fileInputRef.current?.click()}
           className="shrink-0"
         >
-          {(isUploading || isCompressing) ? (
+          {isUploading ? (
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
           ) : (
             <UploadCloud className="w-4 h-4 mr-2" />
           )}
-          {isCompressing ? "Compressing image..." : isUploading ? "Uploading..." : "อัปโหลดภาพ"}
+          {isUploading ? "Optimizing..." : "อัปโหลดภาพ"}
         </Button>
       </div>
       

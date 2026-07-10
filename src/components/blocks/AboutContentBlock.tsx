@@ -53,7 +53,7 @@ export default function AboutContentBlock({ headline, description, image }: Abou
             <div className="absolute inset-0 bg-brand-500 rounded-[2.5rem] transform translate-x-4 translate-y-4 -z-10"></div>
             {bgImage ? (
               <div className="relative aspect-[4/3] w-full rounded-[2.5rem] overflow-hidden shadow-xl">
-                <Image src={bgImage} alt="About Us" fill className="object-cover" />
+                <Image src={bgImage} alt="About Us" fill quality={95} sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
               </div>
             ) : null}
           </div>

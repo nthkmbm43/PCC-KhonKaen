@@ -107,6 +107,7 @@ export default async function FeatureGridBlock({ data }: { data?: Record<string,
                       src={product.image} 
                       alt={product.title} 
                       fill
+                      quality={95}
                       className="object-cover rounded-[1.25rem] group-hover:scale-105 transition-transform duration-700 ease-out" 
                       sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                     />

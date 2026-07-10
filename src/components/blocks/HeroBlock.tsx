@@ -50,7 +50,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
 
       <div className={`absolute inset-0 z-0 ${opacityClass} mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110`}>
         {imageUrl ? (
-          <Image src={imageUrl} alt={typeof backgroundImage === 'object' ? (backgroundImage?.alt || actualHeading || '') : (actualHeading || '')} fill className="object-cover" />
+          <Image src={imageUrl} alt={typeof backgroundImage === 'object' ? (backgroundImage?.alt || actualHeading || '') : (actualHeading || '')} fill quality={95} sizes="100vw" className="object-cover" />
         ) : null}
       </div>
       

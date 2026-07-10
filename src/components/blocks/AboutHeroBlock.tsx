@@ -17,7 +17,7 @@ export default function AboutHeroBlock({ headline, description, backgroundImage 
       <div className="absolute inset-0 bg-gradient-to-br from-[#0a174f] via-brand-900 to-brand-800/80 opacity-95 z-0 transition-opacity duration-1000"></div>
       <div className="absolute inset-0 z-0 opacity-40 mix-blend-overlay">
         {bgImage ? (
-          <Image src={bgImage} alt="Background" fill className="object-cover" />
+          <Image src={bgImage} alt="Background" fill quality={95} sizes="100vw" className="object-cover" />
         ) : null}
       </div>
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">

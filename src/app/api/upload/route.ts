@@ -7,6 +7,86 @@ import { logAudit } from '@/lib/audit';
 import sharp from 'sharp';
 import { requireApiPermission } from '@/lib/auth/api';
 
+const MAX_IMAGE_DIMENSION = 3840;
+const SUPPORTED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'] as const;
+
+function sanitizeFilename(filename: string) {
+  return filename
+    .replace(/\.[^.]+$/, '')
+    .replace(/[^a-zA-Z0-9.-]/g, '_')
+    .replace(/_+/g, '_')
+    .slice(0, 120);
+}
+
+function mimeFromFormat(format?: string) {
+  if (format === 'jpeg' || format === 'jpg') return 'image/jpeg';
+  if (format === 'png') return 'image/png';
+  if (format === 'webp') return 'image/webp';
+  if (format === 'gif') return 'image/gif';
+  return `image/${format}`;
+}
+
+async function optimizeImage(
+  buffer: Buffer,
+  format: string | undefined,
+  width: number | undefined,
+  height: number | undefined,
+  hasAlpha: boolean | undefined
+): Promise<{
+  buffer: Buffer;
+  mimeType: string;
+  extension: string;
+  width: number | undefined;
+  height: number | undefined;
+}> {
+  if (format === 'gif') {
+    return {
+      buffer,
+      mimeType: 'image/gif',
+      extension: 'gif',
+      width,
+      height,
+    };
+  }
+
+  const shouldResize =
+    (width && width > MAX_IMAGE_DIMENSION) ||
+    (height && height > MAX_IMAGE_DIMENSION);
+
+  let pipeline = sharp(buffer, { failOn: 'none' }).rotate();
+
+  if (shouldResize) {
+    pipeline = pipeline.resize({
+      width: MAX_IMAGE_DIMENSION,
+      height: MAX_IMAGE_DIMENSION,
+      fit: 'inside',
+      withoutEnlargement: true,
+      kernel: sharp.kernel.lanczos3,
+    });
+  }
+
+  pipeline = pipeline.sharpen({
+    sigma: 0.35,
+    m1: 0.4,
+    m2: 1.4,
+  });
+
+  const optimizedBuffer = hasAlpha
+    ? await pipeline.webp({ lossless: true, effort: 6 }).toBuffer()
+    : await pipeline
+        .webp({ quality: 95, alphaQuality: 100, smartSubsample: true, effort: 6 })
+        .toBuffer();
+  const optimizedMeta = await sharp(optimizedBuffer).metadata();
+
+  return {
+    buffer: Buffer.from(optimizedBuffer),
+    mimeType: 'image/webp',
+    extension: 'webp',
+    width: optimizedMeta.width,
+    height: optimizedMeta.height,
+  };
+}
+
 export async function POST(req: Request): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user && process.env.NODE_ENV !== 'test') {
@@ -40,12 +120,14 @@ export async function POST(req: Request): Promise<NextResponse> {
     let width: number | undefined;
     let height: number | undefined;
     let format: string | undefined;
+    let hasAlpha: boolean | undefined;
 
     try {
       const metadata = await sharp(buffer).metadata();
       width = metadata.width;
       height = metadata.height;
       format = metadata.format;
+      hasAlpha = metadata.hasAlpha;
       
       // Maximum Pixels constraint (e.g., prevent image bombs > 10,000 x 10,000)
       if (width && height && (width > 10000 || height > 10000)) {
@@ -57,63 +139,40 @@ export async function POST(req: Request): Promise<NextResponse> {
     }
 
     // Ensure MIME type matches the format detected by sharp
-    let detectedMime = `image/${format}`;
-    if (format === 'jpeg') detectedMime = 'image/jpeg';
-    if (format === 'png') detectedMime = 'image/png';
-    if (format === 'webp') detectedMime = 'image/webp';
-    if (format === 'gif') detectedMime = 'image/gif';
+    const detectedMime = mimeFromFormat(format);
     
     // Check if format is actually supported
-    if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(detectedMime)) {
+    if (!SUPPORTED_MIME_TYPES.includes(detectedMime as typeof SUPPORTED_MIME_TYPES[number])) {
         return NextResponse.json({ error: 'Unsupported image format.' }, { status: 400 });
     }
 
-    const uniqueFilename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-
-    let processedBuffer: any = buffer;
-    let finalWidth = width;
-    let finalHeight = height;
+    let processedBuffer: Buffer = Buffer.from(buffer);
+    let finalMimeType = detectedMime;
+    let finalExtension = detectedMime.split('/')[1] || 'jpg';
+    let finalWidth: number | undefined = width;
+    let finalHeight: number | undefined = height;
 
     try {
-      let imageProcessor = sharp(buffer);
-      
-      // Resize for SEO if larger than 2048px, retaining sharpness
-      if ((width && width > 2048) || (height && height > 2048)) {
-        imageProcessor = imageProcessor.resize({
-          width: 2048,
-          height: 2048,
-          fit: 'inside',
-          withoutEnlargement: true
-        });
-      }
-
-      // Optimize file size while maintaining highest quality (no visual loss)
-      if (format === 'jpeg' || format === 'jpg') {
-        processedBuffer = await imageProcessor.jpeg({ quality: 90, mozjpeg: true, chromaSubsampling: '4:4:4' }).toBuffer();
-      } else if (format === 'png') {
-        processedBuffer = await imageProcessor.png({ compressionLevel: 9, adaptiveFiltering: true }).toBuffer();
-      } else if (format === 'webp') {
-        processedBuffer = await imageProcessor.webp({ quality: 90, effort: 6 }).toBuffer();
-      } else if (format !== 'gif') {
-        processedBuffer = await imageProcessor.toBuffer();
-      }
-      
-      // Update dimensions after possible resize
-      const newMeta = await sharp(processedBuffer).metadata();
-      finalWidth = newMeta.width;
-      finalHeight = newMeta.height;
+      const optimized = await optimizeImage(buffer, format, width, height, hasAlpha);
+      processedBuffer = optimized.buffer;
+      finalMimeType = optimized.mimeType;
+      finalExtension = optimized.extension;
+      finalWidth = optimized.width;
+      finalHeight = optimized.height;
     } catch (e) {
       console.warn("Failed to process image with sharp, using original buffer", e);
     }
 
+    const uniqueFilename = `${Date.now()}-${sanitizeFilename(file.name)}.${finalExtension}`;
+
     // Convert Buffer to a standard Blob to avoid "SharedArrayBuffer is not allowed" error in Fetch API
     const safeBuffer = Buffer.from(processedBuffer);
-    const fileBlob = new Blob([safeBuffer], { type: detectedMime });
+    const fileBlob = new Blob([safeBuffer], { type: finalMimeType });
 
     // Upload to Vercel Blob
     const blob = await put(uniqueFilename, fileBlob, {
       access: 'public',
-      contentType: detectedMime,
+      contentType: finalMimeType,
     });
 
     // Save metadata to database and log audit
@@ -121,7 +180,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       const inserted = await tx.insert(mediaFiles).values({
         filename: uniqueFilename,
         originalName: file.name,
-        mimeType: detectedMime,
+        mimeType: finalMimeType,
         size: processedBuffer.length,
         width: finalWidth,
         height: finalHeight,

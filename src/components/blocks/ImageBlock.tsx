@@ -15,7 +15,7 @@ export default function ImageBlock({ data }: ImageBlockProps) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <div className="relative w-full h-auto aspect-video rounded-3xl overflow-hidden shadow-lg">
-        <Image src={url} alt={alt || ''} fill className="object-cover" />
+        <Image src={url} alt={alt || ''} fill quality={95} sizes="(max-width: 1280px) 100vw, 1280px" className="object-cover" />
       </div>
     </div>
   );
