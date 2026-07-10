@@ -3,12 +3,16 @@ import { mediaFiles } from '@/db/schema';
 import { NextResponse } from 'next/server';
 import { desc, ilike, or, eq, and, SQL } from 'drizzle-orm';
 import { auth } from '@/auth';
+import { requireApiPermission } from '@/lib/auth/api';
 
 export async function GET(req: Request) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
 
   const { searchParams } = new URL(req.url);
   const q = searchParams.get('q');

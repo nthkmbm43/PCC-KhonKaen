@@ -3,12 +3,16 @@ import { pages, seoMetadata } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
+import { requireApiPermission } from "@/lib/auth/api";
 
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
 
   try {
     const data = await req.json();

@@ -16,6 +16,10 @@ const eslintConfig = defineConfig([
     "test-results/**",
     "scripts/**",
     "extract.js",
+    "test.js",
+    "test-regex.js",
+    "test-regex2.js",
+    "check-db*.ts",
   ]),
   {
     rules: {

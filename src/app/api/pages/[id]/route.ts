@@ -5,12 +5,16 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
 import { revalidateTag, revalidatePath } from "next/cache";
+import { requireApiPermission } from "@/lib/auth/api";
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
 
   try {
     const { id } = await params;
@@ -132,6 +136,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
 
   try {
     const { id } = await params;

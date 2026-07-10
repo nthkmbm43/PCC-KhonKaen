@@ -1,8 +1,12 @@
 import { db } from "@/db";
 import { siteSettings } from "@/db/schema";
 import { NextResponse } from "next/server";
+import { requireApiPermission } from "@/lib/auth/api";
 
-export async function POST() {
+export async function POST(req: Request) {
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
+
   try {
     const settingsArray = await db.select().from(siteSettings).limit(1);
     const settings = settingsArray[0];

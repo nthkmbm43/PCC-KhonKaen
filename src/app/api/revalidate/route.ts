@@ -1,15 +1,11 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { requireBearerSecret } from "@/lib/auth/api";
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("authorization");
-    const secret = process.env.REVALIDATION_SECRET;
-
-    // Secure the webhook if a secret is configured in env
-    if (secret && authHeader !== `Bearer ${secret}`) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
+    const secretResponse = requireBearerSecret(request, "REVALIDATION_SECRET");
+    if (secretResponse) return secretResponse;
 
     const body = await request.json();
     const { collection, slug } = body;

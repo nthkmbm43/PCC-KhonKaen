@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { pages, seoMetadata, siteSettings } from "@/db/schema";
 import { NextResponse } from "next/server";
+import { requireBearerSecret } from "@/lib/auth/api";
 
 export const dynamic = 'force-dynamic';
 
@@ -50,7 +51,10 @@ const NAVBAR_LINKS = [
   { label: 'ติดต่อเรา', url: '/contact' },
 ];
 
-export async function GET() {
+export async function GET(req: Request) {
+  const secretResponse = requireBearerSecret(req, "SEED_SECRET");
+  if (secretResponse) return secretResponse;
+
   try {
     // ── 1. Upsert siteSettings ──────────────────────────────────────────────
     const existingSettings = await db.select().from(siteSettings).limit(1);

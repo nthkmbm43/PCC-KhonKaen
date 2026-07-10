@@ -2,8 +2,12 @@ import { db } from "@/db";
 import { lineRichMenus } from "@/db/schema";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
+import { requireApiPermission } from "@/lib/auth/api";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
+
   try {
     const menus = await db.select().from(lineRichMenus).limit(1);
     let menu = menus[0];
@@ -23,6 +27,9 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
+
   try {
     const data = await req.json();
     const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;

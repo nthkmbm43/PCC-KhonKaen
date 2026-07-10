@@ -2,8 +2,8 @@ import { db } from '@/db';
 import { businessHolidayClosures } from '@/db/schema';
 import { NextResponse } from 'next/server';
 import { sql } from 'drizzle-orm';
-import { and, lte, gte, eq } from 'drizzle-orm';
 import { auth } from '@/auth';
+import { requireApiPermission } from '@/lib/auth/api';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,11 +21,14 @@ async function ensureTable() {
 }
 
 // GET: list all holidays (admin)
-export async function GET() {
+export async function GET(req: Request) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
 
   try {
     await ensureTable();
@@ -46,6 +49,9 @@ export async function POST(req: Request) {
   if (!session?.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
 
   try {
     await ensureTable();

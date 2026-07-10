@@ -4,8 +4,12 @@ import { products, seoMetadata } from "@/db/schema";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
 import crypto from "crypto";
+import { requireApiPermission } from "@/lib/auth/api";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
+
   try {
     const allProducts = await db.select().from(products).orderBy(products.createdAt);
     return NextResponse.json(allProducts);
@@ -20,6 +24,9 @@ export async function POST(req: Request) {
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
 
   try {
     const data = await req.json();

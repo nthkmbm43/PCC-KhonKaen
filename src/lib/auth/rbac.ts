@@ -21,8 +21,11 @@ export const ROUTE_PERMISSION: Record<string, string> = {
   '/api/media': 'pages:*',
   '/api/upload': 'pages:*',
   '/api/revalidate': 'pages:*',
+  '/api/revalidate-all': 'pages:*',
   '/api/preview': 'pages:*',
   '/api/deploy': 'pages:*',
+  '/api/admin/holidays': 'settings:*',
+  '/api/line/richmenu': 'line-marketing:*',
 };
 
 /**

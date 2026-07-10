@@ -5,12 +5,16 @@ import { eq } from 'drizzle-orm';
 import { auth } from '@/auth';
 import { logAudit } from '@/lib/audit';
 import { logger } from '@/lib/logger';
+import { requireApiPermission } from '@/lib/auth/api';
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
 
   const { id } = await params;
 

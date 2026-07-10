@@ -11,6 +11,14 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Admin Dashboard | PCC CMS",
     description: "Manage your website content",
+    robots: {
+      index: false,
+      follow: false,
+      googleBot: {
+        index: false,
+        follow: false,
+      },
+    },
     icons: {
       icon: settings?.faviconUrl || settings?.logoUrl || "/images/logo.png",
       shortcut: settings?.faviconUrl || settings?.logoUrl || "/images/logo.png",

@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { products, seoMetadata } from "@/db/schema";
+import { requireBearerSecret } from "@/lib/auth/api";
 
 
 export const dynamic = 'force-dynamic';
@@ -73,7 +74,10 @@ const PRODUCT_DATA = [
   },
 ];
 
-export async function GET() {
+export async function GET(req: Request) {
+  const secretResponse = requireBearerSecret(req, "SEED_SECRET");
+  if (secretResponse) return secretResponse;
+
   try {
     const results = [];
     for (const p of PRODUCT_DATA) {

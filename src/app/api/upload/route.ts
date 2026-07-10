@@ -5,11 +5,17 @@ import { db } from '@/db';
 import { mediaFiles } from '@/db/schema';
 import { logAudit } from '@/lib/audit';
 import sharp from 'sharp';
+import { requireApiPermission } from '@/lib/auth/api';
 
 export async function POST(req: Request): Promise<NextResponse> {
   const session = await auth();
   if (!session?.user && process.env.NODE_ENV !== 'test') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (process.env.NODE_ENV !== 'test') {
+    const { response } = await requireApiPermission(new URL(req.url).pathname);
+    if (response) return response;
   }
   
   // Provide a dummy session for testing

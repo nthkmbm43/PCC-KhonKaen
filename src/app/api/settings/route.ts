@@ -2,8 +2,12 @@ import { db } from "@/db";
 import { siteSettings } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { requireApiPermission } from "@/lib/auth/api";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
+
   try {
     const settingsArray = await db.select().from(siteSettings).limit(1);
     let settings = settingsArray[0];
@@ -26,6 +30,9 @@ export async function GET() {
 }
 
 export async function PUT(req: Request) {
+  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  if (response) return response;
+
   try {
     const data = await req.json();
     
