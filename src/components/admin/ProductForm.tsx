@@ -332,24 +332,26 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
 
             {/* Page Builder / Blocks */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
-              <div className="flex items-center justify-between border-b pb-4">
+              <div className="flex flex-col gap-4 border-b pb-4">
                 <div>
-                  <h2 className="text-lg font-semibold text-slate-800">รายละเอียดเนื้อหา (Content Builder)</h2>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h2 className="text-lg font-semibold text-slate-800">รายละเอียดเนื้อหา (Content Builder)</h2>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button type="button" variant="outline" size="sm" onClick={() => addBlock('text')} className="gap-1 bg-white">
+                        <Plus className="w-3.5 h-3.5" /> Text
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => addBlock('image')} className="gap-1 bg-white">
+                        <ImageIcon className="w-3.5 h-3.5" /> Image
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => addBlock('gallery')} className="gap-1 bg-white">
+                        <ImageIcon className="w-3.5 h-3.5" /> Gallery
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => addBlock('html')} className="gap-1 bg-white">
+                        <Plus className="w-3.5 h-3.5" /> HTML
+                      </Button>
+                    </div>
+                  </div>
                   <p className="text-sm text-slate-500">สร้างเนื้อหาของสินค้านี้แบบเป็นบล็อค</p>
-                </div>
-                <div className="flex gap-2">
-                  <Button type="button" variant="outline" size="sm" onClick={() => addBlock('text')} className="gap-1">
-                    <Plus className="w-3.5 h-3.5" /> Text
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => addBlock('image')} className="gap-1">
-                    <ImageIcon className="w-3.5 h-3.5" /> Image
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => addBlock('gallery')} className="gap-1">
-                    <ImageIcon className="w-3.5 h-3.5" /> Gallery
-                  </Button>
-                  <Button type="button" variant="outline" size="sm" onClick={() => addBlock('html')} className="gap-1">
-                    <Plus className="w-3.5 h-3.5" /> Raw HTML
-                  </Button>
                 </div>
               </div>
 
