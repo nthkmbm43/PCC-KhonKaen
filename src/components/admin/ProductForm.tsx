@@ -30,6 +30,13 @@ const blockSchema = z.object({
   title: z.string().optional(),
   content: z.string().optional(),
   image: z.string().optional(),
+  items: z.array(z.object({
+    title: z.string().optional(),
+    description: z.string().optional(),
+    image: z.string().optional(),
+  })).optional(),
+  autoplay: z.boolean().optional(),
+  delay: z.coerce.number().optional(),
   bullets: z.array(z.string()).optional(),
   layout: z.string().optional(),
   backgroundStyle: z.string().optional(),
@@ -144,9 +151,16 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
       id: Math.random().toString(36).substring(7),
       type,
       isVisible: true,
-      title: "",
-      content: "",
+      title: type === "gallery" ? "ผลงานชิ้นนี้" : "",
+      content: type === "gallery" ? "รวมภาพผลงานจริง ตั้งแต่ผลงานสำเร็จ การขนส่ง และการติดตั้งหน้างาน" : "",
       image: "",
+      items: type === "gallery" ? [
+        { title: "ผลงานชิ้นนี้", description: "ภาพผลงานหลังติดตั้งเสร็จ แสดงภาพรวมของสินค้าในพื้นที่จริง", image: "" },
+        { title: "ขนส่ง", description: "ขั้นตอนการขนส่งสินค้าไปยังหน้างานอย่างเป็นระบบ", image: "" },
+        { title: "ติดตั้ง", description: "ขั้นตอนการติดตั้งโดยทีมงานหน้างาน พร้อมควบคุมคุณภาพ", image: "" },
+      ] : [],
+      autoplay: type === "gallery",
+      delay: 4500,
       bullets: []
     });
   };
@@ -330,6 +344,9 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                   <Button type="button" variant="outline" size="sm" onClick={() => addBlock('image')} className="gap-1">
                     <ImageIcon className="w-3.5 h-3.5" /> Image
                   </Button>
+                  <Button type="button" variant="outline" size="sm" onClick={() => addBlock('gallery')} className="gap-1">
+                    <ImageIcon className="w-3.5 h-3.5" /> Gallery
+                  </Button>
                   <Button type="button" variant="outline" size="sm" onClick={() => addBlock('html')} className="gap-1">
                     <Plus className="w-3.5 h-3.5" /> Raw HTML
                   </Button>
@@ -354,7 +371,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                           <BlockHeader
                             title={blockType}
                             subtitle={blockTitle}
-                            icon={blockType === "image" ? <ImageIcon className="w-4 h-4" /> : blockType === "html" ? <span className="font-mono font-bold text-[10px]">{"</>"}</span> : <FileText className="w-4 h-4" />}
+                            icon={blockType === "image" || blockType === "gallery" ? <ImageIcon className="w-4 h-4" /> : blockType === "html" ? <span className="font-mono font-bold text-[10px]">{"</>"}</span> : <FileText className="w-4 h-4" />}
                             isEditMode={true}
                             isVisible={form.watch(`content.${index}.isVisible`)}
                             canMoveUp={index > 0}
@@ -389,6 +406,73 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                                   onChange={(val) => form.setValue(`content.${index}.image`, val)} 
                                 />
                                 <Input {...form.register(`content.${index}.title`)} placeholder="คำอธิบายรูปภาพ (Alt Text)" className="bg-white" />
+                              </div>
+                            )}
+
+                            {blockType === 'gallery' && (
+                              <div className="space-y-5 pt-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                  <div className="space-y-2">
+                                    <Label>หัวข้อแกลเลอรี</Label>
+                                    <Input {...form.register(`content.${index}.title`)} placeholder="เช่น ผลงานชิ้นนี้" className="bg-white font-medium" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label>หน่วงเวลาเลื่อนอัตโนมัติ (ms)</Label>
+                                    <Input
+                                      type="number"
+                                      min={1500}
+                                      step={500}
+                                      {...form.register(`content.${index}.delay`, { valueAsNumber: true })}
+                                      placeholder="4500"
+                                      className="bg-white"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label>คำอธิบายแกลเลอรี</Label>
+                                  <textarea
+                                    {...form.register(`content.${index}.content`)}
+                                    className="flex min-h-[80px] w-full rounded-lg border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    placeholder="อธิบายภาพรวมของชุดภาพนี้"
+                                  />
+                                </div>
+
+                                <div className="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
+                                  <div>
+                                    <Label className="font-semibold text-slate-700">เลื่อนอัตโนมัติ</Label>
+                                    <p className="text-xs text-slate-500">เปิด/ปิดการเลื่อนภาพเองบนหน้าเว็บ</p>
+                                  </div>
+                                  <Switch
+                                    checked={form.watch(`content.${index}.autoplay`) !== false}
+                                    onCheckedChange={(checked) => form.setValue(`content.${index}.autoplay`, checked, { shouldDirty: true })}
+                                  />
+                                </div>
+
+                                {[0, 1, 2].map((itemIndex) => (
+                                  <div key={itemIndex} className="bg-white border border-slate-200 rounded-xl p-4 space-y-3">
+                                    <div className="flex items-center justify-between">
+                                      <Label className="font-bold text-slate-800">
+                                        {itemIndex === 0 ? "ภาพที่ 1: ผลงานชิ้นนี้" : itemIndex === 1 ? "ภาพที่ 2: ขนส่ง" : "ภาพที่ 3: ติดตั้ง"}
+                                      </Label>
+                                      <span className="text-xs text-slate-400">แสดงเป็นสไลด์ {itemIndex + 1}</span>
+                                    </div>
+                                    <ImageUpload
+                                      value={form.watch(`content.${index}.items.${itemIndex}.image`) || ""}
+                                      onChange={(val) => form.setValue(`content.${index}.items.${itemIndex}.image`, val, { shouldDirty: true })}
+                                    />
+                                    <Input
+                                      {...form.register(`content.${index}.items.${itemIndex}.title`)}
+                                      placeholder={itemIndex === 0 ? "ผลงานชิ้นนี้" : itemIndex === 1 ? "ขนส่ง" : "ติดตั้ง"}
+                                      className="bg-white"
+                                    />
+                                    <textarea
+                                      {...form.register(`content.${index}.items.${itemIndex}.description`)}
+                                      className="flex min-h-[70px] w-full rounded-lg border border-input bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                      placeholder="อธิบายว่าภาพนี้คืออะไร"
+                                    />
+                                  </div>
+                                ))}
                               </div>
                             )}
 

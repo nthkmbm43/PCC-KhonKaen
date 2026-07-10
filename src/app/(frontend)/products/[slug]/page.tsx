@@ -8,6 +8,7 @@ import { CheckCircle2, MessageCircle, Phone, ArrowLeft, ArrowRight } from "lucid
 import { siteConfig } from "@/data/site-config";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 import { absoluteUrl, createSeoMetadata, JsonLd } from "@/lib/seo";
+import { ProductGalleryCarousel, type ProductGalleryItem } from "@/components/products/ProductGalleryCarousel";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 
@@ -232,7 +233,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             )}
 
             <div className="space-y-12 lg:space-y-20">
-              {sections.filter((s: any) => s.isVisible !== false).map((section: { type?: string; id?: string; title?: string; content?: string; image?: string; bullets?: string[] }, idx: number) => {
+              {sections.filter((s: any) => s.isVisible !== false).map((section: { type?: string; id?: string; title?: string; content?: string; image?: string; bullets?: string[]; items?: ProductGalleryItem[]; autoplay?: boolean; delay?: number }, idx: number) => {
                 if (section.type === 'text') {
                   return (
                     <div key={idx} id={section.id} className="relative group">
@@ -257,6 +258,17 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 } else if (section.type === 'html') {
                   return (
                     <div key={idx} className="w-full" dangerouslySetInnerHTML={{ __html: section.content || '' }} />
+                  );
+                } else if (section.type === 'gallery') {
+                  return (
+                    <ProductGalleryCarousel
+                      key={idx}
+                      title={section.title}
+                      description={section.content}
+                      items={Array.isArray(section.items) ? section.items : []}
+                      autoplay={section.autoplay !== false}
+                      delay={section.delay || 4500}
+                    />
                   );
                 } else {
                   // Fallback for old data
