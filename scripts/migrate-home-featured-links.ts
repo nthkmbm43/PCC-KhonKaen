@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { config } from "dotenv";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { pages } from "@/db/schema";
+import { pages, seoMetadata } from "@/db/schema";
 
 config({ path: ".env.local" });
 config({ path: ".env.production", override: true });
@@ -89,9 +89,35 @@ async function main() {
     .update(pages)
     .set({
       content: nextContent,
+      seoTitle: "กำแพงกันดิน รั้วสำเร็จรูป พื้น Precast โพสเทนชั่น ขอนแก่น | PCC",
+      seoDescription:
+        "PCC Post-Tension ขอนแก่น รับออกแบบ ผลิต ติดตั้ง พื้น Precast งานโพสเทนชั่น กำแพงกันดินตัว L รั้วสำเร็จรูป เสารั้วลวดหนาม มาตรฐาน มอก. โดยวิศวกร โทร 063-454-5656",
       updatedAt: new Date(),
     })
     .where(eq(pages.id, home.id));
+
+  const existingSeo = await db
+    .select()
+    .from(seoMetadata)
+    .where(and(eq(seoMetadata.resourceType, "page"), eq(seoMetadata.resourceId, home.id)))
+    .limit(1);
+
+  const seoValues = {
+    title: "กำแพงกันดิน รั้วสำเร็จรูป พื้น Precast โพสเทนชั่น ขอนแก่น | PCC",
+    description:
+      "PCC Post-Tension ขอนแก่น รับออกแบบ ผลิต ติดตั้ง พื้น Precast งานโพสเทนชั่น กำแพงกันดินตัว L รั้วสำเร็จรูป เสารั้วลวดหนาม มาตรฐาน มอก. โดยวิศวกร โทร 063-454-5656",
+    updatedAt: new Date(),
+  };
+
+  if (existingSeo.length > 0) {
+    await db.update(seoMetadata).set(seoValues).where(eq(seoMetadata.id, existingSeo[0].id));
+  } else {
+    await db.insert(seoMetadata).values({
+      resourceType: "page",
+      resourceId: home.id,
+      ...seoValues,
+    });
+  }
 
   console.log(
     replaced
