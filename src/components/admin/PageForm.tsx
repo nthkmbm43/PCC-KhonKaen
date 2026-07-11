@@ -246,6 +246,9 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                       <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'cta', isVisible: true })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> CTA Banner
                       </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'featuredLinks', isVisible: true, items: [] })}>
+                        <Plus className="w-3.5 h-3.5 mr-1" /> Featured Links
+                      </Button>
                       <Button type="button" variant="outline" size="sm" onClick={() => append({ id: Math.random().toString(36).substring(7), blockType: 'featureGrid', isVisible: true })}>
                         <Plus className="w-3.5 h-3.5 mr-1" /> Products
                       </Button>
@@ -378,11 +381,11 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                           )}
 
                           {/* Common Block Settings / Nested Items */}
-                          {["featureGrid", "whyUs", "process", "stats", "testimonial"].includes(blockType) && (
+                          {["featureGrid", "featuredLinks", "whyUs", "process", "stats", "testimonial"].includes(blockType) && (
                             <NestedItemsList 
                               nestIndex={index} 
                               control={form.control as any} 
-                              blockType={blockType} 
+                              blockType={blockType === "featuredLinks" ? "featureGrid" : blockType} 
                               watch={form.watch as any} 
                               setValue={form.setValue} 
                               isEditMode={isEditMode}

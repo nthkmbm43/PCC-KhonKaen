@@ -16,6 +16,7 @@ import BranchLocationsBlock from './BranchLocationsBlock'
 import TestimonialBlock from './TestimonialBlock'
 import ProductSpecBlock from './ProductSpecBlock'
 import CustomCodeBlock from './CustomCodeBlock'
+import FeaturedLinksBlock from './FeaturedLinksBlock'
 
 const blockComponents = {
   // Core blocks
@@ -24,6 +25,7 @@ const blockComponents = {
   image: ImageBlock,
   cta: CtaBlock,
   customCode: CustomCodeBlock,
+  featuredLinks: FeaturedLinksBlock,
   featureGrid: FeatureGridBlock,
   mapBlock: MapBlock,
   // New blocks (Phase 1)
