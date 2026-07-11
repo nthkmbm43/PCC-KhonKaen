@@ -65,7 +65,7 @@ export async function GET(req: Request) {
         mainPhone: '063-454-5656',
         lineUrl: 'https://lin.ee/5O8rHvD',
         facebookUrl: 'https://www.facebook.com/profile.php?id=61591107462645',
-        tiktokUrl: '',
+        tiktokUrl: 'https://www.tiktok.com/@pcc.sales.kk',
         workingHours: CORRECT_WORKING_HOURS,
         companyAddress: 'เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000',
       });
@@ -75,7 +75,7 @@ export async function GET(req: Request) {
         navbarLinks: NAVBAR_LINKS,
         lineUrl: existingSettings[0].lineUrl || 'https://lin.ee/5O8rHvD',
         facebookUrl: existingSettings[0].facebookUrl || 'https://www.facebook.com/profile.php?id=61591107462645',
-        tiktokUrl: existingSettings[0].tiktokUrl || '',
+        tiktokUrl: existingSettings[0].tiktokUrl || 'https://www.tiktok.com/@pcc.sales.kk',
         workingHours: CORRECT_WORKING_HOURS,
         mainPhone: existingSettings[0].mainPhone || '063-454-5656',
       });

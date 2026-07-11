@@ -46,7 +46,7 @@ export const siteConfig = {
       label: "Facebook",
     },
     tiktok: {
-      url: "",
+      url: "https://www.tiktok.com/@pcc.sales.kk",
       label: "TikTok",
     },
   },
