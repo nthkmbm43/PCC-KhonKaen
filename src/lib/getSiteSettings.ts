@@ -10,6 +10,11 @@ function formatImageUrl(url: string | null | undefined | unknown): string {
   return `/${cleanUrl}`;
 }
 
+function normalizeTiktokUrl(url: string | null | undefined | unknown): string {
+  if (typeof url !== 'string' || !url.trim()) return '';
+  return url.trim().replace('https://www.tiktok.com/@pcc.kk', 'https://www.tiktok.com/@pcc.sales.kk');
+}
+
 function formatGoogleMapsUrl(url: string | null | undefined | unknown): string {
   if (typeof url !== 'string' || !url.trim()) return '';
   const rawUrl = url.trim();
@@ -49,7 +54,7 @@ export const getSiteSettings = unstable_cache(
         secondaryPhone: '',
         lineUrl: settings?.lineUrl || siteConfig.social.line.url,
         facebookUrl: settings?.facebookUrl || siteConfig.social.facebook?.url || '',
-        tiktokUrl: settings?.tiktokUrl || siteConfig.social.tiktok?.url || '',
+        tiktokUrl: normalizeTiktokUrl(settings?.tiktokUrl || siteConfig.social.tiktok?.url),
         googleMapsUrl: formatGoogleMapsUrl(settings?.googleMapsUrl) || siteConfig.googleMapsEmbed || '',
         workingHours: settings?.workingHours || '',
         holidayNotice: settings?.holidayNotice || '',
@@ -74,7 +79,7 @@ export const getSiteSettings = unstable_cache(
         secondaryPhone: '',
         lineUrl: siteConfig.social.line.url,
         facebookUrl: siteConfig.social.facebook?.url || '',
-        tiktokUrl: siteConfig.social.tiktok?.url || '',
+        tiktokUrl: normalizeTiktokUrl(siteConfig.social.tiktok?.url),
         googleMapsUrl: siteConfig.googleMapsEmbed || '',
         workingHours: '',
         holidayNotice: '',

@@ -4,6 +4,7 @@ import { resolve } from "path";
 import { db } from "../src/db";
 
 dotenv.config({ path: resolve(process.cwd(), ".env.local") });
+dotenv.config({ path: resolve(process.cwd(), ".env.production"), override: true });
 
 const facebookUrl = "https://www.facebook.com/profile.php?id=61591107462645";
 const tiktokUrl = "https://www.tiktok.com/@pcc.sales.kk";
