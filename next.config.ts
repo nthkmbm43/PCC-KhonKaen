@@ -5,6 +5,16 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: '/retaining-wall',
+        destination: '/products/l-shape-retaining-wall-khon-kaen',
+        permanent: true,
+      },
+      {
+        source: '/post-tension',
+        destination: '/products/post-tension-slab-khon-kaen',
+        permanent: true,
+      },
+      {
         source: '/products/retaining-wall',
         destination: '/products/l-shape-retaining-wall-khon-kaen',
         permanent: true,
