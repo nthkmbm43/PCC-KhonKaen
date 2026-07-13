@@ -1,5 +1,6 @@
 import React from "react";
 import { MapPin } from "lucide-react";
+import StaticMapPreview from "@/components/StaticMapPreview";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export default async function MapBlock({ data }: { data?: Record<string, unknown> }) {
@@ -11,7 +12,7 @@ export default async function MapBlock({ data }: { data?: Record<string, unknown
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
-        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div className="grid gap-8 lg:grid-cols-[1fr_420px] lg:items-center">
           <div className="flex gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-brand-50 text-brand-600">
               <MapPin size={24} aria-hidden="true" />
@@ -21,21 +22,18 @@ export default async function MapBlock({ data }: { data?: Record<string, unknown
                 Location
               </p>
               <h2 className="mt-2 text-2xl font-bold text-gray-900">
-                เปิดเส้นทางสำนักงาน PCC Post-Tension ขอนแก่น
+                แผนที่สำนักงาน PCC Post-Tension ขอนแก่น
               </h2>
               <p className="mt-3 max-w-2xl leading-7 text-gray-600">
-                ใช้ Google Maps เพื่อนำทางมายังสำนักงานหรือสอบถามเส้นทางก่อนเข้าพบทีมงานของเรา
+                ดูตำแหน่งสำนักงานและกดเพื่อเปิดเส้นทางนำทางด้วย Google Maps ได้ทันที
               </p>
             </div>
           </div>
-          <a
+          <StaticMapPreview
             href={mapUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-12 items-center justify-center bg-brand-500 px-6 py-4 text-center font-bold text-white transition-colors hover:bg-brand-600"
-          >
-            เปิดใน Google Maps
-          </a>
+            address={settings.contact.companyAddress}
+            className="rounded-2xl"
+          />
         </div>
       </div>
     </div>

@@ -1,12 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
-import {
-  ArrowUpRight,
-  Building2,
-  ChevronRight,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Building2, ChevronRight, MapPin, Phone } from "lucide-react";
+import StaticMapPreview from "@/components/StaticMapPreview";
 import {
   footerProductLinks,
   footerQuickLinks,
@@ -17,13 +12,7 @@ import {
 const sectionBase =
   "border border-white/10 bg-white/[0.03] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]";
 
-function FooterHeading({
-  children,
-  eyebrow,
-}: {
-  children: React.ReactNode;
-  eyebrow: string;
-}) {
+function FooterHeading({ children, eyebrow }: { children: React.ReactNode; eyebrow: string }) {
   return (
     <div className="mb-5 border-l-4 border-accent-500 pl-4">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent-400">
@@ -43,9 +32,10 @@ function FooterLinkList({
     <ul className="divide-y divide-white/10">
       {links.map((link) => (
         <li key={link.label}>
-          <Link prefetch={false}
+          <Link
+            prefetch={false}
             href={link.href}
-            className="group flex items-center justify-between gap-4 py-3 text-slate-300 transition-colors hover:text-brand-400"
+            className="group flex min-h-12 items-center justify-between gap-4 py-3 text-slate-300 transition-colors hover:text-brand-400"
             target={link.external ? "_blank" : undefined}
           >
             <span className="flex items-center gap-2">
@@ -84,8 +74,15 @@ interface FooterData {
   copyright?: string | null;
 }
 
-export default function Footer({ contact, footerData }: { contact: ContactInfo, footerData?: FooterData }) {
+export default function Footer({
+  contact,
+  footerData,
+}: {
+  contact: ContactInfo;
+  footerData?: FooterData;
+}) {
   const currentYear = new Date().getFullYear();
+  const address = contact.companyAddress || siteConfig.offices[0].addressLines.join("\n");
   const socialLinks = [
     {
       label: "LINE",
@@ -110,7 +107,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
   ].filter((item): item is NonNullable<typeof item> => Boolean(item?.href));
 
   return (
-    <footer className="bg-slate-950 pt-16 text-slate-300 border-t-4 border-brand-500">
+    <footer className="border-t-4 border-brand-500 bg-slate-950 pt-16 text-slate-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="border-b border-white/15 pb-10">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-[1.15fr_0.85fr_0.85fr_1.08fr]">
@@ -136,26 +133,12 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
               </div>
 
               <div className="space-y-6 pt-6">
-                {contact.companyAddress ? (
-                  <div className="border-l border-white/15 pl-4">
-                    <h5 className="font-bold text-white">สำนักงานใหญ่</h5>
-                    <div className="mt-2 space-y-1 text-sm leading-6 text-slate-400 whitespace-pre-line">
-                      {contact.companyAddress}
-                    </div>
+                <div className="border-l border-white/15 pl-4">
+                  <h5 className="font-bold text-white">สำนักงานใหญ่</h5>
+                  <div className="mt-2 space-y-1 whitespace-pre-line text-sm leading-6 text-slate-400">
+                    {address}
                   </div>
-                ) : (
-                  siteConfig.offices.map((office) => (
-                    <div
-                      key={office.name}
-                      className="border-l border-white/15 pl-4"
-                    >
-                      <h5 className="font-bold text-white">{office.name}</h5>
-                      <div className="mt-2 space-y-1 text-sm leading-6 text-slate-400 whitespace-pre-line">
-                        {office.addressLines.join('\n')}
-                      </div>
-                    </div>
-                  ))
-                )}
+                </div>
               </div>
             </section>
 
@@ -171,35 +154,25 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
 
             <section className={sectionBase}>
               <FooterHeading eyebrow="Location">แผนที่</FooterHeading>
-              <div className="rounded-xl border border-white/15 bg-slate-900 p-5">
-                <div className="flex min-h-44 flex-col justify-between bg-[linear-gradient(135deg,rgba(66,123,244,0.18),rgba(245,158,11,0.12))] p-5">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent-400">
-                      PCC Post-Tension Khon Kaen
-                    </p>
-                    <p className="mt-3 text-lg font-bold leading-relaxed text-white">
-                      สำนักงานขอนแก่น พร้อมให้คำปรึกษางานพรีแคสท์และโพสเทนชั่น
-                    </p>
-                  </div>
-                  {contact.googleMapsUrl && (
-                    <a href={contact.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-11 items-center justify-center border border-brand-400/50 px-4 py-3 text-sm font-bold text-brand-200 transition-colors hover:border-brand-300 hover:text-brand-100">
-                      เปิดเส้นทางใน Google Maps
-                    </a>
-                  )}
+              {contact.googleMapsUrl ? (
+                <StaticMapPreview
+                  href={contact.googleMapsUrl}
+                  address={address.replace(/\n/g, " ")}
+                  variant="dark"
+                  className="rounded-xl"
+                />
+              ) : (
+                <div className="rounded-xl border border-white/15 bg-slate-900 p-5 text-sm text-slate-400">
+                  ยังไม่ได้ตั้งค่าลิงก์ Google Maps
                 </div>
-              </div>
-              <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
+              )}
+              <div className="mt-4 space-y-3 border-t border-white/10 pt-4">
                 <div className="flex items-start gap-3 text-slate-400">
-                  <MapPin size={18} className="text-brand-400 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm leading-relaxed whitespace-pre-line">
-                    {contact.companyAddress || siteConfig.offices[0].addressLines.join('\n')}
+                  <MapPin size={18} className="mt-0.5 shrink-0 text-brand-400" />
+                  <span className="whitespace-pre-line text-sm leading-relaxed">
+                    {address}
                   </span>
                 </div>
-                {contact.googleMapsUrl && (
-                  <a href={contact.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 pl-7 pr-3 text-sm font-semibold text-brand-400 transition-colors hover:text-brand-300">
-                    เปิดใน Google Maps
-                  </a>
-                )}
               </div>
             </section>
 
@@ -207,7 +180,8 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
               <FooterHeading eyebrow="Resources">ข้อมูลเพิ่มเติม</FooterHeading>
               <div className="grid flex-1 gap-3 sm:grid-cols-3">
                 {footerSecondaryLinks.map((link) => (
-                  <Link prefetch={false}
+                  <Link
+                    prefetch={false}
                     key={link.label}
                     href={link.href}
                     className="flex min-h-20 items-center justify-center border border-white/10 px-4 py-4 text-center font-semibold text-slate-200 transition-colors hover:border-brand-400/60 hover:text-brand-300"
@@ -224,7 +198,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <a
               href={`tel:${contact.mainPhone.replace(/\D/g, "")}`}
-              className="flex items-center gap-3 border border-white/10 bg-white/[0.03] px-5 py-4 font-semibold text-white transition-colors hover:border-brand-400/50"
+              className="flex min-h-14 items-center gap-3 border border-white/10 bg-white/[0.03] px-5 py-4 font-semibold text-white transition-colors hover:border-brand-400/50"
             >
               <Phone size={20} className="text-brand-300" />
               {contact.mainPhone}
@@ -235,9 +209,15 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
                 href={item.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-3 border px-5 py-4 font-semibold text-white transition-colors ${item.className}`}
+                className={`flex min-h-14 items-center gap-3 border px-5 py-4 font-semibold text-white transition-colors ${item.className}`}
               >
-                <Image src={item.icon} alt={item.label} width={22} height={22} className="h-5 w-5 object-contain" />
+                <Image
+                  src={item.icon}
+                  alt={item.label}
+                  width={22}
+                  height={22}
+                  className="h-5 w-5 object-contain"
+                />
                 {item.label}
               </a>
             ))}
@@ -247,15 +227,16 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
         <div className="flex flex-col gap-4 py-8 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
           <p>{footerData?.copyright || `© ${currentYear} ${siteConfig.legalName}. All rights reserved.`}</p>
           <div className="flex flex-wrap gap-x-6 gap-y-2 font-semibold text-slate-400">
-            <Link prefetch={false} href="/contact" className="inline-flex min-h-11 items-center hover:text-brand-300">
-              TERMS
-            </Link>
-            <Link prefetch={false} href="/contact" className="inline-flex min-h-11 items-center hover:text-brand-300">
-              PRIVACY
-            </Link>
-            <Link prefetch={false} href="/contact" className="inline-flex min-h-11 items-center hover:text-brand-300">
-              COOKIES
-            </Link>
+            {footerSecondaryLinks.slice(0, 3).map((link) => (
+              <Link
+                key={link.label}
+                prefetch={false}
+                href={link.href}
+                className="inline-flex min-h-11 items-center hover:text-brand-300"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
