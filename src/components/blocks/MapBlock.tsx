@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPin } from "lucide-react";
-import StaticMapPreview from "@/components/StaticMapPreview";
+import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export default async function MapBlock({ data }: { data?: Record<string, unknown> }) {
@@ -29,10 +29,10 @@ export default async function MapBlock({ data }: { data?: Record<string, unknown
               </p>
             </div>
           </div>
-          <StaticMapPreview
-            href={mapUrl}
-            address={settings.contact.companyAddress}
-            className="rounded-2xl"
+          <GoogleMapEmbed
+            src={mapUrl}
+            title="แผนที่สำนักงาน PCC Post-Tension ขอนแก่น"
+            className="h-80 rounded-2xl"
           />
         </div>
       </div>

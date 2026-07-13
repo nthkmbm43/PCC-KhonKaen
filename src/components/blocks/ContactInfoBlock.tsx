@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Clock, MapPin, MessageCircle, Phone } from "lucide-react";
-import StaticMapPreview from "@/components/StaticMapPreview";
+import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import { siteConfig } from "@/data/site-config";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 
@@ -183,10 +183,10 @@ export default async function ContactInfoBlock({
             </div>
 
             {settings.contact.googleMapsUrl && (
-              <StaticMapPreview
-                href={settings.contact.googleMapsUrl}
-                address={address.replace(/\n/g, " ")}
-                className="mt-6 rounded-3xl"
+              <GoogleMapEmbed
+                src={settings.contact.googleMapsUrl}
+                title="แผนที่สำนักงานและโรงงาน PCC Post-Tension ขอนแก่น"
+                className="mt-6 h-[420px] rounded-3xl"
               />
             )}
           </div>

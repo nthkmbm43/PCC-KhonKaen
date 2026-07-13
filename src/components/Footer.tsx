@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Building2, ChevronRight, MapPin, Phone } from "lucide-react";
-import StaticMapPreview from "@/components/StaticMapPreview";
+import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import {
   footerProductLinks,
   footerQuickLinks,
@@ -155,11 +155,10 @@ export default function Footer({
             <section className={sectionBase}>
               <FooterHeading eyebrow="Location">แผนที่</FooterHeading>
               {contact.googleMapsUrl ? (
-                <StaticMapPreview
-                  href={contact.googleMapsUrl}
-                  address={address.replace(/\n/g, " ")}
-                  variant="dark"
-                  className="rounded-xl"
+                <GoogleMapEmbed
+                  src={contact.googleMapsUrl}
+                  title="แผนที่สำนักงาน PCC Post-Tension ขอนแก่น"
+                  className="h-72 rounded-xl border-white/15"
                 />
               ) : (
                 <div className="rounded-xl border border-white/15 bg-slate-900 p-5 text-sm text-slate-400">
