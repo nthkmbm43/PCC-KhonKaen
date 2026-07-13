@@ -158,7 +158,7 @@ export default function Footer({
                 <GoogleMapEmbed
                   src={contact.googleMapsUrl}
                   title="แผนที่สำนักงาน PCC Post-Tension ขอนแก่น"
-                  className="h-72 rounded-xl border-white/15"
+                  className="h-48 rounded-xl border-white/15"
                 />
               ) : (
                 <div className="rounded-xl border border-white/15 bg-slate-900 p-5 text-sm text-slate-400">
