@@ -1,7 +1,6 @@
 import { db } from "@/db";
 import { lineRichMenus } from "@/db/schema";
 import { NextResponse } from "next/server";
-import sharp from "sharp";
 import { requireApiPermission } from "@/lib/auth/api";
 
 export async function GET(req: Request) {
@@ -114,6 +113,7 @@ export async function POST(req: Request) {
     const imageBuffer = Buffer.from(arrayBuffer);
 
     // Compress with sharp to ensure it's under 1MB
+    const { default: sharp } = await import("sharp");
     const compressedBuffer = await sharp(imageBuffer)
       .resize({ width: 2500, withoutEnlargement: true })
       .jpeg({ quality: 80 })

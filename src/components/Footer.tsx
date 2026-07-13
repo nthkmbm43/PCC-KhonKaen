@@ -193,7 +193,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
                   </span>
                 </div>
                 {contact.googleMapsUrl && (
-                  <a href={contact.googleMapsUrl} target="_blank" className="inline-flex items-center gap-2 text-brand-400 font-semibold text-sm hover:text-brand-300 transition-colors pl-7">
+                  <a href={contact.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 pl-7 pr-3 text-sm font-semibold text-brand-400 transition-colors hover:text-brand-300">
                     เปิดใน Google Maps
                   </a>
                 )}
@@ -251,13 +251,13 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
         <div className="flex flex-col gap-4 py-8 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
           <p>{footerData?.copyright || `© ${currentYear} ${siteConfig.legalName}. All rights reserved.`}</p>
           <div className="flex flex-wrap gap-x-6 gap-y-2 font-semibold text-slate-400">
-            <Link prefetch={false} href="/contact" className="hover:text-brand-300">
+            <Link prefetch={false} href="/contact" className="inline-flex min-h-11 items-center hover:text-brand-300">
               TERMS
             </Link>
-            <Link prefetch={false} href="/contact" className="hover:text-brand-300">
+            <Link prefetch={false} href="/contact" className="inline-flex min-h-11 items-center hover:text-brand-300">
               PRIVACY
             </Link>
-            <Link prefetch={false} href="/contact" className="hover:text-brand-300">
+            <Link prefetch={false} href="/contact" className="inline-flex min-h-11 items-center hover:text-brand-300">
               COOKIES
             </Link>
           </div>

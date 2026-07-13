@@ -4,7 +4,6 @@ import { auth } from '@/auth';
 import { db } from '@/db';
 import { mediaFiles } from '@/db/schema';
 import { logAudit } from '@/lib/audit';
-import sharp from 'sharp';
 import { requireApiPermission } from '@/lib/auth/api';
 
 const MAX_IMAGE_DIMENSION = 3840;
@@ -53,6 +52,7 @@ async function optimizeImage(
     (width && width > MAX_IMAGE_DIMENSION) ||
     (height && height > MAX_IMAGE_DIMENSION);
 
+  const { default: sharp } = await import('sharp');
   let pipeline = sharp(buffer, { failOn: 'none' }).rotate();
 
   if (shouldResize) {
@@ -123,6 +123,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     let hasAlpha: boolean | undefined;
 
     try {
+      const { default: sharp } = await import('sharp');
       const metadata = await sharp(buffer).metadata();
       width = metadata.width;
       height = metadata.height;

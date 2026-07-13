@@ -222,14 +222,14 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
               <Phone size={20} />
               {displayPhone}
             </a>
-            <a href={lineUrl} target="_blank" rel="noopener noreferrer" className="bg-[#06C755] hover:bg-[#05b34c] text-white px-3 py-2.5 rounded-full font-medium flex items-center gap-2 whitespace-nowrap transition-all sm:px-5 lg:px-6 hover:shadow-[0_8px_20px_rgba(6,199,85,0.4)] hover:-translate-y-1">
+            <a href={lineUrl} target="_blank" rel="noopener noreferrer" aria-label="ติดต่อผ่าน LINE" className="flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#06C755] px-3 py-2.5 font-medium text-white transition-all hover:-translate-y-1 hover:bg-[#05b34c] hover:shadow-[0_8px_20px_rgba(6,199,85,0.4)] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#06C755]/30 sm:px-5 lg:px-6">
               <MessageCircle size={20} className="shrink-0" />
               <span className="hidden sm:inline">แอดไลน์สอบถาม</span>
               <span className="sm:hidden">แอดไลน์</span>
             </a>
 
             <button
-              className="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-200 lg:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Menu"
             >
@@ -244,7 +244,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
         onClick={() => setIsMobileMenuOpen(false)}
       ></div>
 
-      <div className={`fixed top-16 sm:top-20 right-0 bottom-0 w-[300px] bg-white z-50 shadow-2xl border-l border-gray-100 transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
+      <div className={`fixed top-16 right-0 bottom-0 z-50 w-[min(88vw,340px)] transform overflow-y-auto border-l border-gray-100 bg-white shadow-2xl transition-transform duration-300 ease-in-out sm:top-20 lg:hidden ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
         <div className="flex flex-col p-6 gap-2">
           {navbarLinks && navbarLinks.length > 0 ? (
             navbarLinks.map((link, index) => {

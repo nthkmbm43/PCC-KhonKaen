@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StickyFloatingLineBtn from "@/components/ui/StickyFloatingLineBtn";
@@ -8,6 +8,14 @@ import { getSiteSettings } from "@/lib/getSiteSettings";
 import "../globals.css";
 
 import parse from "html-react-parser";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#ffffff",
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();

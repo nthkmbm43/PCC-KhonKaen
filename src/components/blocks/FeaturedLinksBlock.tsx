@@ -50,19 +50,19 @@ export default function FeaturedLinksBlock({ data }: { data?: Record<string, unk
     : defaultItems;
 
   return (
-    <section className="w-full py-12 sm:py-16">
+    <section className="w-full py-10 sm:py-16">
       <div className="mx-auto max-w-5xl px-4">
-        <div className="bg-blue-900 px-6 py-14 text-center text-white shadow-sm sm:px-10 lg:px-16">
+        <div className="bg-blue-900 px-5 py-12 text-center text-white shadow-sm sm:px-10 sm:py-14 lg:px-16">
           {eyebrow && (
             <p className="mb-6 text-sm font-bold uppercase tracking-[0.18em] text-blue-200">
               {eyebrow}
             </p>
           )}
-          <h2 className="mx-auto max-w-3xl text-3xl font-extrabold leading-tight text-white sm:text-4xl">
+          <h2 className="mx-auto max-w-3xl text-2xl font-extrabold leading-tight text-white sm:text-4xl">
             {headline}
           </h2>
           {description && (
-            <p className="mx-auto mt-6 max-w-3xl text-base leading-8 text-blue-100 sm:text-lg">
+            <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-blue-100 sm:mt-6 sm:text-lg sm:leading-8">
               {description}
             </p>
           )}
@@ -74,7 +74,7 @@ export default function FeaturedLinksBlock({ data }: { data?: Record<string, unk
                 <Link
                   key={item.id || `${item.title}-${index}`}
                   href={href}
-                  className={`inline-flex min-h-14 w-full items-center justify-center gap-3 rounded-full border px-7 py-4 text-base font-bold transition sm:w-auto sm:min-w-72 ${itemClass(item.variant || (index === 1 ? "green" : "light"))}`}
+                  className={`inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border px-5 py-3 text-sm font-bold leading-snug transition sm:min-h-14 sm:w-auto sm:min-w-72 sm:gap-3 sm:px-7 sm:py-4 sm:text-base ${itemClass(item.variant || (index === 1 ? "green" : "light"))}`}
                 >
                   {itemIcon(item.icon)}
                   <span>{item.title || "รายการสินค้า"}</span>
