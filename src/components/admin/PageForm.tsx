@@ -279,12 +279,40 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                   {fields.map((field, index) => {
                      
                     const blockType = form.watch(`content.${index}.blockType`);
-                    const blockTitle = blockType === "hero" ? form.watch(`content.${index}.headline`) || "Hero Block" : "Content Block";
-                    
+                    const blockLabels: Record<string, { title: string; subtitle: string }> = {
+                      hero: {
+                        title: "Hero Section",
+                        subtitle: "ส่วนหัวหน้าเว็บ / แบนเนอร์หลัก",
+                      },
+                      richText: {
+                        title: "Rich Text Content",
+                        subtitle: "บล็อกข้อความแบบจัดรูปแบบ",
+                      },
+                      image: {
+                        title: "Image Block",
+                        subtitle: "บล็อกรูปภาพ",
+                      },
+                      customCode: {
+                        title: "HTML/CSS Embed",
+                        subtitle: "บล็อก HTML หรือ CSS พิเศษ",
+                      },
+                    };
+                    const blockLabel = blockLabels[blockType] || {
+                      title: "Content Block",
+                      subtitle: "บล็อกเนื้อหา",
+                    };
+                    const customTitle =
+                      blockType === "hero"
+                        ? form.watch(`content.${index}.headline`)
+                        : form.watch(`content.${index}.headline`) || form.watch(`content.${index}.description`);
+                    const blockTitle = customTitle
+                      ? `${blockLabel.subtitle} - ${customTitle}`
+                      : blockLabel.subtitle;
+                     
                     return (
-                      <AccordionItem key={field.id} value={field.id} className={`bg-white border rounded-lg shadow-sm px-2 ${form.watch(`content.${index}.isVisible`) === false ? 'opacity-70' : ''}`}>
+                      <AccordionItem key={field.id} value={field.id} className={`overflow-hidden bg-white border rounded-lg shadow-sm ${form.watch(`content.${index}.isVisible`) === false ? 'opacity-70' : ''}`}>
                         <BlockHeader
-                          title={blockType}
+                          title={blockLabel.title}
                           subtitle={blockTitle}
                           icon={blockType === "hero" || blockType === "image" ? <ImageIcon className="w-4 h-4" /> : blockType === "customCode" ? <span className="font-mono font-bold text-xs">{"</>"}</span> : <FileText className="w-4 h-4" />}
                           isEditMode={isEditMode}

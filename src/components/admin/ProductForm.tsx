@@ -366,12 +366,37 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                   <Accordion className="space-y-4">
                     {contentBlocks.map((field, index) => {
                       const blockType = form.watch(`content.${index}.type`);
-                      const blockTitle = form.watch(`content.${index}.title`) || `${blockType} block`;
+                      const blockLabels: Record<string, { title: string; subtitle: string }> = {
+                        text: {
+                          title: "Text Content",
+                          subtitle: "บล็อกข้อความ / รายละเอียดสินค้า",
+                        },
+                        image: {
+                          title: "Image Block",
+                          subtitle: "บล็อกรูปภาพเดี่ยว พร้อมคำอธิบายภาพ",
+                        },
+                        gallery: {
+                          title: "Gallery Block",
+                          subtitle: "บล็อกแกลเลอรีรูปภาพหลายรูป",
+                        },
+                        html: {
+                          title: "HTML Embed",
+                          subtitle: "บล็อก HTML / โค้ดฝังพิเศษ",
+                        },
+                      };
+                      const customTitle = form.watch(`content.${index}.title`);
+                      const blockLabel = blockLabels[blockType] || {
+                        title: "Content Block",
+                        subtitle: "บล็อกเนื้อหา",
+                      };
+                      const blockTitle = customTitle
+                        ? `${blockLabel.subtitle} - ${customTitle}`
+                        : blockLabel.subtitle;
 
                       return (
-                        <AccordionItem key={field.id} value={field.id} className={`bg-slate-50 border rounded-xl shadow-sm px-2 ${form.watch(`content.${index}.isVisible`) === false ? 'opacity-70' : ''}`}>
+                        <AccordionItem key={field.id} value={field.id} className={`overflow-hidden bg-slate-50 border rounded-xl shadow-sm ${form.watch(`content.${index}.isVisible`) === false ? 'opacity-70' : ''}`}>
                           <BlockHeader
-                            title={blockType}
+                            title={blockLabel.title}
                             subtitle={blockTitle}
                             icon={blockType === "image" || blockType === "gallery" ? <ImageIcon className="w-4 h-4" /> : blockType === "html" ? <span className="font-mono font-bold text-[10px]">{"</>"}</span> : <FileText className="w-4 h-4" />}
                             isEditMode={true}

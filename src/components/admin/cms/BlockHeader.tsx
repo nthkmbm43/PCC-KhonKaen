@@ -1,6 +1,14 @@
 import React from "react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Copy,
+  Eye,
+  EyeOff,
+  GripVertical,
+  Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ArrowUp, ArrowDown, Trash2, GripVertical, Copy, Eye, EyeOff } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +37,35 @@ interface BlockHeaderProps {
   onToggleVisibility: (visible: boolean) => void;
 }
 
+function HeaderButton({
+  children,
+  label,
+  onClick,
+  disabled,
+  className = "",
+}: {
+  children: React.ReactNode;
+  label: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
+  className?: string;
+}) {
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      onClick={onClick}
+      disabled={disabled}
+      title={label}
+      aria-label={label}
+      className={`h-9 w-9 shrink-0 rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 disabled:opacity-40 ${className}`}
+    >
+      {children}
+    </Button>
+  );
+}
+
 export function BlockHeader({
   title,
   subtitle,
@@ -46,98 +83,99 @@ export function BlockHeader({
   const visible = isVisible !== false;
 
   return (
-    <div className="flex flex-col gap-3 w-full px-3 py-3 sm:flex-row sm:items-center">
-      <div className="hidden sm:flex p-2 cursor-move text-slate-400 hover:text-slate-600 transition-colors">
-        <GripVertical className="w-5 h-5" />
-      </div>
+    <div className="grid w-full grid-cols-1 gap-3 px-3 py-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+      <div className="flex min-w-0 items-start gap-3">
+        <div className="mt-1 hidden cursor-move rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 sm:flex">
+          <GripVertical className="h-5 w-5" />
+        </div>
 
-      <AccordionTrigger className="flex-1 hover:no-underline py-1">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${visible ? "bg-blue-50 text-blue-600" : "bg-slate-100 text-slate-400"}`}>
-            {icon}
-          </div>
-          <div className="text-left flex flex-col min-w-0">
-            <div className="flex items-center gap-2">
-              <p className={`font-semibold capitalize ${visible ? "text-slate-700" : "text-slate-400 line-through"}`}>{title}</p>
-              {!visible && (
-                <span className="text-[10px] bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">Hidden</span>
+        <AccordionTrigger className="min-w-0 flex-1 py-1 text-left hover:no-underline">
+          <div className="flex min-w-0 items-start gap-3">
+            <div
+              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
+                visible ? "bg-blue-50 text-blue-600" : "bg-slate-100 text-slate-400"
+              }`}
+            >
+              {icon}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <p
+                  className={`text-base font-bold leading-6 ${
+                    visible ? "text-slate-800" : "text-slate-400 line-through"
+                  }`}
+                >
+                  {title}
+                </p>
+                <span className="rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
+                  Content Builder
+                </span>
+                {!visible && (
+                  <span className="rounded-full bg-slate-200 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                    Hidden
+                  </span>
+                )}
+              </div>
+              {subtitle && (
+                <p className="mt-1 max-w-full truncate text-sm leading-6 text-slate-500">
+                  {subtitle}
+                </p>
               )}
             </div>
-            {subtitle && (
-              <p className="text-sm text-slate-400 truncate max-w-[220px] sm:max-w-md">{subtitle}</p>
-            )}
           </div>
-        </div>
-      </AccordionTrigger>
+        </AccordionTrigger>
+      </div>
 
-      <div className="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white px-2 py-2 shadow-sm sm:ml-auto">
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
+      <div className="flex max-w-full flex-wrap items-center justify-start gap-1.5 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm lg:justify-end">
+        <HeaderButton
+          label={visible ? "ซ่อนบล็อก" : "แสดงบล็อก"}
+          disabled={!isEditMode}
+          className={visible ? "" : "text-orange-600 hover:bg-orange-50 hover:text-orange-700"}
+          onClick={(event) => {
+            event.stopPropagation();
             onToggleVisibility(!visible);
           }}
-          disabled={!isEditMode}
-          className={`h-8 gap-1 rounded-lg px-2 transition-colors ${visible ? "text-slate-500 hover:text-slate-700 hover:bg-slate-100" : "text-orange-600 hover:bg-orange-50"}`}
-          title={visible ? "ซ่อนบล็อก" : "แสดงบล็อก"}
-          aria-label={visible ? "ซ่อนบล็อก" : "แสดงบล็อก"}
         >
-          {visible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-          <span className="hidden xl:inline">{visible ? "ซ่อน" : "แสดง"}</span>
-        </Button>
+          {visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+        </HeaderButton>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
+        <HeaderButton
+          label="คัดลอกบล็อก"
+          disabled={!isEditMode}
+          className="hover:bg-emerald-50 hover:text-emerald-600"
+          onClick={(event) => {
+            event.stopPropagation();
             onDuplicate();
           }}
-          disabled={!isEditMode}
-          className="text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 h-8 gap-1 rounded-lg px-2 transition-colors"
-          title="คัดลอกบล็อก"
-          aria-label="คัดลอกบล็อก"
         >
-          <Copy className="w-4 h-4" />
-          <span className="hidden xl:inline">คัดลอก</span>
-        </Button>
+          <Copy className="h-4 w-4" />
+        </HeaderButton>
 
-        <div className="hidden sm:block w-px h-5 bg-slate-200 mx-1" />
+        <div className="mx-1 hidden h-6 w-px bg-slate-200 sm:block" />
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={(e) => {
-            e.stopPropagation();
+        <HeaderButton
+          label="เลื่อนบล็อกขึ้น"
+          disabled={!isEditMode || !canMoveUp}
+          className="hover:bg-blue-50 hover:text-blue-600"
+          onClick={(event) => {
+            event.stopPropagation();
             onMoveUp();
           }}
-          disabled={!isEditMode || !canMoveUp}
-          className="text-slate-500 hover:text-blue-600 hover:bg-blue-50 h-8 w-8 rounded-lg transition-colors"
-          title="เลื่อนขึ้น"
-          aria-label="เลื่อนบล็อกขึ้น"
         >
-          <ArrowUp className="w-4 h-4" />
-        </Button>
+          <ArrowUp className="h-4 w-4" />
+        </HeaderButton>
 
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={(e) => {
-            e.stopPropagation();
+        <HeaderButton
+          label="เลื่อนบล็อกลง"
+          disabled={!isEditMode || !canMoveDown}
+          className="hover:bg-blue-50 hover:text-blue-600"
+          onClick={(event) => {
+            event.stopPropagation();
             onMoveDown();
           }}
-          disabled={!isEditMode || !canMoveDown}
-          className="text-slate-500 hover:text-blue-600 hover:bg-blue-50 h-8 w-8 rounded-lg transition-colors"
-          title="เลื่อนลง"
-          aria-label="เลื่อนบล็อกลง"
         >
-          <ArrowDown className="w-4 h-4" />
-        </Button>
+          <ArrowDown className="h-4 w-4" />
+        </HeaderButton>
 
         <AlertDialog>
           <AlertDialogTrigger
@@ -145,30 +183,29 @@ export function BlockHeader({
               <Button
                 type="button"
                 variant="outline"
-                size="sm"
-                className="text-red-600 border-red-200 hover:text-red-700 hover:bg-red-50 hover:border-red-300 h-8 gap-1 rounded-lg px-2 transition-colors"
+                size="icon"
                 disabled={!isEditMode}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(event) => event.stopPropagation()}
                 title="ลบบล็อก"
                 aria-label="ลบบล็อก"
-              />
+                className="h-9 w-9 shrink-0 rounded-lg border-red-200 text-red-600 transition-colors hover:border-red-300 hover:bg-red-50 hover:text-red-700"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             }
-          >
-            <Trash2 className="w-4 h-4" />
-            <span className="hidden sm:inline">ลบ</span>
-          </AlertDialogTrigger>
+          />
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>ลบบล็อก {title} นี้?</AlertDialogTitle>
               <AlertDialogDescription>
-                คุณแน่ใจหรือไม่ที่จะลบบล็อกนี้? ข้อมูล รูปภาพ และข้อความภายในบล็อกนี้จะถูกนำออกจากหน้าเมื่อบันทึก
+                ข้อมูล รูปภาพ และข้อความภายในบล็อกนี้จะถูกนำออกจากหน้าเมื่อบันทึก
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>ยกเลิก</AlertDialogCancel>
               <AlertDialogAction
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={(event) => {
+                  event.stopPropagation();
                   onRemove();
                 }}
                 className="bg-red-600 hover:bg-red-700"
