@@ -119,7 +119,6 @@ export function organizationJsonLd(contact?: Record<string, string | undefined>)
     image: absoluteUrl(defaultImage),
     description: siteConfig.description,
     telephone: contact?.mainPhone || siteConfig.phone,
-    email: siteConfig.email,
     taxID: siteConfig.taxId,
     foundingDate: String(siteConfig.foundedYear - 543),
     priceRange: "$$",

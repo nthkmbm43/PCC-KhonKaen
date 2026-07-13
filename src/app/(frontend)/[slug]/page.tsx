@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return createSeoMetadata({
     title: page.seo?.title || page.title || 'PCC Post-Tension',
     description: page.seo?.description || '',
+    keywords: page.seo?.keywords ? page.seo.keywords.split(',').map((keyword) => keyword.trim()).filter(Boolean) : undefined,
     path: `/${page.slug}`,
     image: page.seo?.ogImage || undefined,
   })

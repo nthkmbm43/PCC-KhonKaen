@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import { MapPin } from "lucide-react";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export default async function MapBlock({ data }: { data?: Record<string, unknown> }) {
@@ -8,19 +9,34 @@ export default async function MapBlock({ data }: { data?: Record<string, unknown
   if (!mapUrl) return null;
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 h-[500px] w-full">
-        <iframe
-          src={mapUrl}
-          width="100%"
-          height="100%"
-          style={{ border: 0, borderRadius: "1.5rem" }}
-          allowFullScreen={true}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          className="w-full h-full"
-          title="Google Maps Location"
-        ></iframe>
+    <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
+        <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="flex gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-brand-50 text-brand-600">
+              <MapPin size={24} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-brand-600">
+                Location
+              </p>
+              <h2 className="mt-2 text-2xl font-bold text-gray-900">
+                เปิดเส้นทางสำนักงาน PCC Post-Tension ขอนแก่น
+              </h2>
+              <p className="mt-3 max-w-2xl leading-7 text-gray-600">
+                ใช้ Google Maps เพื่อนำทางมายังสำนักงานหรือสอบถามเส้นทางก่อนเข้าพบทีมงานของเรา
+              </p>
+            </div>
+          </div>
+          <a
+            href={mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-12 items-center justify-center bg-brand-500 px-6 py-4 text-center font-bold text-white transition-colors hover:bg-brand-600"
+          >
+            เปิดใน Google Maps
+          </a>
+        </div>
       </div>
     </div>
   );

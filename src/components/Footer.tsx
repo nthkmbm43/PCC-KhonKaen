@@ -4,7 +4,6 @@ import {
   ArrowUpRight,
   Building2,
   ChevronRight,
-  Mail,
   MapPin,
   Phone,
 } from "lucide-react";
@@ -172,18 +171,22 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
 
             <section className={sectionBase}>
               <FooterHeading eyebrow="Location">แผนที่</FooterHeading>
-              <div className="relative h-56 overflow-hidden border border-white/15 bg-slate-900 sm:h-64 rounded-xl">
-                <iframe
-                  src={contact.googleMapsUrl}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen={true}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="PCC Post-Tension Location Map"
-                  className="absolute inset-0"
-                />
+              <div className="rounded-xl border border-white/15 bg-slate-900 p-5">
+                <div className="flex min-h-44 flex-col justify-between bg-[linear-gradient(135deg,rgba(66,123,244,0.18),rgba(245,158,11,0.12))] p-5">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent-400">
+                      PCC Post-Tension Khon Kaen
+                    </p>
+                    <p className="mt-3 text-lg font-bold leading-relaxed text-white">
+                      สำนักงานขอนแก่น พร้อมให้คำปรึกษางานพรีแคสท์และโพสเทนชั่น
+                    </p>
+                  </div>
+                  {contact.googleMapsUrl && (
+                    <a href={contact.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-11 items-center justify-center border border-brand-400/50 px-4 py-3 text-sm font-bold text-brand-200 transition-colors hover:border-brand-300 hover:text-brand-100">
+                      เปิดเส้นทางใน Google Maps
+                    </a>
+                  )}
+                </div>
               </div>
               <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
                 <div className="flex items-start gap-3 text-slate-400">
@@ -218,14 +221,7 @@ export default function Footer({ contact, footerData }: { contact: ContactInfo, 
         </div>
 
         <div className="border-b border-white/15 py-8">
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-            <a
-              href={`mailto:${siteConfig.email}`}
-              className="flex items-center gap-3 border border-white/10 bg-white/[0.03] px-5 py-4 font-semibold text-white transition-colors hover:border-brand-400/50"
-            >
-              <Mail size={20} className="text-brand-300" />
-              {siteConfig.email}
-            </a>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <a
               href={`tel:${contact.mainPhone.replace(/\D/g, "")}`}
               className="flex items-center gap-3 border border-white/10 bg-white/[0.03] px-5 py-4 font-semibold text-white transition-colors hover:border-brand-400/50"

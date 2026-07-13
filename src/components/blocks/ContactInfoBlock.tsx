@@ -168,20 +168,30 @@ export default async function ContactInfoBlock({ headline, description }: Contac
           </div>
         </div>
 
-        {/* Map */}
+        {/* Map link */}
         <div className="w-full lg:w-2/3">
-          <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 h-full min-h-[500px]">
-            <iframe
-              src={settings.contact.googleMapsUrl}
-              width="100%"
-              height="100%"
-              style={{ border: 0, borderRadius: "1.5rem" }}
-              allowFullScreen={true}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="w-full h-full min-h-[460px]"
-              title="Google Maps Location"
-            ></iframe>
+          <div className="flex h-full min-h-[420px] flex-col justify-between rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
+            <div className="rounded-3xl bg-gradient-to-br from-slate-900 via-blue-950 to-blue-800 p-8 text-white">
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-brand-200">
+                PCC Post-Tension Khon Kaen
+              </p>
+              <h2 className="mt-4 text-3xl font-bold leading-tight">
+                แผนที่สำนักงานและโรงงานขอนแก่น
+              </h2>
+              <p className="mt-4 leading-8 text-blue-100">
+                เปิดเส้นทางผ่าน Google Maps เพื่อเดินทางมาปรึกษางานกำแพงกันดิน รั้วสำเร็จรูป พื้น Precast และงานโพสเทนชั่น
+              </p>
+            </div>
+            {settings.contact.googleMapsUrl && (
+              <a
+                href={settings.contact.googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-brand-500 px-6 py-4 text-center font-bold text-white transition-colors hover:bg-brand-600"
+              >
+                เปิดเส้นทางใน Google Maps
+              </a>
+            )}
           </div>
         </div>
       </div>
