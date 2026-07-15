@@ -5,21 +5,27 @@ import { unstable_cache } from "next/cache";
 
 export const getProductWithSeo = unstable_cache(
   async (slug: string) => {
-    const result = await db
-      .select({
-        product: products,
-        seo: seoMetadata,
-      })
-      .from(products)
-      .leftJoin(
-        seoMetadata,
-        and(
-          eq(seoMetadata.resourceId, products.id),
-          eq(seoMetadata.resourceType, "product")
+    let result;
+    try {
+      result = await db
+        .select({
+          product: products,
+          seo: seoMetadata,
+        })
+        .from(products)
+        .leftJoin(
+          seoMetadata,
+          and(
+            eq(seoMetadata.resourceId, products.id),
+            eq(seoMetadata.resourceType, "product")
+          )
         )
-      )
-      .where(eq(products.slug, slug))
-      .limit(1);
+        .where(eq(products.slug, slug))
+        .limit(1);
+    } catch (error) {
+      console.error(`Error fetching product "${slug}" from DB:`, error);
+      return null;
+    }
 
     if (result.length === 0) {
       return null;
@@ -37,23 +43,29 @@ export const getProductWithSeo = unstable_cache(
 export const getPublishedProducts = unstable_cache(
   async () => {
     // Only select necessary fields to reduce payload as requested by PA
-    const result = await db
-      .select({
-        id: products.id,
-        slug: products.slug,
-        title: products.title,
-        shortTitle: products.shortTitle,
-        description: products.description,
-        image: products.image,
-        category: products.category,
-        isFeatured: products.isFeatured,
-        badge: products.badge,
-        sortOrder: products.sortOrder,
-        updatedAt: products.updatedAt,
-      })
-      .from(products)
-      .where(eq(products.workflowState, "published"))
-      .orderBy(products.createdAt); // Or some manual order if needed
+    let result;
+    try {
+      result = await db
+        .select({
+          id: products.id,
+          slug: products.slug,
+          title: products.title,
+          shortTitle: products.shortTitle,
+          description: products.description,
+          image: products.image,
+          category: products.category,
+          isFeatured: products.isFeatured,
+          badge: products.badge,
+          sortOrder: products.sortOrder,
+          updatedAt: products.updatedAt,
+        })
+        .from(products)
+        .where(eq(products.workflowState, "published"))
+        .orderBy(products.createdAt); // Or some manual order if needed
+    } catch (error) {
+      console.error("Error fetching published products from DB:", error);
+      return [];
+    }
 
     const badgePriority: Record<string, number> = {
       "มาแรง": 1,
