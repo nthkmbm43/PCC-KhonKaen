@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Building2, ChevronRight, MapPin, Phone } from "lucide-react";
-import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import {
   footerProductLinks,
   footerQuickLinks,
@@ -83,6 +82,9 @@ export default function Footer({
 }) {
   const currentYear = new Date().getFullYear();
   const address = contact.companyAddress || siteConfig.offices[0].addressLines.join("\n");
+  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    address.replace(/\s+/g, " ").trim()
+  )}`;
   const socialLinks = [
     {
       label: "LINE",
@@ -154,17 +156,30 @@ export default function Footer({
 
             <section className={sectionBase}>
               <FooterHeading eyebrow="Location">แผนที่</FooterHeading>
-              {contact.googleMapsUrl ? (
-                <GoogleMapEmbed
-                  src={contact.googleMapsUrl}
-                  title="แผนที่สำนักงาน PCC Post-Tension ขอนแก่น"
-                  className="h-48 rounded-xl border-white/15"
-                />
-              ) : (
-                <div className="rounded-xl border border-white/15 bg-slate-900 p-5 text-sm text-slate-400">
-                  ยังไม่ได้ตั้งค่าลิงก์ Google Maps
+              <a
+                href={mapsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open PCC Post-Tension Khon Kaen location in Google Maps"
+                className="group block overflow-hidden rounded-xl border border-white/15 bg-slate-900 transition-colors hover:border-brand-400/60"
+              >
+                <div className="relative flex h-48 items-center justify-center bg-[linear-gradient(135deg,#07111f_0%,#0f1f3d_45%,#132a55_100%)] p-5">
+                  <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(96,165,250,.22)_1px,transparent_1px),linear-gradient(90deg,rgba(96,165,250,.22)_1px,transparent_1px)] [background-size:32px_32px]" />
+                  <div className="relative w-full max-w-[250px] bg-white p-4 text-slate-900 shadow-xl">
+                    <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+                      <MapPin size={22} />
+                    </div>
+                    <p className="text-sm font-bold leading-snug">PCC Post-Tension Khon Kaen</p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-600">
+                      {address}
+                    </p>
+                  </div>
                 </div>
-              )}
+                <div className="flex min-h-14 items-center justify-between gap-3 border-t border-white/10 px-4 py-3 font-bold text-white">
+                  <span>Open in Google Maps</span>
+                  <ArrowUpRight size={18} className="shrink-0 text-accent-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </div>
+              </a>
               <div className="mt-4 space-y-3 border-t border-white/10 pt-4">
                 <div className="flex items-start gap-3 text-slate-400">
                   <MapPin size={18} className="mt-0.5 shrink-0 text-brand-400" />
