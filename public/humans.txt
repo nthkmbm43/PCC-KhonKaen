@@ -6,5 +6,5 @@ Contact: contact@pcc-posttension.com
 /* SITE */
 Language: Thai
 Canonical: https://pcc-khon-kaen.vercel.app
-Sitemap: https://pcc-khon-kaen.vercel.app/google-sitemap.xml
+Sitemap: https://pcc-khon-kaen.vercel.app/google-sitemap.txt
 AI guide: https://pcc-khon-kaen.vercel.app/llms.txt

@@ -6,7 +6,7 @@
 
 - Canonical domain: https://pcc-khon-kaen.vercel.app
 - Main website: https://pcc-khon-kaen.vercel.app/
-- Sitemap: https://pcc-khon-kaen.vercel.app/google-sitemap.xml
+- Sitemap: https://pcc-khon-kaen.vercel.app/google-sitemap.txt
 - Contact: https://pcc-khon-kaen.vercel.app/contact
 
 ## Services
