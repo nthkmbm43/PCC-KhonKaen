@@ -1,6 +1,7 @@
 "use client";
 
 import { Clock, ExternalLink, MapPin, Phone } from "lucide-react";
+import { siteConfig } from "@/data/site-config";
 
 type Branch = {
   name: string;
@@ -44,9 +45,41 @@ const defaultBranches: Branch[] = [
   },
 ];
 
+function normalizeBranch(branch: Branch): Branch {
+  const headOffice = siteConfig.offices[0];
+  const khonKaenBranch = siteConfig.offices[1];
+  const isOldHeadOffice =
+    branch.isPrimary || branch.name.includes("สำนักงานใหญ่") || branch.name.includes("สาขาขอนแก่น (สำนักงานใหญ่)");
+  const hasOldKhonKaenPin = branch.mapUrl?.includes("16.4419") || branch.mapUrl?.includes("102.8359");
+
+  if (isOldHeadOffice) {
+    return {
+      ...branch,
+      name: headOffice.name,
+      address: headOffice.address,
+      phone: "091-553-2624",
+      mapUrl: headOffice.mapUrl,
+      isPrimary: true,
+    };
+  }
+
+  if (hasOldKhonKaenPin || branch.name.includes("ขอนแก่น")) {
+    return {
+      ...branch,
+      name: khonKaenBranch.name,
+      address: khonKaenBranch.address,
+      phone: branch.phone || "063-454-5656",
+      mapUrl: khonKaenBranch.mapUrl,
+      isPrimary: false,
+    };
+  }
+
+  return branch;
+}
+
 export default function BranchLocationsBlock({ data, initialStatus }: BranchLocationsBlockProps) {
   const headline = data?.headline || "สาขาของเรา";
-  const branches = data?.branches || defaultBranches;
+  const branches = (data?.branches || defaultBranches).map(normalizeBranch);
   const status = initialStatus || null;
 
   return (
