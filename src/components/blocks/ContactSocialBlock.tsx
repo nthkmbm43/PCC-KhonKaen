@@ -16,12 +16,23 @@ function readText(value: unknown) {
   return typeof value === "string" && value.trim() ? value : undefined;
 }
 
+function getGoogleMapsHref(src: string) {
+  const coordMatch = src.match(/!2d([0-9.-]+)!3d([0-9.-]+)/);
+
+  if (coordMatch) {
+    const [, lng, lat] = coordMatch;
+    return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+  }
+
+  return src;
+}
+
 export default async function ContactSocialBlock({ headline, description, data }: ContactSocialBlockProps) {
   const settings = await getSiteSettings();
   const lineUrl = settings.contact.lineUrl;
   const facebookUrl = settings.contact.facebookUrl || siteConfig.social.facebook.url;
   const tiktokUrl = settings.contact.tiktokUrl || siteConfig.social.tiktok.url;
-  const headOffice = siteConfig.offices[0];
+  const khonKaenMapUrl = getGoogleMapsHref(settings.contact.googleMapsUrl);
 
   const title =
     headline ||
@@ -61,7 +72,7 @@ export default async function ContactSocialBlock({ headline, description, data }
       : null,
     {
       label: "Google Map สำนักงานขอนแก่น",
-      href: headOffice.mapUrl,
+      href: khonKaenMapUrl,
       icon: "/images/social/google-map.png",
       borderClass: "border-t-[#EA4335]",
       text: "เปิดหมุดสำนักงานขอนแก่นเพื่อดูเส้นทางใน Google Maps",
