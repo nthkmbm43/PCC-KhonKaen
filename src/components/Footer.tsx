@@ -84,7 +84,6 @@ export default function Footer({
   const currentYear = new Date().getFullYear();
   const headOffice = siteConfig.offices[0];
   const khonKaenBranch = siteConfig.offices[1];
-  const headOfficeAddress = headOffice.addressLines.join("\n");
   const khonKaenAddress = khonKaenBranch.addressLines.join("\n");
   const mapsSrc = contact.googleMapsUrl || siteConfig.googleMapsEmbed || headOffice.mapUrl;
   const socialLinks = [
@@ -127,7 +126,7 @@ export default function Footer({
                 </div>
                 <div className="mt-5 inline-flex items-center gap-2 border border-brand-400/40 bg-brand-400/10 px-3 py-1.5 text-sm font-semibold text-brand-200">
                   <Building2 size={16} />
-                  สำนักงานใหญ่เชียงใหม่
+                  สำนักงานขอนแก่น
                 </div>
                 {footerData?.description && (
                   <p className="mt-4 text-sm leading-relaxed text-slate-400">
@@ -138,13 +137,7 @@ export default function Footer({
 
               <div className="space-y-6 pt-6">
                 <div className="border-l border-white/15 pl-4">
-                  <h5 className="font-bold text-white">สำนักงานใหญ่เชียงใหม่</h5>
-                  <div className="mt-2 space-y-1 whitespace-pre-line text-sm leading-6 text-slate-400">
-                    {headOfficeAddress}
-                  </div>
-                </div>
-                <div className="border-l border-white/15 pl-4">
-                  <h5 className="font-bold text-white">สาขาขอนแก่น</h5>
+                  <h5 className="font-bold text-white">สำนักงานขอนแก่น</h5>
                   <div className="mt-2 space-y-1 whitespace-pre-line text-sm leading-6 text-slate-400">
                     {khonKaenAddress}
                   </div>
@@ -173,7 +166,7 @@ export default function Footer({
                 <div className="flex items-start gap-3 text-slate-400">
                   <MapPin size={18} className="mt-0.5 shrink-0 text-brand-400" />
                   <span className="whitespace-pre-line text-sm leading-relaxed">
-                    {headOfficeAddress}
+                    {khonKaenAddress}
                   </span>
                 </div>
               </div>
