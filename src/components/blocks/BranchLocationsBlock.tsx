@@ -1,5 +1,3 @@
-"use client";
-
 import { Clock, ExternalLink, MapPin, Phone } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
 
