@@ -27,11 +27,11 @@ type BranchLocationsBlockProps = {
 
 const defaultBranches: Branch[] = [
   {
-    name: "สำนักงานใหญ่เชียงใหม่",
-    address: "292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300",
-    phone: "091-553-2624",
+    name: "สำนักงานขอนแก่น",
+    address: "เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000",
+    phone: "063-454-5656",
     hours: "จันทร์ - เสาร์: 08:00 - 17:00 น.",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=18.8156,99.0199",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=16.476942,102.774184",
     isPrimary: true,
   },
   {
@@ -55,7 +55,7 @@ function normalizeBranch(branch: Branch): Branch {
       ...branch,
       name: headOffice.name,
       address: headOffice.address,
-      phone: "091-553-2624",
+      phone: "063-454-5656",
       mapUrl: headOffice.mapUrl,
       isPrimary: true,
     };

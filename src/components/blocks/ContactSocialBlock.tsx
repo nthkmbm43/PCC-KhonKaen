@@ -60,11 +60,11 @@ export default async function ContactSocialBlock({ headline, description, data }
         }
       : null,
     {
-      label: "Google Map สำนักงานใหญ่",
+      label: "Google Map สำนักงานขอนแก่น",
       href: headOffice.mapUrl,
       icon: "/images/social/google-map.png",
       borderClass: "border-t-[#EA4335]",
-      text: "เปิดหมุดสำนักงานใหญ่เชียงใหม่เพื่อดูเส้นทางใน Google Maps",
+      text: "เปิดหมุดสำนักงานขอนแก่นเพื่อดูเส้นทางใน Google Maps",
     },
   ].filter((item): item is NonNullable<typeof item> => Boolean(item?.href));
 

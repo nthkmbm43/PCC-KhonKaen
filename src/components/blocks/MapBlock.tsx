@@ -24,16 +24,16 @@ export default async function MapBlock({ data }: { data?: Record<string, unknown
                 Location
               </p>
               <h2 className="mt-2 text-2xl font-bold text-gray-900">
-                แผนที่สำนักงานใหญ่ PCC Post-Tension เชียงใหม่
+                แผนที่สำนักงานขอนแก่น PCC Post-Tension
               </h2>
               <p className="mt-3 max-w-2xl leading-7 text-gray-600">
-                ปักหมุดสำนักงานใหญ่เชียงใหม่ให้ชัดเจน พร้อมกดเปิดเส้นทางนำทางด้วย Google Maps ได้ทันที
+                แสดงหมุดสำนักงานขอนแก่นให้ชัดเจน พร้อมกดเปิดเส้นทางนำทางด้วย Google Maps ได้ทันที
               </p>
             </div>
           </div>
           <GoogleMapEmbed
             src={mapUrl}
-            title="แผนที่สำนักงานใหญ่ PCC Post-Tension เชียงใหม่"
+            title="แผนที่สำนักงานขอนแก่น PCC Post-Tension"
             className="h-80 rounded-2xl"
           />
         </div>
