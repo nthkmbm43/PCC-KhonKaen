@@ -7,7 +7,7 @@ import { getSiteSettings } from "@/lib/getSiteSettings";
 export default async function MapBlock({ data }: { data?: Record<string, unknown> }) {
   const settings = await getSiteSettings();
   const headOffice = siteConfig.offices[0];
-  const mapUrl = (data?.url as string) || headOffice.mapUrl || settings.contact.googleMapsUrl;
+  const mapUrl = (data?.url as string) || settings.contact.googleMapsUrl || siteConfig.googleMapsEmbed || headOffice.mapUrl;
 
   if (!mapUrl) return null;
 

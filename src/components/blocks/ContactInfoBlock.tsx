@@ -22,6 +22,7 @@ export default async function ContactInfoBlock({
   const displayPhone = settings.contact.mainPhone;
   const headOffice = siteConfig.offices[0];
   const address = headOffice.addressLines.join("\n");
+  const mapSrc = settings.contact.googleMapsUrl || siteConfig.googleMapsEmbed || headOffice.mapUrl;
   const title = headline || "ติดต่อเรา";
   const desc =
     description ||
@@ -183,9 +184,9 @@ export default async function ContactInfoBlock({
               </p>
             </div>
 
-            {headOffice.mapUrl && (
+            {mapSrc && (
               <GoogleMapEmbed
-                src={headOffice.mapUrl}
+                src={mapSrc}
                 title="แผนที่สำนักงานใหญ่ PCC Post-Tension เชียงใหม่"
                 className="mt-6 h-[420px] rounded-3xl"
               />

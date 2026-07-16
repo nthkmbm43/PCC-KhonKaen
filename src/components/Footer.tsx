@@ -7,6 +7,7 @@ import {
   footerSecondaryLinks,
   siteConfig,
 } from "@/data/site-config";
+import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 
 const sectionBase =
   "border border-white/10 bg-white/[0.03] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]";
@@ -85,7 +86,7 @@ export default function Footer({
   const khonKaenBranch = siteConfig.offices[1];
   const headOfficeAddress = headOffice.addressLines.join("\n");
   const khonKaenAddress = khonKaenBranch.addressLines.join("\n");
-  const mapsHref = headOffice.mapUrl;
+  const mapsSrc = contact.googleMapsUrl || siteConfig.googleMapsEmbed || headOffice.mapUrl;
   const socialLinks = [
     {
       label: "LINE",
@@ -163,34 +164,11 @@ export default function Footer({
 
             <section className={sectionBase}>
               <FooterHeading eyebrow="Location">แผนที่</FooterHeading>
-              <a
-                href={mapsHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="เปิดหมุดสำนักงานใหญ่เชียงใหม่ของ PCC Post-Tension ใน Google Maps"
-                className="group block overflow-hidden rounded-xl border border-white/15 bg-slate-900 transition-colors hover:border-brand-400/60"
-              >
-                <div className="relative flex h-52 items-center justify-center bg-[linear-gradient(135deg,#07111f_0%,#0f1f3d_45%,#132a55_100%)] p-5">
-                  <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(96,165,250,.22)_1px,transparent_1px),linear-gradient(90deg,rgba(96,165,250,.22)_1px,transparent_1px)] [background-size:32px_32px]" />
-                  <div className="relative w-full max-w-[270px] bg-white p-4 text-slate-900 shadow-xl">
-                    <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-2 text-xs font-bold text-brand-700">
-                      <MapPin size={22} />
-                      หมุดสำนักงานใหญ่
-                    </div>
-                    <p className="text-sm font-bold leading-snug">PCC Post-Tension สำนักงานใหญ่เชียงใหม่</p>
-                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-600">
-                      {headOfficeAddress}
-                    </p>
-                    <p className="mt-2 text-xs font-semibold text-brand-700">
-                      พิกัด: {headOffice.lat}, {headOffice.lng}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex min-h-14 items-center justify-between gap-3 border-t border-white/10 px-4 py-3 font-bold text-white">
-                  <span>เปิดหมุดสำนักงานใหญ่ใน Google Maps</span>
-                  <ArrowUpRight size={18} className="shrink-0 text-accent-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </div>
-              </a>
+              <GoogleMapEmbed
+                src={mapsSrc}
+                title="แผนที่ PCC Post-Tension"
+                className="h-64 rounded-xl border-white/15"
+              />
               <div className="mt-4 space-y-3 border-t border-white/10 pt-4">
                 <div className="flex items-start gap-3 text-slate-400">
                   <MapPin size={18} className="mt-0.5 shrink-0 text-brand-400" />
