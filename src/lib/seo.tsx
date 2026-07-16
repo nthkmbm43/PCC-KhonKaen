@@ -142,11 +142,17 @@ export function organizationJsonLd(contact?: Record<string, string | undefined>)
     address: {
       "@type": "PostalAddress",
       streetAddress: siteConfig.offices[0].address,
-      addressLocality: "เมืองขอนแก่น",
+      addressLocality: "เมืองเชียงใหม่",
       addressRegion: siteConfig.offices[0].province,
-      postalCode: "40000",
+      postalCode: "50300",
       addressCountry: "TH",
     },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: siteConfig.offices[0].lat,
+      longitude: siteConfig.offices[0].lng,
+    },
+    hasMap: siteConfig.offices[0].mapUrl,
     areaServed: siteConfig.serviceAreas.map((area) => ({
       "@type": "AdministrativeArea",
       name: area,

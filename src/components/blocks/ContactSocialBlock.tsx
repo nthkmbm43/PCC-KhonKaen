@@ -21,6 +21,7 @@ export default async function ContactSocialBlock({ headline, description, data }
   const lineUrl = settings.contact.lineUrl;
   const facebookUrl = settings.contact.facebookUrl || siteConfig.social.facebook.url;
   const tiktokUrl = settings.contact.tiktokUrl || siteConfig.social.tiktok.url;
+  const headOffice = siteConfig.offices[0];
 
   const title =
     headline ||
@@ -59,11 +60,11 @@ export default async function ContactSocialBlock({ headline, description, data }
         }
       : null,
     {
-      label: "Google Map",
-      href: "https://www.google.com/maps/place/16.476942,102.774184",
+      label: "Google Map สำนักงานใหญ่",
+      href: headOffice.mapUrl,
       icon: "/images/social/google-map.png",
       borderClass: "border-t-[#EA4335]",
-      text: "เปิดแผนที่เพื่อดูเส้นทางมายังสำนักงานสาขาขอนแก่น",
+      text: "เปิดหมุดสำนักงานใหญ่เชียงใหม่เพื่อดูเส้นทางใน Google Maps",
     },
   ].filter((item): item is NonNullable<typeof item> => Boolean(item?.href));
 

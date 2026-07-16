@@ -28,19 +28,19 @@ type BranchLocationsBlockProps = {
 
 const defaultBranches: Branch[] = [
   {
-    name: "สาขาขอนแก่น (สำนักงานใหญ่)",
-    address: "เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000",
-    phone: "063-454-5656",
-    hours: "จันทร์ - เสาร์: 08:00 - 17:00 น.",
-    mapUrl: "https://maps.google.com/?q=16.4419,102.8359",
-    isPrimary: true,
-  },
-  {
-    name: "สาขาเชียงใหม่",
+    name: "สำนักงานใหญ่เชียงใหม่",
     address: "292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300",
     phone: "091-553-2624",
     hours: "จันทร์ - เสาร์: 08:00 - 17:00 น.",
-    mapUrl: "https://maps.google.com/?q=18.8156,99.0199",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=18.8156,99.0199",
+    isPrimary: true,
+  },
+  {
+    name: "สาขาขอนแก่น",
+    address: "เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000",
+    phone: "063-454-5656",
+    hours: "จันทร์ - เสาร์: 08:00 - 17:00 น.",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=16.476942,102.774184",
   },
 ];
 
@@ -93,7 +93,7 @@ export default function BranchLocationsBlock({ data, initialStatus }: BranchLoca
                   <div className="flex items-start gap-3 text-gray-600">
                     <MapPin size={18} className="mt-0.5 shrink-0 text-blue-500" />
                     <span className="whitespace-pre-line text-sm leading-relaxed">
-                      {branch.isPrimary && status?.companyAddress ? status.companyAddress : branch.address}
+                      {branch.address}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-gray-600">

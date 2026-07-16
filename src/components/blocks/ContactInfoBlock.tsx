@@ -20,7 +20,8 @@ export default async function ContactInfoBlock({
   const tiktokUrl = settings.contact.tiktokUrl || siteConfig.social.tiktok.url;
   const phoneNo = settings.contact.mainPhone.replace(/\D/g, "");
   const displayPhone = settings.contact.mainPhone;
-  const address = settings.contact.companyAddress || siteConfig.offices[0].addressLines.join("\n");
+  const headOffice = siteConfig.offices[0];
+  const address = headOffice.addressLines.join("\n");
   const title = headline || "ติดต่อเรา";
   const desc =
     description ||
@@ -172,20 +173,20 @@ export default async function ContactInfoBlock({
           <div className="flex h-full min-h-[420px] flex-col justify-between rounded-3xl border border-gray-100 bg-white p-8 shadow-sm">
             <div className="rounded-3xl bg-gradient-to-br from-slate-900 via-blue-950 to-blue-800 p-8 text-white">
               <p className="text-sm font-bold uppercase tracking-[0.18em] text-brand-200">
-                PCC Post-Tension Khon Kaen
+                PCC Post-Tension Head Office
               </p>
               <h2 className="mt-4 text-3xl font-bold leading-tight">
-                แผนที่สำนักงานและโรงงานขอนแก่น
+                แผนที่สำนักงานใหญ่เชียงใหม่
               </h2>
               <p className="mt-4 leading-8 text-blue-100">
-                ดูตำแหน่งสำนักงานก่อนเดินทาง หรือกดเปิด Google Maps เพื่อให้นำทางมายัง PCC Post-Tension ขอนแก่น
+                ดูหมุดสำนักงานใหญ่เชียงใหม่ก่อนเดินทาง หรือกดเปิด Google Maps เพื่อให้นำทางไปยังตำแหน่งจริง
               </p>
             </div>
 
-            {settings.contact.googleMapsUrl && (
+            {headOffice.mapUrl && (
               <GoogleMapEmbed
-                src={settings.contact.googleMapsUrl}
-                title="แผนที่สำนักงานและโรงงาน PCC Post-Tension ขอนแก่น"
+                src={headOffice.mapUrl}
+                title="แผนที่สำนักงานใหญ่ PCC Post-Tension เชียงใหม่"
                 className="mt-6 h-[420px] rounded-3xl"
               />
             )}

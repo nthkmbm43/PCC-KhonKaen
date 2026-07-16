@@ -81,10 +81,11 @@ export default function Footer({
   footerData?: FooterData;
 }) {
   const currentYear = new Date().getFullYear();
-  const address = contact.companyAddress || siteConfig.offices[0].addressLines.join("\n");
-  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    address.replace(/\s+/g, " ").trim()
-  )}`;
+  const headOffice = siteConfig.offices[0];
+  const khonKaenBranch = siteConfig.offices[1];
+  const headOfficeAddress = headOffice.addressLines.join("\n");
+  const khonKaenAddress = khonKaenBranch.addressLines.join("\n");
+  const mapsHref = headOffice.mapUrl;
   const socialLinks = [
     {
       label: "LINE",
@@ -125,7 +126,7 @@ export default function Footer({
                 </div>
                 <div className="mt-5 inline-flex items-center gap-2 border border-brand-400/40 bg-brand-400/10 px-3 py-1.5 text-sm font-semibold text-brand-200">
                   <Building2 size={16} />
-                  สำนักงานขอนแก่น
+                  สำนักงานใหญ่เชียงใหม่
                 </div>
                 {footerData?.description && (
                   <p className="mt-4 text-sm leading-relaxed text-slate-400">
@@ -136,9 +137,15 @@ export default function Footer({
 
               <div className="space-y-6 pt-6">
                 <div className="border-l border-white/15 pl-4">
-                  <h5 className="font-bold text-white">สำนักงานใหญ่</h5>
+                  <h5 className="font-bold text-white">สำนักงานใหญ่เชียงใหม่</h5>
                   <div className="mt-2 space-y-1 whitespace-pre-line text-sm leading-6 text-slate-400">
-                    {address}
+                    {headOfficeAddress}
+                  </div>
+                </div>
+                <div className="border-l border-white/15 pl-4">
+                  <h5 className="font-bold text-white">สาขาขอนแก่น</h5>
+                  <div className="mt-2 space-y-1 whitespace-pre-line text-sm leading-6 text-slate-400">
+                    {khonKaenAddress}
                   </div>
                 </div>
               </div>
@@ -160,23 +167,27 @@ export default function Footer({
                 href={mapsHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Open PCC Post-Tension Khon Kaen location in Google Maps"
+                aria-label="เปิดหมุดสำนักงานใหญ่เชียงใหม่ของ PCC Post-Tension ใน Google Maps"
                 className="group block overflow-hidden rounded-xl border border-white/15 bg-slate-900 transition-colors hover:border-brand-400/60"
               >
-                <div className="relative flex h-48 items-center justify-center bg-[linear-gradient(135deg,#07111f_0%,#0f1f3d_45%,#132a55_100%)] p-5">
+                <div className="relative flex h-52 items-center justify-center bg-[linear-gradient(135deg,#07111f_0%,#0f1f3d_45%,#132a55_100%)] p-5">
                   <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(96,165,250,.22)_1px,transparent_1px),linear-gradient(90deg,rgba(96,165,250,.22)_1px,transparent_1px)] [background-size:32px_32px]" />
-                  <div className="relative w-full max-w-[250px] bg-white p-4 text-slate-900 shadow-xl">
-                    <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+                  <div className="relative w-full max-w-[270px] bg-white p-4 text-slate-900 shadow-xl">
+                    <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-2 text-xs font-bold text-brand-700">
                       <MapPin size={22} />
+                      หมุดสำนักงานใหญ่
                     </div>
-                    <p className="text-sm font-bold leading-snug">PCC Post-Tension Khon Kaen</p>
+                    <p className="text-sm font-bold leading-snug">PCC Post-Tension สำนักงานใหญ่เชียงใหม่</p>
                     <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-600">
-                      {address}
+                      {headOfficeAddress}
+                    </p>
+                    <p className="mt-2 text-xs font-semibold text-brand-700">
+                      พิกัด: {headOffice.lat}, {headOffice.lng}
                     </p>
                   </div>
                 </div>
                 <div className="flex min-h-14 items-center justify-between gap-3 border-t border-white/10 px-4 py-3 font-bold text-white">
-                  <span>Open in Google Maps</span>
+                  <span>เปิดหมุดสำนักงานใหญ่ใน Google Maps</span>
                   <ArrowUpRight size={18} className="shrink-0 text-accent-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </div>
               </a>
@@ -184,7 +195,7 @@ export default function Footer({
                 <div className="flex items-start gap-3 text-slate-400">
                   <MapPin size={18} className="mt-0.5 shrink-0 text-brand-400" />
                   <span className="whitespace-pre-line text-sm leading-relaxed">
-                    {address}
+                    {headOfficeAddress}
                   </span>
                 </div>
               </div>

@@ -1,11 +1,13 @@
 import React from "react";
 import { MapPin } from "lucide-react";
 import GoogleMapEmbed from "@/components/GoogleMapEmbed";
+import { siteConfig } from "@/data/site-config";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export default async function MapBlock({ data }: { data?: Record<string, unknown> }) {
   const settings = await getSiteSettings();
-  const mapUrl = (data?.url as string) || settings.contact.googleMapsUrl;
+  const headOffice = siteConfig.offices[0];
+  const mapUrl = (data?.url as string) || headOffice.mapUrl || settings.contact.googleMapsUrl;
 
   if (!mapUrl) return null;
 
@@ -22,16 +24,16 @@ export default async function MapBlock({ data }: { data?: Record<string, unknown
                 Location
               </p>
               <h2 className="mt-2 text-2xl font-bold text-gray-900">
-                แผนที่สำนักงาน PCC Post-Tension ขอนแก่น
+                แผนที่สำนักงานใหญ่ PCC Post-Tension เชียงใหม่
               </h2>
               <p className="mt-3 max-w-2xl leading-7 text-gray-600">
-                ดูตำแหน่งสำนักงานและกดเพื่อเปิดเส้นทางนำทางด้วย Google Maps ได้ทันที
+                ปักหมุดสำนักงานใหญ่เชียงใหม่ให้ชัดเจน พร้อมกดเปิดเส้นทางนำทางด้วย Google Maps ได้ทันที
               </p>
             </div>
           </div>
           <GoogleMapEmbed
             src={mapUrl}
-            title="แผนที่สำนักงาน PCC Post-Tension ขอนแก่น"
+            title="แผนที่สำนักงานใหญ่ PCC Post-Tension เชียงใหม่"
             className="h-80 rounded-2xl"
           />
         </div>

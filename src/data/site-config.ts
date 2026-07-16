@@ -15,7 +15,21 @@ export const siteConfig = {
   experienceYears: 30,
   offices: [
     {
-      name: "สำนักงานขอนแก่น",
+      name: "สำนักงานใหญ่เชียงใหม่",
+      address:
+        "292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300",
+      addressLines: [
+        "292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน",
+        "อำเภอเมือง จังหวัดเชียงใหม่ 50300",
+      ],
+      province: "เชียงใหม่",
+      lat: 18.8156,
+      lng: 99.0199,
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=18.8156,99.0199",
+      isHeadOffice: true,
+    },
+    {
+      name: "สาขาขอนแก่น",
       address:
         "100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000",
       addressLines: [
@@ -24,16 +38,10 @@ export const siteConfig = {
         "จังหวัดขอนแก่น 40000",
       ],
       province: "ขอนแก่น",
-    },
-    {
-      name: "สำนักงานเชียงใหม่",
-      address:
-        "292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300",
-      addressLines: [
-        "292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน",
-        "อำเภอเมือง จังหวัดเชียงใหม่ 50300",
-      ],
-      province: "เชียงใหม่",
+      lat: 16.476942,
+      lng: 102.774184,
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=16.476942,102.774184",
+      isHeadOffice: false,
     },
   ],
   social: {
