@@ -17,8 +17,12 @@ export async function generateMetadata(): Promise<Metadata> {
     })
   }
 
+  const title = page.seo?.title || page.title || 'PCC Post-Tension'
+
   return createSeoMetadata({
-    title: page.seo?.title || page.title || 'PCC Post-Tension',
+    title: title.length < 50
+      ? 'PCC Post-Tension ขอนแก่น | กำแพงกันดิน รั้ว มอก. Precast'
+      : title,
     description: page.seo?.description || '',
     keywords: page.seo?.keywords ? page.seo.keywords.split(',').map((keyword) => keyword.trim()).filter(Boolean) : undefined,
     path: `/`,
