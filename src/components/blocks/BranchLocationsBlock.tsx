@@ -114,76 +114,86 @@ export default async function BranchLocationsBlock({ data, initialStatus }: Bran
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
-          {branches.map((branch, i) => (
-            <div
-              key={`${branch.name}-${i}`}
-              className={`relative overflow-hidden rounded-2xl border transition-all duration-500 hover:-translate-y-1 hover:shadow-xl ${
-                branch.isPrimary
-                  ? "border-blue-200 bg-gradient-to-br from-blue-50 to-white shadow-md shadow-blue-100"
-                  : "border-gray-100 bg-white shadow-sm"
-              }`}
-            >
-              {branch.isPrimary && (
-                <div className="absolute right-4 top-4 z-10 rounded-full bg-blue-600 px-3 py-1 text-xs font-bold text-white">
-                  สำนักงานใหญ่
-                </div>
-              )}
+          {branches.map((branch, i) => {
+            const isKhonKaenBranch = branch.name.includes("ขอนแก่น") || branch.address.includes("ขอนแก่น");
+            const badge = branch.isPrimary ? "สำนักงานใหญ่" : isKhonKaenBranch ? "สาขาของคุณ" : null;
 
-              <GoogleMapEmbed
-                src={branch.mapEmbedUrl || branch.mapUrl || ""}
-                title={`แผนที่ ${branch.name}`}
-                className="h-60 rounded-none border-0"
-              />
-
-              <div className="space-y-4 p-6 sm:p-8">
-                <h3 className="text-xl font-bold text-gray-900">{branch.name}</h3>
-
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3 text-gray-600">
-                    <MapPin size={18} className="mt-0.5 shrink-0 text-blue-500" />
-                    <span className="whitespace-pre-line text-sm leading-relaxed">
-                      {branch.address}
-                    </span>
+            return (
+              <div
+                key={`${branch.name}-${i}`}
+                className={`relative overflow-hidden rounded-2xl border transition-all duration-500 hover:-translate-y-1 hover:shadow-xl ${
+                  branch.isPrimary
+                    ? "border-blue-200 bg-gradient-to-br from-blue-50 to-white shadow-md shadow-blue-100"
+                    : isKhonKaenBranch
+                      ? "border-emerald-200 bg-gradient-to-br from-emerald-50 to-white shadow-md shadow-emerald-100"
+                      : "border-gray-100 bg-white shadow-sm"
+                }`}
+              >
+                {badge && (
+                  <div
+                    className={`absolute right-4 top-4 z-10 rounded-full px-3 py-1 text-xs font-bold text-white ${
+                      branch.isPrimary ? "bg-blue-600" : "bg-emerald-600"
+                    }`}
+                  >
+                    {badge}
                   </div>
-                  <div className="flex items-center gap-3 text-gray-600">
-                    <Phone size={18} className="shrink-0 text-blue-500" />
-                    <a
-                      href={`tel:${branch.phone.replace(/-/g, "")}`}
-                      className="min-h-11 py-3 text-sm font-medium transition-colors hover:text-blue-600"
-                    >
-                      {branch.phone}
-                    </a>
-                  </div>
-                  {branch.isPrimary && status ? (
-                    <div className="flex items-start gap-3">
-                      <Clock
-                        size={18}
-                        className={status.isOpen ? "mt-0.5 shrink-0 text-green-500" : "mt-0.5 shrink-0 text-red-500"}
-                      />
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-gray-900">
-                          วันนี้{status.todayThai}:{" "}
-                          <span className={status.isOpen ? "text-green-600" : "text-red-600"}>
-                            {status.isOpen ? "เปิดทำการ" : "ปิดทำการ"}
-                          </span>
-                        </span>
-                        <span className="mt-0.5 text-xs font-medium text-gray-500">
-                          {status.isOpen ? "08:00 - 17:00 น." : status.reason}
-                        </span>
-                        {branch.hours && <span className="mt-1 text-xs text-gray-400">{branch.hours}</span>}
-                      </div>
+                )}
+
+                <GoogleMapEmbed
+                  src={branch.mapEmbedUrl || branch.mapUrl || ""}
+                  title={`แผนที่ ${branch.name}`}
+                  className="h-60 rounded-none border-0"
+                />
+
+                <div className="space-y-4 p-6 sm:p-8">
+                  <h3 className="text-xl font-bold text-gray-900">{branch.name}</h3>
+
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 text-gray-600">
+                      <MapPin size={18} className="mt-0.5 shrink-0 text-blue-500" />
+                      <span className="whitespace-pre-line text-sm leading-relaxed">
+                        {branch.address}
+                      </span>
                     </div>
-                  ) : branch.hours ? (
                     <div className="flex items-center gap-3 text-gray-600">
-                      <Clock size={18} className="shrink-0 text-blue-500" />
-                      <span className="text-sm">{branch.hours}</span>
+                      <Phone size={18} className="shrink-0 text-blue-500" />
+                      <a
+                        href={`tel:${branch.phone.replace(/-/g, "")}`}
+                        className="min-h-11 py-3 text-sm font-medium transition-colors hover:text-blue-600"
+                      >
+                        {branch.phone}
+                      </a>
                     </div>
-                  ) : null}
+                    {status ? (
+                      <div className="flex items-start gap-3">
+                        <Clock
+                          size={18}
+                          className={status.isOpen ? "mt-0.5 shrink-0 text-green-500" : "mt-0.5 shrink-0 text-red-500"}
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-gray-900">
+                            วันนี้{status.todayThai}:{" "}
+                            <span className={status.isOpen ? "text-green-600" : "text-red-600"}>
+                              {status.isOpen ? "เปิดทำการ" : "ปิดทำการ"}
+                            </span>
+                          </span>
+                          <span className="mt-0.5 text-xs font-medium text-gray-500">
+                            {status.isOpen ? "08:00 - 17:00 น." : status.reason}
+                          </span>
+                          {branch.hours && <span className="mt-1 text-xs text-gray-400">{branch.hours}</span>}
+                        </div>
+                      </div>
+                    ) : branch.hours ? (
+                      <div className="flex items-center gap-3 text-gray-600">
+                        <Clock size={18} className="shrink-0 text-blue-500" />
+                        <span className="text-sm">{branch.hours}</span>
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
-
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
