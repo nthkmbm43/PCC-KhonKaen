@@ -1,5 +1,7 @@
-import { Clock, ExternalLink, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
+import GoogleMapEmbed from "@/components/GoogleMapEmbed";
 import { siteConfig } from "@/data/site-config";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 
 type Branch = {
   name: string;
@@ -7,6 +9,7 @@ type Branch = {
   phone: string;
   hours?: string;
   mapUrl?: string;
+  mapEmbedUrl?: string;
   isPrimary?: boolean;
 };
 
@@ -27,11 +30,12 @@ type BranchLocationsBlockProps = {
 
 const defaultBranches: Branch[] = [
   {
-    name: "สำนักงานขอนแก่น",
-    address: "เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000",
-    phone: "063-454-5656",
+    name: "สำนักงานใหญ่เชียงใหม่",
+    address: "292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300",
+    phone: "091-553-2624",
     hours: "จันทร์ - เสาร์: 08:00 - 17:00 น.",
-    mapUrl: "https://www.google.com/maps/search/?api=1&query=16.476942,102.774184",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=18.810046814758575,98.99280067708213",
+    mapEmbedUrl: siteConfig.offices[0].mapEmbedUrl,
     isPrimary: true,
   },
   {
@@ -40,44 +44,62 @@ const defaultBranches: Branch[] = [
     phone: "063-454-5656",
     hours: "จันทร์ - เสาร์: 08:00 - 17:00 น.",
     mapUrl: "https://www.google.com/maps/search/?api=1&query=16.476942,102.774184",
+    mapEmbedUrl: siteConfig.googleMapsEmbed,
   },
 ];
 
-function normalizeBranch(branch: Branch): Branch {
+function normalizeBranch(branch: Branch, khonKaenEmbedUrl: string): Branch {
   const headOffice = siteConfig.offices[0];
   const khonKaenBranch = siteConfig.offices[1];
+  const isChiangMai =
+    branch.name.includes("เชียงใหม่") ||
+    branch.address.includes("เชียงใหม่") ||
+    branch.mapUrl?.includes("18.8156") ||
+    branch.mapUrl?.includes("99.0199");
+  const isKhonKaen =
+    branch.name.includes("ขอนแก่น") ||
+    branch.address.includes("ขอนแก่น") ||
+    branch.mapUrl?.includes("16.4419") ||
+    branch.mapUrl?.includes("102.8359") ||
+    branch.mapUrl?.includes("16.476942") ||
+    branch.mapUrl?.includes("102.774184");
   const isOldHeadOffice =
     branch.isPrimary || branch.name.includes("สำนักงานใหญ่") || branch.name.includes("สาขาขอนแก่น (สำนักงานใหญ่)");
-  const hasOldKhonKaenPin = branch.mapUrl?.includes("16.4419") || branch.mapUrl?.includes("102.8359");
 
-  if (isOldHeadOffice) {
-    return {
-      ...branch,
-      name: headOffice.name,
-      address: headOffice.address,
-      phone: "063-454-5656",
-      mapUrl: headOffice.mapUrl,
-      isPrimary: true,
-    };
-  }
-
-  if (hasOldKhonKaenPin || branch.name.includes("ขอนแก่น")) {
+  if (isKhonKaen) {
     return {
       ...branch,
       name: khonKaenBranch.name,
       address: khonKaenBranch.address,
-      phone: branch.phone || "063-454-5656",
+      phone: "063-454-5656",
       mapUrl: khonKaenBranch.mapUrl,
+      mapEmbedUrl: khonKaenEmbedUrl,
       isPrimary: false,
+    };
+  }
+
+  if (isChiangMai || isOldHeadOffice) {
+    return {
+      ...branch,
+      name: headOffice.name,
+      address: headOffice.address,
+      phone: "091-553-2624",
+      mapUrl: headOffice.mapUrl,
+      mapEmbedUrl: headOffice.mapEmbedUrl,
+      isPrimary: true,
     };
   }
 
   return branch;
 }
 
-export default function BranchLocationsBlock({ data, initialStatus }: BranchLocationsBlockProps) {
+export default async function BranchLocationsBlock({ data, initialStatus }: BranchLocationsBlockProps) {
+  const settings = await getSiteSettings();
   const headline = data?.headline || "สาขาของเรา";
-  const branches = (data?.branches || defaultBranches).map(normalizeBranch);
+  const khonKaenEmbedUrl = settings.contact.googleMapsUrl || siteConfig.googleMapsEmbed;
+  const branches = (data?.branches || defaultBranches)
+    .map((branch) => normalizeBranch(branch, khonKaenEmbedUrl))
+    .sort((a, b) => Number(Boolean(b.isPrimary)) - Number(Boolean(a.isPrimary)));
   const status = initialStatus || null;
 
   return (
@@ -107,15 +129,11 @@ export default function BranchLocationsBlock({ data, initialStatus }: BranchLoca
                 </div>
               )}
 
-              <div className="relative flex h-52 items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-blue-800 p-6 text-center text-white">
-                <div>
-                  <MapPin className="mx-auto mb-4 h-10 w-10 text-brand-300" aria-hidden="true" />
-                  <p className="text-sm font-bold uppercase tracking-[0.18em] text-brand-200">
-                    PCC Location
-                  </p>
-                  <p className="mt-2 text-xl font-bold">{branch.name}</p>
-                </div>
-              </div>
+              <GoogleMapEmbed
+                src={branch.mapEmbedUrl || branch.mapUrl || ""}
+                title={`แผนที่ ${branch.name}`}
+                className="h-60 rounded-none border-0"
+              />
 
               <div className="space-y-4 p-6 sm:p-8">
                 <h3 className="text-xl font-bold text-gray-900">{branch.name}</h3>
@@ -163,17 +181,6 @@ export default function BranchLocationsBlock({ data, initialStatus }: BranchLoca
                   ) : null}
                 </div>
 
-                {branch.mapUrl && (
-                  <a
-                    href={branch.mapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-800"
-                  >
-                    <ExternalLink size={16} />
-                    เปิดใน Google Maps
-                  </a>
-                )}
               </div>
             </div>
           ))}

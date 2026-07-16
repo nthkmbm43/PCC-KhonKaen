@@ -15,18 +15,19 @@ export const siteConfig = {
   experienceYears: 30,
   offices: [
     {
-      name: "สำนักงานขอนแก่น",
+      name: "สำนักงานใหญ่เชียงใหม่",
       address:
-        "เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000",
+        "292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300",
       addressLines: [
-        "เลขที่ 100 หมู่ 11",
-        "ตำบลแดงใหญ่ อำเภอเมือง",
-        "จังหวัดขอนแก่น 40000",
+        "292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน",
+        "อำเภอเมือง จังหวัดเชียงใหม่ 50300",
       ],
-      province: "ขอนแก่น",
-      lat: 16.476942,
-      lng: 102.774184,
-      mapUrl: "https://www.google.com/maps/search/?api=1&query=16.476942,102.774184",
+      province: "เชียงใหม่",
+      lat: 18.810046814758575,
+      lng: 98.99280067708213,
+      mapUrl: "https://www.google.com/maps/search/?api=1&query=18.810046814758575,98.99280067708213",
+      mapEmbedUrl:
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3776.7330410886702!2d98.99280067708213!3d18.810046814758575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30da2535c8883f4f%3A0x97c6891c89bd1d11!2z4Lia4Lij4Li04Lip4Lix4LiXIOC4nuC4tOC4muC4ueC4peC4ouC5jOC4hOC4reC4meC4geC4o-C4teC4lSDguIjguLPguIHguLHguJQ!5e0!3m2!1sth!2sth!4v1784193272974!5m2!1sth!2sth",
       isHeadOffice: true,
     },
     {

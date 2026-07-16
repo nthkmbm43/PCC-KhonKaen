@@ -25,13 +25,21 @@ const PROCESS_STEPS = [
 
 const BRANCHES = [
   {
-    name: 'สาขาขอนแก่น (สำนักงานใหญ่)',
+    name: 'สำนักงานใหญ่เชียงใหม่',
+    address: '292/1 ถนนเชียงใหม่-ลำปาง ตำบลป่าตัน อำเภอเมือง จังหวัดเชียงใหม่ 50300',
+    phone: '091-553-2624',
+    hours: 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.',
+    mapUrl: 'https://www.google.com/maps/search/?api=1&query=18.810046814758575,98.99280067708213',
+    isPrimary: true,
+  },
+  {
+    name: 'สาขาขอนแก่น',
     address: 'เลขที่ 100 หมู่ 11 ตำบลแดงใหญ่ อำเภอเมือง จังหวัดขอนแก่น 40000',
     phone: '063-454-5656',
     email: 'contact@pcc-posttension.com',
     hours: 'จันทร์ – อาทิตย์: 08:00 – 17:00 น.',
-    mapUrl: 'https://maps.google.com/?q=16.4419,102.8359',
-    isPrimary: true,
+    mapUrl: 'https://www.google.com/maps/search/?api=1&query=16.476942,102.774184',
+    isPrimary: false,
   },
 ];
 
