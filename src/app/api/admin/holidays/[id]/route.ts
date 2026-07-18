@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { requireApiPermission } from '@/lib/auth/api';
+import { revalidateTag } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,6 +33,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       .where(eq(businessHolidayClosures.id, id))
       .returning();
 
+    revalidateTag('business-status', { expire: 0 });
+
     return NextResponse.json({ success: true, holiday: updated[0] });
   } catch (error) {
     return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
@@ -51,6 +54,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
   try {
     const { id } = await params;
     await db.delete(businessHolidayClosures).where(eq(businessHolidayClosures.id, id));
+    revalidateTag('business-status', { expire: 0 });
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ success: false, error: String(error) }, { status: 500 });

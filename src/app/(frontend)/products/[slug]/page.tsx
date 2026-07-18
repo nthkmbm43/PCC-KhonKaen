@@ -42,19 +42,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = await getProductWithSeo(slug);
-  const isDraftMode = (await draftMode()).isEnabled;
+  const [product, allProducts, settings, draft] = await Promise.all([
+    getProductWithSeo(slug),
+    getPublishedProducts(),
+    getSiteSettings(),
+    draftMode(),
+  ]);
+  const isDraftMode = draft.isEnabled;
   
   if (!product || (!isDraftMode && product.workflowState !== "published")) {
     notFound();
   }
 
-  const allProducts = await getPublishedProducts();
   const currentIndex = allProducts.findIndex(p => p.slug === slug);
   const nextProduct = currentIndex >= 0 && currentIndex < allProducts.length - 1 ? allProducts[currentIndex + 1] : null;
   const prevProduct = currentIndex > 0 ? allProducts[currentIndex - 1] : null;
 
-  const settings = await getSiteSettings();
   const lineUrl = settings.contact.lineUrl;
   const phoneNo = settings.contact.mainPhone.replace(/\D/g, "");
   const displayPhone = settings.contact.mainPhone;

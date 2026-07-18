@@ -52,8 +52,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const products = await getPublishedProducts();
-  const settings = await getSiteSettings();
+  const [products, settings] = await Promise.all([
+    getPublishedProducts(),
+    getSiteSettings(),
+  ]);
   
   return (
     <html lang="th" className="antialiased scroll-smooth">

@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
 import { requireApiPermission } from "@/lib/auth/api";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -43,6 +44,10 @@ export async function POST(req: Request) {
       
       return inserted;
     });
+
+    revalidateTag('pages', { expire: 0 });
+    revalidatePath(data.slug === 'home' ? '/' : `/${data.slug}`);
+    revalidatePath('/sitemap.xml');
     
     return NextResponse.json(result[0]);
   } catch (error) {

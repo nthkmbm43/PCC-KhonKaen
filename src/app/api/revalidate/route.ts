@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
       revalidatePath(path);
       console.log(`[Revalidate] Purged cache for: ${path}`);
     }
+    revalidatePath('/sitemap.xml');
 
     return NextResponse.json({ revalidated: true, paths: pathsToRevalidate });
   } catch (err) {

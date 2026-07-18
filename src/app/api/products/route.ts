@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { logAudit } from "@/lib/audit";
 import crypto from "crypto";
 import { requireApiPermission } from "@/lib/auth/api";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function GET(req: Request) {
   const { response } = await requireApiPermission(new URL(req.url).pathname);
@@ -71,6 +72,10 @@ export async function POST(req: Request) {
 
       return inserted;
     });
+
+    revalidateTag('products', { expire: 0 });
+    revalidatePath('/', 'layout');
+    revalidatePath('/sitemap.xml');
 
     return NextResponse.json({ ...newProduct[0], rawPreviewToken: generatedRawToken }, { status: 201 });
   } catch (error) {

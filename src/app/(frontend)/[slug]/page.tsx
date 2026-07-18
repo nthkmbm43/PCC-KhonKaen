@@ -2,13 +2,19 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { breadcrumbJsonLd, createSeoMetadata, JsonLd } from '@/lib/seo'
-import { getPageWithSeo } from '@/lib/repositories/page'
+import { getPageWithSeo, getPublishedPages } from '@/lib/repositories/page'
 import { getSiteSettings } from '@/lib/getSiteSettings'
 import { draftMode } from 'next/headers'
 import ExitPreviewButton from '@/components/ExitPreviewButton'
 
-export const dynamic = 'force-dynamic';
 export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const pages = await getPublishedPages()
+  return pages
+    .filter((page) => page.slug !== 'home')
+    .map((page) => ({ slug: page.slug }))
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
@@ -41,12 +47,13 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
-  const [page, settings] = await Promise.all([
+  const [page, settings, draft] = await Promise.all([
     getPageWithSeo(decodedSlug),
     getSiteSettings(),
+    draftMode(),
   ])
 
-  const isDraftMode = (await draftMode()).isEnabled
+  const isDraftMode = draft.isEnabled
 
   // Strict check: if not in draft mode, page must be published
   if (!page || (!isDraftMode && page.workflowState !== 'published')) {

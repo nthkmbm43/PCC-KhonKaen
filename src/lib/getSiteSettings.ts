@@ -88,4 +88,4 @@ export const getSiteSettings = unstable_cache(
       rawSettings: null
     }
   }
-}, ['site-settings'], { tags: ['site-settings'], revalidate: 60 })
+}, ['site-settings'], { tags: ['site-settings'], revalidate: 3600 })

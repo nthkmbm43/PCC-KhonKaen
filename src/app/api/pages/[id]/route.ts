@@ -120,8 +120,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     // Revalidate cache to ensure frontend gets fresh data immediately
     const updatedPage = result[0];
     if (updatedPage.slug) {
-      revalidatePath(`/${updatedPage.slug}`);
-      revalidateTag('pages', { expire: 0 } as any);
+      revalidatePath(updatedPage.slug === 'home' ? '/' : `/${updatedPage.slug}`);
+      revalidatePath('/sitemap.xml');
+      revalidateTag('pages', { expire: 0 });
     }
 
     return NextResponse.json(updatedPage);
@@ -171,6 +172,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     if (!result) {
       return NextResponse.json({ error: "Page not found" }, { status: 404 });
     }
+
+    revalidateTag('pages', { expire: 0 });
+    revalidatePath('/sitemap.xml');
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { sql } from 'drizzle-orm';
 import { auth } from '@/auth';
 import { requireApiPermission } from '@/lib/auth/api';
+import { revalidateTag } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -71,6 +72,8 @@ export async function POST(req: Request) {
       endDate,
       isActive,
     }).returning();
+
+    revalidateTag('business-status', { expire: 0 });
 
     return NextResponse.json({ success: true, holiday: inserted[0] });
   } catch (error) {

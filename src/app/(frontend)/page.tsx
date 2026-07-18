@@ -31,8 +31,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const page = await getPageWithSeo('home')
-  const isDraftMode = (await draftMode()).isEnabled
+  const [page, draft] = await Promise.all([
+    getPageWithSeo('home'),
+    draftMode(),
+  ])
+  const isDraftMode = draft.isEnabled
 
   if (!page || (!isDraftMode && page.workflowState !== 'published')) {
     notFound()

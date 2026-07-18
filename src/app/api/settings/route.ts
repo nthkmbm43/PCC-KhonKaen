@@ -42,6 +42,8 @@ export async function PUT(req: Request) {
     if (settingsArray.length === 0) {
       // Create
       const newSettings = await db.insert(siteSettings).values({ ...data }).returning();
+      revalidateTag('site-settings', { expire: 0 });
+      revalidateTag('business-status', { expire: 0 });
       return NextResponse.json(newSettings[0]);
     } else {
       // Clean undefined fields for a true partial update
@@ -57,6 +59,7 @@ export async function PUT(req: Request) {
       
       revalidatePath('/', 'layout');
       revalidateTag('site-settings', { expire: 0 });
+      revalidateTag('business-status', { expire: 0 });
       
       return NextResponse.json(updatedSettings[0]);
     }

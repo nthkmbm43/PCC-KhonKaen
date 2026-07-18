@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { products, seoMetadata, revisions } from "@/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 import { auth } from "@/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { logAudit } from "@/lib/audit";
 import crypto from "crypto";
 import { requireApiPermission } from "@/lib/auth/api";
@@ -142,7 +142,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
+    revalidateTag('products', { expire: 0 });
     revalidatePath('/', 'layout');
+    revalidatePath('/sitemap.xml');
 
     return NextResponse.json({ ...updatedProduct[0], rawPreviewToken: generatedRawToken });
   } catch (error) {
@@ -192,7 +194,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
+    revalidateTag('products', { expire: 0 });
     revalidatePath('/', 'layout');
+    revalidatePath('/sitemap.xml');
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -11,7 +11,9 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin", "/api"],
       },
     ],
-    sitemap: [`${baseUrl}/google-sitemap.txt`],
+    // Keep one canonical sitemap URL. Legacy google-sitemap files can remain
+    // reachable, but crawlers should discover and submit this endpoint.
+    sitemap: `${baseUrl}/sitemap.xml`,
     host: baseUrl,
   };
 }

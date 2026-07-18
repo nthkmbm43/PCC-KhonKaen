@@ -4,7 +4,7 @@ import { NextResponse, NextRequest } from 'next/server';
 
 const authMiddleware = NextAuth(authConfig).auth;
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   // Reuse proxy Request-ID if present, otherwise generate a new one
   const requestId = req.headers.get('x-request-id') || crypto.randomUUID();
   
@@ -35,8 +35,9 @@ export default async function middleware(req: NextRequest) {
 }
  
 export const config = {
-  // Protect dynamic app routes, but leave SEO metadata and static assets public.
+  // Public pages do not need session parsing. Keep Proxy on protected/admin APIs only.
   matcher: [
-    '/((?!_next/static|_next/image|images|favicon.ico|robots.txt|sitemap.xml|manifest.webmanifest|site.webmanifest|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|xml|txt|webmanifest)$).*)',
+    '/admin/:path*',
+    '/api/:path*',
   ],
 };

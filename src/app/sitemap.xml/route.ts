@@ -2,7 +2,9 @@ import { siteConfig } from "@/data/site-config";
 import { getPublishedPages } from "@/lib/repositories/page";
 import { getPublishedProducts } from "@/lib/repositories/product";
 
-export const dynamic = "force-dynamic";
+// Prerender the XML and serve it from Vercel's cache. Googlebot should never
+// have to wait for a cross-region database request just to fetch the sitemap.
+export const dynamic = "force-static";
 export const revalidate = 3600;
 
 type SitemapEntry = {
@@ -88,7 +90,7 @@ export async function GET() {
   return new Response(xml, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 }
