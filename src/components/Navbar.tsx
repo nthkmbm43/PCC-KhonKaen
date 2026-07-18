@@ -10,7 +10,7 @@ type NavProduct = {
   slug: string;
   title: string;
   shortTitle: string;
-  description: string | null;
+  description?: string | null;
   image: string | null;
   category?: string | null;
   isFeatured?: string | null;
@@ -95,13 +95,13 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
         <div className="w-[30%] min-w-[280px] bg-slate-50 border-r border-gray-100 p-6 flex flex-col gap-2">
           <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">หมวดหมู่สินค้า</h4>
           {products.map((product) => (
-            <Link prefetch={false} key={`${keyPrefix}-cat-${product.slug}`} href={`/products/${product.slug}`} className="group/cat flex items-center justify-between gap-3 p-3 rounded-xl hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-gray-100">
+            <Link key={`${keyPrefix}-cat-${product.slug}`} href={`/products/${product.slug}`} className="group/cat flex items-center justify-between gap-3 p-3 rounded-xl hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-gray-100">
               <span className="font-bold text-gray-700 group-hover/cat:text-brand-700 transition-colors line-clamp-1">{product.shortTitle}</span>
               {renderBadge(product, true)}
             </Link>
           ))}
           <div className="mt-auto pt-4">
-            <Link prefetch={false} href="/products" className="flex items-center gap-2 text-sm text-brand-600 font-bold hover:text-brand-700 transition-colors">
+            <Link href="/products" className="flex items-center gap-2 text-sm text-brand-600 font-bold hover:text-brand-700 transition-colors">
               ดูสินค้าทั้งหมด <ArrowRight size={16} />
             </Link>
           </div>
@@ -111,12 +111,12 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
           <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">สินค้าแนะนำ</h4>
           <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 xl:gap-4">
             {menuProducts.map((product) => (
-              <Link prefetch={false} key={`${keyPrefix}-feat-${product.slug}`} href={`/products/${product.slug}`} className="group/feat relative h-24 xl:h-28 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all bg-slate-100">
+              <Link key={`${keyPrefix}-feat-${product.slug}`} href={`/products/${product.slug}`} className="group/feat relative h-24 xl:h-28 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all bg-slate-100">
                 <Image
                   src={product.image || "/images/placeholder.jpg"}
                   alt={product.title}
                   fill
-                  quality={95}
+                  quality={75}
                   sizes="(max-width: 1280px) 33vw, 240px"
                   className="object-cover group-hover/feat:scale-110 transition-transform duration-700"
                 />
@@ -135,7 +135,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
 
   const renderDesktopProductLink = (label: string, url: string, keyPrefix: string) => (
     <div className="relative group/nav h-full flex items-center">
-      <Link prefetch={false} href={url} className="relative flex items-center gap-1 hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 group-hover/nav:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
+      <Link href={url} className="relative flex items-center gap-1 hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 group-hover/nav:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
         {label} <ChevronDown size={16} className="group-hover/nav:rotate-180 transition-transform duration-300" />
       </Link>
       {renderMegaMenu(keyPrefix)}
@@ -146,7 +146,6 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
     <div className={`flex flex-col gap-1 overflow-hidden transition-all duration-300 ${isMobileProductsOpen ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"}`}>
       {products.map((product) => (
         <Link
-          prefetch={false}
           key={product.slug}
           href={`/products/${product.slug}`}
           className="pl-8 pr-4 py-3 text-base text-gray-600 hover:text-brand-700 hover:bg-slate-50 rounded-lg transition-colors flex items-center gap-3"
@@ -157,7 +156,6 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
         </Link>
       ))}
       <Link
-        prefetch={false}
         href="/products"
         className="pl-8 pr-4 py-3 mt-1 text-base text-brand-700 font-bold hover:bg-brand-50 rounded-lg transition-colors"
         onClick={() => setIsMobileMenuOpen(false)}
@@ -171,7 +169,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
     <>
       <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
         <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 h-16 md:h-20 lg:h-24 xl:h-28 flex items-center justify-between gap-3">
-          <Link prefetch={false} href="/" className="flex shrink-0 items-center group py-2">
+          <Link href="/" className="flex shrink-0 items-center group py-2">
             {contact.logoUrl ? (
               <div className="relative w-[180px] md:w-[240px] lg:w-[320px] h-10 md:h-12 lg:h-16">
                 <Image
@@ -201,18 +199,18 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                 }
 
                 return (
-                  <Link prefetch={false} key={index} href={link.url} className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
+                  <Link key={index} href={link.url} className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
                     {link.label}
                   </Link>
                 );
               })
             ) : (
               <>
-                <Link prefetch={false} href="/" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">หน้าแรก</Link>
+                <Link href="/" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">หน้าแรก</Link>
                 {renderDesktopProductLink(PRODUCT_LINK_LABEL, "/products", "fallback")}
-                <Link prefetch={false} href="/portfolio" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">ผลงานของเรา</Link>
-                <Link prefetch={false} href="/about" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">เกี่ยวกับเรา</Link>
-                <Link prefetch={false} href="/contact" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">ติดต่อเรา</Link>
+                <Link href="/portfolio" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">ผลงานของเรา</Link>
+                <Link href="/about" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">เกี่ยวกับเรา</Link>
+                <Link href="/contact" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">ติดต่อเรา</Link>
               </>
             )}
           </nav>
@@ -263,14 +261,14 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
               }
 
               return (
-                <Link prefetch={false} key={index} href={link.url} className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link key={index} href={link.url} className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                   {link.label}
                 </Link>
               );
             })
           ) : (
             <>
-              <Link prefetch={false} href="/" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>หน้าแรก</Link>
+              <Link href="/" className="p-4 text-lg font-bold text-gray-800 hover:bg-brand-50 hover:text-brand-600 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>หน้าแรก</Link>
               <div className="flex flex-col">
                 <button
                   className="flex items-center justify-between p-4 text-lg font-bold text-gray-800 hover:bg-slate-50 hover:text-brand-700 rounded-xl transition-colors w-full"
@@ -280,9 +278,9 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                 </button>
                 {renderMobileProductLinks()}
               </div>
-              <Link prefetch={false} href="/portfolio" className="p-4 text-lg font-bold text-gray-800 hover:bg-slate-50 hover:text-brand-700 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>ผลงานของเรา</Link>
-              <Link prefetch={false} href="/about" className="p-4 text-lg font-bold text-gray-800 hover:bg-slate-50 hover:text-brand-700 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>เกี่ยวกับเรา</Link>
-              <Link prefetch={false} href="/contact" className="p-4 text-lg font-bold text-gray-800 hover:bg-slate-50 hover:text-brand-700 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>ติดต่อเรา</Link>
+              <Link href="/portfolio" className="p-4 text-lg font-bold text-gray-800 hover:bg-slate-50 hover:text-brand-700 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>ผลงานของเรา</Link>
+              <Link href="/about" className="p-4 text-lg font-bold text-gray-800 hover:bg-slate-50 hover:text-brand-700 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>เกี่ยวกับเรา</Link>
+              <Link href="/contact" className="p-4 text-lg font-bold text-gray-800 hover:bg-slate-50 hover:text-brand-700 rounded-xl transition-colors" onClick={() => setIsMobileMenuOpen(false)}>ติดต่อเรา</Link>
             </>
           )}
 

@@ -57,6 +57,16 @@ export default async function RootLayout({
     getPublishedProducts(),
     getSiteSettings(),
   ]);
+  const navbarProducts = products.map((product) => ({
+    id: product.id,
+    slug: product.slug,
+    title: product.title,
+    shortTitle: product.shortTitle,
+    image: product.image,
+    category: product.category,
+    isFeatured: product.isFeatured,
+    badge: product.badge,
+  }));
   
   return (
     <html lang="th" className="antialiased scroll-smooth">
@@ -68,7 +78,7 @@ export default async function RootLayout({
         <JsonLd data={organizationJsonLd(settings.contact)} />
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={serviceCatalogJsonLd()} />
-        <Navbar products={products} contact={settings.contact} navbarLinks={settings.navbarLinks as { label: string; url: string }[]} />
+        <Navbar products={navbarProducts} contact={settings.contact} navbarLinks={settings.navbarLinks as { label: string; url: string }[]} />
         <main className="flex-grow flex flex-col">{children}</main>
         <Footer contact={settings.contact} footerData={settings.footerData as { footerLogoUrl?: string; description?: string; copyright?: string }} />
         <StickyFloatingLineBtn lineUrl={settings.contact.lineUrl} />

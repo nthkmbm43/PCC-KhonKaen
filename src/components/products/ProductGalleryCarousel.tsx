@@ -77,7 +77,7 @@ export function ProductGalleryCarousel({
           src={activeSlide.image || "/images/placeholder.jpg"}
           alt={activeSlide.title || title}
           fill
-          quality={95}
+          quality={75}
           sizes="(max-width: 1024px) 100vw, 66vw"
           className="object-cover"
         />

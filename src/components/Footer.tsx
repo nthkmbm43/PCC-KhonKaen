@@ -33,7 +33,6 @@ function FooterLinkList({
       {links.map((link) => (
         <li key={link.label}>
           <Link
-            prefetch={false}
             href={link.href}
             className="group flex min-h-12 items-center justify-between gap-4 py-3 text-slate-300 transition-colors hover:text-brand-400"
             target={link.external ? "_blank" : undefined}
@@ -177,7 +176,6 @@ export default function Footer({
               <div className="grid flex-1 gap-3 sm:grid-cols-3">
                 {footerSecondaryLinks.map((link) => (
                   <Link
-                    prefetch={false}
                     key={link.label}
                     href={link.href}
                     className="flex min-h-20 items-center justify-center border border-white/10 px-4 py-4 text-center font-semibold text-slate-200 transition-colors hover:border-brand-400/60 hover:text-brand-300"
@@ -226,7 +224,6 @@ export default function Footer({
             {footerSecondaryLinks.slice(0, 3).map((link) => (
               <Link
                 key={link.label}
-                prefetch={false}
                 href={link.href}
                 className="inline-flex min-h-11 items-center hover:text-brand-300"
               >

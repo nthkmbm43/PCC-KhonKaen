@@ -31,7 +31,7 @@ export default async function PortfolioGridBlock() {
                   src={portfolio.image} 
                   alt={portfolio.title}
                   fill
-                  quality={95}
+                  quality={75}
                   sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                   className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
                 />
