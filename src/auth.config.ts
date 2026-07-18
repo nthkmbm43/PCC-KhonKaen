@@ -37,7 +37,7 @@ export const authConfig = {
           // Allow tests to hit API routes to verify business logic (e.g., Magic Number, Saga)
         } else {
           const isAdminRoute = nextUrl.pathname.startsWith('/admin');
-          const isApiRoute = nextUrl.pathname.startsWith('/api/') && !nextUrl.pathname.startsWith('/api/auth') && !nextUrl.pathname.startsWith('/api/preview') && !nextUrl.pathname.startsWith('/api/revalidate');
+          const isApiRoute = nextUrl.pathname.startsWith('/api/') && !nextUrl.pathname.startsWith('/api/auth') && !nextUrl.pathname.startsWith('/api/preview') && !nextUrl.pathname.startsWith('/api/revalidate') && nextUrl.pathname !== '/api/leads';
           if (isAdminRoute || isApiRoute) {
             return false; // Redirect unauthenticated users to login page
           }

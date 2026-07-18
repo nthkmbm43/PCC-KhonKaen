@@ -102,6 +102,7 @@ export function createSeoMetadata({
 }
 
 export function organizationJsonLd(contact?: Record<string, string | undefined>) {
+  const khonKaenOffice = siteConfig.offices.find((office) => !office.isHeadOffice) ?? siteConfig.offices[1];
   const sameAs = [
     contact?.facebookUrl || siteConfig.social.facebook.url,
     contact?.tiktokUrl || siteConfig.social.tiktok.url,
@@ -112,8 +113,8 @@ export function organizationJsonLd(contact?: Record<string, string | undefined>)
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "@id": `${siteConfig.url}#organization`,
-    name: siteConfig.legalName,
-    alternateName: siteConfig.name,
+    name: `${siteConfig.legalName} สาขาขอนแก่น`,
+    alternateName: `${siteConfig.name} ขอนแก่น`,
     url: siteConfig.url,
     logo: absoluteUrl("/images/logo.png"),
     image: absoluteUrl(defaultImage),
@@ -141,18 +142,23 @@ export function organizationJsonLd(contact?: Record<string, string | undefined>)
     ],
     address: {
       "@type": "PostalAddress",
-      streetAddress: siteConfig.offices[0].address,
-      addressLocality: "เมืองเชียงใหม่",
-      addressRegion: siteConfig.offices[0].province,
-      postalCode: "50300",
+      streetAddress: khonKaenOffice.address,
+      addressLocality: "เมืองขอนแก่น",
+      addressRegion: khonKaenOffice.province,
+      postalCode: "40000",
       addressCountry: "TH",
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: siteConfig.offices[0].lat,
-      longitude: siteConfig.offices[0].lng,
+      latitude: khonKaenOffice.lat,
+      longitude: khonKaenOffice.lng,
     },
-    hasMap: siteConfig.offices[0].mapUrl,
+    hasMap: khonKaenOffice.mapUrl,
+    parentOrganization: {
+      "@type": "Organization",
+      name: siteConfig.legalName,
+      url: "https://pcc-posttension.com",
+    },
     areaServed: siteConfig.serviceAreas.map((area) => ({
       "@type": "AdministrativeArea",
       name: area,

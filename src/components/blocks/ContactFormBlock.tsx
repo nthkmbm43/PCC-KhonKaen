@@ -1,6 +1,7 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { Send, CheckCircle, Phone, MessageSquare, Clock, AlertCircle, CheckCircle2, XCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Send, CheckCircle, Phone, MessageSquare, Clock, AlertCircle } from 'lucide-react';
+import { readLeadAttribution, trackLeadEvent } from '@/lib/lead-attribution';
 
 type BusinessStatus = {
   isOpen: boolean;
@@ -37,6 +38,7 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
   const lineUrl     = data?.lineUrl     || '#';
 
   const [form, setForm]           = useState({ name: '', phone: '', email: '', project: '', message: '' });
+  const [website, setWebsite] = useState('');
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const status = initialStatus || null;
 
@@ -47,8 +49,26 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitStatus('sending');
-    await new Promise(r => setTimeout(r, 1200));
-    setSubmitStatus('success');
+
+    try {
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, website, attribution: readLeadAttribution() }),
+      });
+
+      if (!response.ok) throw new Error('Lead submission failed');
+
+      trackLeadEvent('generate_lead', {
+        form_name: 'contact_form',
+        page_path: window.location.pathname,
+        project_type: form.project || 'not_specified',
+      });
+      setSubmitStatus('success');
+      setForm({ name: '', phone: '', email: '', project: '', message: '' });
+    } catch {
+      setSubmitStatus('error');
+    }
   };
 
   // Helper for reopening calculation
@@ -186,6 +206,17 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="absolute -left-[9999px]" aria-hidden="true">
+                    <label htmlFor="contact-website">Website</label>
+                    <input
+                      id="contact-website"
+                      name="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={website}
+                      onChange={(event) => setWebsite(event.target.value)}
+                    />
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="contact-name">ชื่อ-นามสกุล *</label>
@@ -247,6 +278,11 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
                       <><Send size={20} /> ส่งข้อความ</>
                     )}
                   </button>
+                  {submitStatus === 'error' ? (
+                    <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                      ส่งข้อมูลไม่สำเร็จ กรุณาลองอีกครั้ง หรือโทร/ติดต่อผ่าน LINE ทางด้านซ้าย
+                    </div>
+                  ) : null}
                 </form>
               )}
             </div>

@@ -15,6 +15,7 @@ import {
   MessageCircle,
   ChevronRight,
   Zap,
+  UserRoundSearch,
 } from "lucide-react";
 import { DeployButton } from "./DeployButton";
 import { canAccessRoute } from "@/lib/auth/rbac";
@@ -33,6 +34,7 @@ const websiteItems: NavItem[] = [
 ];
 
 const marketingItems: NavItem[] = [
+  { href: "/admin/leads", label: "ลูกค้าใหม่ (Leads)", icon: <UserRoundSearch className="w-4 h-4" /> },
   { href: "/admin/seo", label: "SEO", icon: <SearchCheck className="w-4 h-4" /> },
   { href: "/admin/line-marketing", label: "LINE OA", icon: <MessageCircle className="w-4 h-4" /> },
 ];

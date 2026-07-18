@@ -161,6 +161,32 @@ export const businessHolidayClosures = pgTable('business_holiday_closures', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
+export const leadStatusEnum = pgEnum('lead_status', ['new', 'contacted', 'qualified', 'closed', 'spam']);
+
+export const leads = pgTable('leads', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  phone: text('phone').notNull(),
+  email: text('email'),
+  project: text('project'),
+  message: text('message'),
+  status: leadStatusEnum('status').default('new').notNull(),
+  landingPage: text('landing_page'),
+  referrer: text('referrer'),
+  utmSource: text('utm_source'),
+  utmMedium: text('utm_medium'),
+  utmCampaign: text('utm_campaign'),
+  utmContent: text('utm_content'),
+  utmTerm: text('utm_term'),
+  clickId: text('click_id'),
+  userAgent: text('user_agent'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => ({
+  statusCreatedAtIdx: index('leads_status_created_at_idx').on(table.status, table.createdAt),
+  createdAtIdx: index('leads_created_at_idx').on(table.createdAt),
+  utmSourceIdx: index('leads_utm_source_idx').on(table.utmSource),
+}));
+
 export const admins = pgTable('admins', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: text('name').notNull(),

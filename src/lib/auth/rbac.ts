@@ -2,13 +2,14 @@ export type Role = 'superuser' | 'admin' | string;
 
 export const ROLE_PERMISSIONS: Record<string, string[]> = {
   superuser: ['*'], // Superuser has all permissions
-  admin: ['products:*', 'pages:*', 'line-marketing:*'],
+  admin: ['products:*', 'pages:*', 'line-marketing:*', 'leads:*'],
 };
 
 export const ROUTE_PERMISSION: Record<string, string> = {
   '/admin/products': 'products:*',
   '/admin/pages': 'pages:*',
   '/admin/line-marketing': 'line-marketing:*',
+  '/admin/leads': 'leads:*',
   '/admin/users': 'users:*',
   '/admin/settings': 'settings:*',
   '/admin/media': 'pages:*',
@@ -43,6 +44,8 @@ export function hasPermission(role: Role | undefined | null, permission: string)
  * Check if a role can access a specific route
  */
 export function canAccessRoute(role: Role | undefined | null, pathname: string): boolean {
+  if (pathname === '/api/leads') return true;
+
   // Public routes or login
   if (!pathname.startsWith('/admin') && (!pathname.startsWith('/api/') || pathname.startsWith('/api/auth'))) {
     return true;

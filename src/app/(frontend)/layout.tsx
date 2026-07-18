@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StickyFloatingLineBtn from "@/components/ui/StickyFloatingLineBtn";
+import LeadAnalytics from "@/components/analytics/LeadAnalytics";
 import { createSeoMetadata, JsonLd, organizationJsonLd, serviceCatalogJsonLd, websiteJsonLd } from "@/lib/seo";
 import { getPublishedProducts } from "@/lib/repositories/product";
 import { getSiteSettings } from "@/lib/getSiteSettings";
@@ -63,6 +64,7 @@ export default async function RootLayout({
         {settings.rawSettings?.customHeadCode ? parse(settings.rawSettings.customHeadCode) : null}
       </head>
       <body className="min-h-screen flex flex-col">
+        <LeadAnalytics />
         <JsonLd data={organizationJsonLd(settings.contact)} />
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={serviceCatalogJsonLd()} />
