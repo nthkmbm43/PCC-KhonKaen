@@ -121,10 +121,10 @@ export async function GET(req: Request) {
     ประหยัดเวลา ลดต้นทุน และได้โครงสร้างที่แข็งแกร่งกว่า — ด้วยวัสดุสำเร็จรูปจากโรงงานมาตรฐาน มอก. ที่คุณไว้ใจได้
   </p>
   <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-    <a href="/products/hollow-core-slab" style="display:inline-block;background:white;color:#1e40af;font-weight:700;padding:.9rem 2rem;border-radius:999px;text-decoration:none;font-size:1rem;">
+    <a href="/products/precast-concrete-slab-khon-kaen" style="display:inline-block;background:white;color:#1e40af;font-weight:700;padding:.9rem 2rem;border-radius:999px;text-decoration:none;font-size:1rem;">
       🏗️ แผ่นพื้นสำเร็จรูป (Precast)
     </a>
-    <a href="/products/post-tension" style="display:inline-block;background:#00B900;color:white;font-weight:700;padding:.9rem 2rem;border-radius:999px;text-decoration:none;font-size:1rem;">
+    <a href="/products/post-tension-slab-khon-kaen" style="display:inline-block;background:#00B900;color:white;font-weight:700;padding:.9rem 2rem;border-radius:999px;text-decoration:none;font-size:1rem;">
       ⚙️ งานโพสเทนชั่น (Post-Tension)
     </a>
   </div>
@@ -188,7 +188,7 @@ export async function GET(req: Request) {
   <div style="max-width:1200px;margin:0 auto;">
     
     <div style="margin-bottom:4rem;display:flex;flex-direction:column;gap:1.5rem;align-items:center;">
-      <img src="https://pcc-posttension.com/wp-content/uploads/2025/03/%E0%B8%A3%E0%B8%B1%E0%B9%89%E0%B8%A7%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88%E0%B8%A3%E0%B8%B9%E0%B8%9B-min.webp" alt="โครงการหมู่บ้านจัดสรร" style="width:100%;max-width:800px;border-radius:1rem;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);" />
+      <img src="/images/product-precast-fence.jpg" alt="โครงการหมู่บ้านจัดสรร" style="width:100%;max-width:800px;border-radius:1rem;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);" />
       <div style="text-align:center;">
         <span style="display:inline-block;padding:0.25rem 0.75rem;background:#dbeafe;color:#1e40af;font-size:0.875rem;font-weight:600;border-radius:999px;margin-bottom:0.5rem;">รั้วสำเร็จรูป</span>
         <h3 style="font-size:1.5rem;font-weight:700;color:#111827;">โครงการหมู่บ้านจัดสรร อ.เมือง จ.ขอนแก่น</h3>
@@ -335,14 +335,14 @@ export async function GET(req: Request) {
         <div style="font-size:2.5rem;margin-bottom:1rem;">🏗️</div>
         <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:.75rem;">แผ่นพื้นพรีแคสท์<br/>(Hollow Core Slab)</h3>
         <p style="color:#bfdbfe;line-height:1.8;margin-bottom:1.5rem;font-size:.95rem;">แผ่นพื้นกลวงสำเร็จรูปจากโรงงาน ความหนา 8–30 ซม. กว้าง 60/120 ซม. ช่วงพาดสูงสุด 12 เมตร มาตรฐาน มอก. 576-2546 ลดน้ำหนักโครงสร้าง 30–40% ติดตั้งเร็วกว่าเทในที่</p>
-        <a href="/products/hollow-core-slab" style="display:inline-block;background:white;color:#1e40af;font-weight:700;padding:.75rem 1.5rem;border-radius:999px;text-decoration:none;font-size:.9rem;">ดูรายละเอียด →</a>
+        <a href="/products/precast-concrete-slab-khon-kaen" style="display:inline-block;background:white;color:#1e40af;font-weight:700;padding:.75rem 1.5rem;border-radius:999px;text-decoration:none;font-size:.9rem;">ดูรายละเอียดแผ่นพื้นสำเร็จรูป →</a>
       </div>
 
       <div style="background:linear-gradient(135deg,#14532d,#15803d);border-radius:1.25rem;padding:2rem;color:white;">
         <div style="font-size:2.5rem;margin-bottom:1rem;">⚙️</div>
         <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:.75rem;">งานโพสเทนชั่น<br/>(Post-Tension System)</h3>
         <p style="color:#bbf7d0;line-height:1.8;margin-bottom:1.5rem;font-size:.95rem;">ระบบคอนกรีตอัดแรงขั้นสูง เพิ่มความแข็งแกร่งโครงสร้าง ช่วงพาดได้ยาว 20+ เมตร ลดจำนวนเสาและคาน เหมาะกับอาคารสูง ศูนย์การค้า คลังสินค้า ตามมาตรฐาน ACI 318</p>
-        <a href="/products/post-tension" style="display:inline-block;background:white;color:#15803d;font-weight:700;padding:.75rem 1.5rem;border-radius:999px;text-decoration:none;font-size:.9rem;">ดูรายละเอียด →</a>
+        <a href="/products/post-tension-slab-khon-kaen" style="display:inline-block;background:white;color:#15803d;font-weight:700;padding:.75rem 1.5rem;border-radius:999px;text-decoration:none;font-size:.9rem;">ดูรายละเอียดงานโพสเทนชั่น →</a>
       </div>
 
     </div>

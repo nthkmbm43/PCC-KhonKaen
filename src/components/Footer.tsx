@@ -36,6 +36,7 @@ function FooterLinkList({
             href={link.href}
             className="group flex min-h-12 items-center justify-between gap-4 py-3 text-slate-300 transition-colors hover:text-brand-400"
             target={link.external ? "_blank" : undefined}
+            rel={link.external ? "noopener noreferrer" : undefined}
           >
             <span className="flex items-center gap-2">
               <ChevronRight
@@ -178,6 +179,8 @@ export default function Footer({
                   <Link
                     key={link.label}
                     href={link.href}
+                    target={link.external ? "_blank" : undefined}
+                    rel={link.external ? "noopener noreferrer" : undefined}
                     className="flex min-h-20 items-center justify-center border border-white/10 px-4 py-4 text-center font-semibold text-slate-200 transition-colors hover:border-brand-400/60 hover:text-brand-300"
                   >
                     {link.label}
@@ -225,6 +228,8 @@ export default function Footer({
               <Link
                 key={link.label}
                 href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
                 className="inline-flex min-h-11 items-center hover:text-brand-300"
               >
                 {link.label}

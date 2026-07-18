@@ -144,8 +144,9 @@ export const footerQuickLinks = [
 ];
 
 export const footerSecondaryLinks = [
-  { label: "ดาวน์โหลดเอกสาร", href: "/contact", external: false },
+  { label: "ดาวน์โหลด Catalog", href: "https://pcc-posttension.com/downloads/", external: true },
   { label: "ติดต่อเรา", href: "/contact", external: false },
+  { label: "เว็บไซต์บริษัทหลัก", href: "https://pcc-posttension.com/", external: true },
 ] as const;
 
 export const orderStatuses = {
