@@ -177,8 +177,8 @@ export function HolidayManager() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
+        <div className="flex flex-wrap items-center gap-2">
           <CalendarX size={20} className="text-blue-600" />
           <h3 className="text-base font-bold text-slate-800">วันหยุดพิเศษ</h3>
           {holidays.filter(h => isHolidayActive(h)).length > 0 && (
@@ -190,7 +190,7 @@ export function HolidayManager() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all hover:shadow-md"
+          className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-md"
         >
           <Plus size={16} />
           เพิ่มวันหยุด
@@ -203,8 +203,8 @@ export function HolidayManager() {
 
       {/* Add/Edit Form Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 backdrop-blur-sm sm:p-4">
+          <div className="max-h-[calc(100dvh-1.5rem)] w-full max-w-md space-y-5 overflow-y-auto rounded-2xl bg-white p-4 shadow-2xl sm:p-6">
             <div className="flex items-center justify-between">
               <h4 className="font-bold text-slate-800 text-lg">
                 {editId ? 'แก้ไขวันหยุด' : 'เพิ่มวันหยุดพิเศษ'}
@@ -228,7 +228,7 @@ export function HolidayManager() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                     วันที่เริ่มหยุด <span className="text-red-500">*</span>

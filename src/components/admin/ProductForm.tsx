@@ -227,8 +227,8 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 mr-4">
+          <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto sm:justify-end">
+            <div className="mr-auto flex items-center gap-2 sm:mr-4">
               <Label htmlFor="status" className="text-sm font-medium text-slate-600">เผยแพร่</Label>
               <Switch 
                 id="status" 
@@ -242,7 +242,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
               variant="outline"
               disabled={isSaving}
               onClick={handlePreview}
-              className="rounded-xl px-6"
+              className="min-w-0 flex-1 rounded-xl px-4 sm:flex-none sm:px-6"
             >
               Preview
             </Button>
@@ -250,7 +250,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
             <Button
               type="submit"
               disabled={isSaving}
-              className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-200 rounded-xl px-6"
+              className="min-w-0 flex-1 rounded-xl bg-blue-600 px-4 text-white shadow-sm shadow-blue-200 hover:bg-blue-700 sm:flex-none sm:px-6"
             >
               <Save className="w-4 h-4 mr-2" />
               {isSaving ? "กำลังบันทึก..." : "บันทึก"}
@@ -264,7 +264,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
           <div className="lg:col-span-2 space-y-6">
             
             {/* Basic Info */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+            <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
               <h2 className="text-lg font-semibold text-slate-800 border-b pb-4">ข้อมูลทั่วไป</h2>
               
               <div className="space-y-4">
@@ -274,7 +274,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                   {form.formState.errors.title && <p className="text-sm text-red-500">{form.formState.errors.title.message}</p>}
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="shortTitle">ชื่อย่อ (Short Title) - แสดงใน Navbar</Label>
                     <Input id="shortTitle" {...form.register("shortTitle")} placeholder="เช่น แผ่นพื้นสำเร็จรูป" />
@@ -331,7 +331,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
             </div>
 
             {/* Page Builder / Blocks */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+            <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
               <div className="flex flex-col gap-4 border-b pb-4">
                 <div>
                   <div className="flex flex-wrap items-center gap-3">
@@ -414,7 +414,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
                             onToggleVisibility={(visible) => form.setValue(`content.${index}.isVisible`, visible, { shouldDirty: true })}
                           />
 
-                          <AccordionContent className="pt-2 pb-6 px-6 border-t bg-slate-50/30">
+                          <AccordionContent className="border-t bg-slate-50/30 px-3 pb-5 pt-2 sm:px-6 sm:pb-6">
                             {blockType === 'text' && (
                               <div className="space-y-3 pt-4">
                                 <Input {...form.register(`content.${index}.title`)} placeholder="หัวข้อ (ถ้ามี)" className="bg-white font-medium" />
@@ -527,7 +527,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
           <div className="space-y-6">
             
             {/* Meta & Display */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+            <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
               <h2 className="text-lg font-semibold text-slate-800 border-b pb-4">การแสดงผล</h2>
               
               <div className="space-y-4">
@@ -598,7 +598,7 @@ export function ProductForm({ initialData, productId }: { initialData?: Omit<Par
             </div>
 
             {/* SEO Settings */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+            <div className="space-y-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
               <div className="flex items-center gap-2 border-b pb-4">
                 <span className="text-xl">🔍</span>
                 <h2 className="text-lg font-semibold text-slate-800">ตั้งค่า SEO</h2>

@@ -43,7 +43,7 @@ export function ProductsClient({ initialProducts }: { initialProducts: Product[]
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Link href="/admin/products/new">
+        <Link href="/admin/products/new" className="w-full sm:w-auto">
           <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-sm gap-2">
             <Plus className="w-4 h-4" />
             สร้างสินค้าใหม่
@@ -52,8 +52,8 @@ export function ProductsClient({ initialProducts }: { initialProducts: Product[]
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-slate-600">
+        <div className="overflow-x-auto overscroll-x-contain">
+          <table className="w-full min-w-[760px] text-left text-sm text-slate-600">
             <thead className="text-xs text-slate-500 uppercase bg-slate-50/80 border-b border-slate-200">
               <tr>
                 <th className="px-6 py-4 font-semibold">สินค้า</th>

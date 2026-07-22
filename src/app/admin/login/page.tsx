@@ -8,9 +8,9 @@ export default async function LoginPage() {
   const settings = settingsArray[0];
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+    <div className="flex min-h-dvh items-center justify-center bg-slate-100 p-3 sm:p-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
-        <div className="p-8 sm:p-10">
+        <div className="p-5 sm:p-10">
           <div className="flex justify-center mb-8">
             {settings?.logoUrl ? (
               <Image 

@@ -57,7 +57,7 @@ export default async function AdminDashboard() {
       {/* Stat Cards */}
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {/* Total Pages */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:p-6">
           <div className="flex items-start justify-between">
             <div>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">จำนวนเพจทั้งหมด</p>
@@ -80,7 +80,7 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Setup Progress */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:p-6">
           <div className="flex items-start justify-between">
             <div>
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">ความครบถ้วนของระบบ</p>
@@ -120,7 +120,7 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Quick Links */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:col-span-2 sm:p-6 lg:col-span-1">
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">ทางลัด</p>
           <div className="space-y-3">
             <Link

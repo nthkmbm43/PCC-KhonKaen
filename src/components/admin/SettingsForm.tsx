@@ -123,12 +123,12 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
             <p className="text-slate-500 text-sm mt-1">จัดการโลโก้ เมนูนำทาง และข้อมูลติดต่อของเว็บไซต์</p>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
             {!isEditMode ? (
               <Button
                 type="button"
                 onClick={() => setIsEditMode(true)}
-                className="shrink-0 bg-slate-800 hover:bg-slate-700 text-white shadow-sm rounded-xl px-5"
+                className="w-full shrink-0 rounded-xl bg-slate-800 px-5 text-white shadow-sm hover:bg-slate-700 sm:w-auto"
               >
                 <Unlock className="w-4 h-4 mr-2" />
                 ปลดล็อคเพื่อแก้ไข
@@ -183,7 +183,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
         <div className={`space-y-6 transition-all duration-300 ${!isEditMode ? "opacity-60 pointer-events-none grayscale-[0.2]" : ""}`}>
           {/* Section: Branding */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/70 flex items-center gap-3">
+            <div className="flex items-center gap-3 border-b border-slate-100 bg-slate-50/70 px-4 py-4 sm:px-6">
               <div className="w-7 h-7 rounded-lg bg-blue-100 flex items-center justify-center">
                 <span className="text-blue-600 text-sm">🎨</span>
               </div>
@@ -192,7 +192,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
                 <p className="text-xs text-slate-400">โลโก้และไอคอนเว็บไซต์</p>
               </div>
             </div>
-            <div className="px-6 py-6 space-y-6">
+            <div className="space-y-6 px-4 py-5 sm:px-6 sm:py-6">
               <div className="space-y-2">
                 <Label className="text-sm font-semibold text-slate-700">โลโก้หลัก (แสดงบน Navbar)</Label>
                 { }
@@ -225,7 +225,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
 
           {/* Section: Navigation Menu */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/70 flex items-center gap-3">
+            <div className="flex items-center gap-3 border-b border-slate-100 bg-slate-50/70 px-4 py-4 sm:px-6">
               <div className="w-7 h-7 rounded-lg bg-indigo-100 flex items-center justify-center">
                 <span className="text-indigo-600 text-sm">🔗</span>
               </div>
@@ -234,13 +234,13 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
                 <p className="text-xs text-slate-400">จัดการลิงก์ใน Navbar ของเว็บไซต์</p>
               </div>
             </div>
-            <div className="px-6 py-6 space-y-3">
+            <div className="space-y-3 px-4 py-5 sm:px-6 sm:py-6">
               {navFields.map((field, index) => (
                 <div
                   key={field.id}
-                  className="flex items-start gap-3 bg-slate-50 border border-slate-200 p-4 rounded-xl"
+                  className="flex flex-col items-stretch gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-start"
                 >
-                  <div className="flex-1 grid grid-cols-2 gap-3">
+                  <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
                     <div className="space-y-1.5">
                       <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">ชื่อเมนู</Label>
                       <Input
@@ -276,7 +276,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="mt-6 shrink-0 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl"
+                        className="shrink-0 self-end rounded-xl text-red-400 hover:bg-red-50 hover:text-red-600 sm:mt-6"
                         disabled={!isEditMode}
                       >
                         <Trash2 className="w-4 h-4" />
@@ -314,7 +314,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
 
           {/* Section: Footer */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/70 flex items-center gap-3">
+            <div className="flex items-center gap-3 border-b border-slate-100 bg-slate-50/70 px-4 py-4 sm:px-6">
               <div className="w-7 h-7 rounded-lg bg-emerald-100 flex items-center justify-center">
                 <span className="text-emerald-600 text-sm">📄</span>
               </div>
@@ -323,7 +323,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
                 <p className="text-xs text-slate-400">เนื้อหาที่แสดงในส่วนท้ายของเว็บไซต์</p>
               </div>
             </div>
-            <div className="px-6 py-6 space-y-4">
+            <div className="space-y-4 px-4 py-5 sm:px-6 sm:py-6">
               <div className="space-y-1.5">
                 <Label className="text-sm font-semibold text-slate-700">โลโก้ Footer (แสดงที่ส่วนล่างของเว็บ)</Label>
                 <ImageUpload
@@ -359,7 +359,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
 
           {/* Section: Contact & Social */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/70 flex items-center gap-3">
+            <div className="flex items-center gap-3 border-b border-slate-100 bg-slate-50/70 px-4 py-4 sm:px-6">
               <div className="w-7 h-7 rounded-lg bg-rose-100 flex items-center justify-center">
                 <span className="text-rose-600 text-sm">📞</span>
               </div>
@@ -368,7 +368,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
                 <p className="text-xs text-slate-400">ลิงก์และข้อมูลที่แสดงในส่วน Header และ Footer</p>
               </div>
             </div>
-            <div className="px-6 py-6 space-y-4">
+            <div className="space-y-4 px-4 py-5 sm:px-6 sm:py-6">
               <div className="space-y-1.5">
                 <Label htmlFor="mainPhone" className="text-sm font-semibold text-slate-700">เบอร์โทรศัพท์หลัก</Label>
                 <Input id="mainPhone" placeholder="081-234-5678" {...form.register("mainPhone")} className="bg-white" readOnly={!isEditMode} />
@@ -460,7 +460,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
 
           {/* Section: Advanced (Auto-Deploy & Custom Scripts) */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/70 flex items-center gap-3">
+            <div className="flex items-center gap-3 border-b border-slate-100 bg-slate-50/70 px-4 py-4 sm:px-6">
               <div className="w-7 h-7 rounded-lg bg-orange-100 flex items-center justify-center">
                 <span className="text-orange-600 text-sm">⚙️</span>
               </div>
@@ -469,7 +469,7 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
                 <p className="text-xs text-slate-400">ระบบ Auto-Deploy และฝังโค้ด (Scripts)</p>
               </div>
             </div>
-            <div className="px-6 py-6 space-y-6">
+            <div className="space-y-6 px-4 py-5 sm:px-6 sm:py-6">
               <div className="space-y-1.5">
                 <Label className="text-sm font-semibold text-slate-700">Vercel Deploy Hook URL</Label>
                 <Input
@@ -515,11 +515,11 @@ export function SettingsForm({ initialData }: { initialData?: Partial<SettingsFo
 
       {/* ─── Holiday Management ────────────────────────────────────────── */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+        <div className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-4 py-5 sm:px-6">
           <h2 className="text-base font-bold text-slate-800">📅 จัดการวันหยุดพิเศษ</h2>
           <p className="text-sm text-slate-500 mt-0.5">กำหนดล่วงหน้า เมื่อถึงวันที่ระบุ หน้าเว็บจะแสดงสถานะ ปิดทำการ โดยอัตโนมัติ</p>
         </div>
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <HolidayManager />
         </div>
       </div>

@@ -158,7 +158,7 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
           <Button
             type="submit"
             disabled={isSaving}
-            className="bg-[#00B900] hover:bg-[#009900] text-white shadow-sm rounded-xl px-6"
+            className="w-full rounded-xl bg-[#00B900] px-6 text-white shadow-sm hover:bg-[#009900] sm:w-auto"
           >
             {isSaving ? <RefreshCw className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             {isSaving ? "กำลัง Sync..." : "Sync & Publish to LINE"}
@@ -169,7 +169,7 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
           
           {/* Image Upload Column */}
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-full">
+            <div className="h-full rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
               <h2 className="text-lg font-semibold text-slate-900 mb-2">ภาพพื้นหลัง (Rich Menu Image)</h2>
               <div className="bg-emerald-50 text-emerald-800 text-xs p-3 rounded-lg mb-6 border border-emerald-100 flex items-start gap-2">
                 <span className="text-lg leading-none">💡</span>
@@ -191,10 +191,10 @@ export function LineMarketingForm({ linkOptions }: { linkOptions: { label: strin
 
           {/* Action Mappings Column */}
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
               <h2 className="text-lg font-semibold text-slate-900 border-b border-slate-100 pb-3 mb-5">กำหนดลิงก์ให้ปุ่ม (6 พื้นที่)</h2>
               
-              <div className="grid grid-cols-2 gap-x-4 gap-y-5">
+              <div className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2">
                 {renderDropdown("actionA", "ปุ่ม A (ซ้ายบน)")}
                 {renderDropdown("actionB", "ปุ่ม B (กลางบน)")}
                 {renderDropdown("actionC", "ปุ่ม C (ขวาบน)")}

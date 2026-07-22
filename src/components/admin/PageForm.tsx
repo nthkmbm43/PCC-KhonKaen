@@ -153,12 +153,12 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
               {pageId ? "แก้ไขเพจ" : "สร้างเพจใหม่"}
             </h1>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto sm:justify-end">
             {!isEditMode ? (
               <Button
                 type="button"
                 onClick={() => setIsEditMode(true)}
-                className="shrink-0 bg-slate-800 hover:bg-slate-700 text-white shadow-sm rounded-xl px-5"
+                className="w-full shrink-0 rounded-xl bg-slate-800 px-5 text-white shadow-sm hover:bg-slate-700 sm:w-auto"
               >
                 <Unlock className="w-4 h-4 mr-2" />
                 ปลดล็อคเพื่อแก้ไข
@@ -225,7 +225,7 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between border-b pb-4">
+              <CardHeader className="flex flex-col items-start justify-between gap-4 border-b pb-4 lg:flex-row lg:items-center">
                 <div>
                   <CardTitle>Page Builder</CardTitle>
                   <CardDescription>Drag and drop blocks to build your page.</CardDescription>
@@ -328,7 +328,7 @@ export function PageForm({ initialData, pageId }: { initialData?: Partial<PageFo
                           }}
                           onToggleVisibility={(visible) => form.setValue(`content.${index}.isVisible`, visible, { shouldDirty: true })}
                         />
-                        <AccordionContent className="pt-2 pb-6 px-6 border-t bg-slate-50/30">
+                        <AccordionContent className="border-t bg-slate-50/30 px-3 pb-5 pt-2 sm:px-6 sm:pb-6">
                           {!["text", "image", "customCode"].includes(blockType) && (
                             <div className="space-y-6 pt-4">
                               <div className="space-y-2">

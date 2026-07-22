@@ -22,7 +22,7 @@ export default async function LeadsPage() {
         {rows.length === 0 ? (
           <div className="px-6 py-16 text-center text-slate-500">ยังไม่มีลูกค้าส่งแบบฟอร์ม</div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto overscroll-x-contain">
             <table className="w-full min-w-[900px] text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                 <tr>

@@ -14,24 +14,23 @@ export default async function DashboardLayout({ children }: { children: React.Re
     (settings as { companyName?: string })?.companyName || "PCC Post-Tension";
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
-      {/* Sidebar — Fixed 260px, never changes */}
+    <div className="flex min-h-screen min-w-0 bg-slate-50">
       <AdminSidebar logoUrl={settings?.logoUrl || undefined} role={role} />
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <main className="flex min-w-0 flex-1 flex-col overflow-x-hidden">
         {/* Topbar */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center px-6 sticky top-0 z-20 shrink-0">
+        <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center border-b border-slate-200 bg-white pl-16 pr-3 sm:pr-5 lg:px-6">
           {/* Breadcrumb / Page Title area — filled by children if needed */}
           <div className="flex-1 flex items-center gap-2 min-w-0">
-            <span className="text-xs text-slate-400 hidden sm:block truncate">
+            <span className="hidden truncate text-xs text-slate-400 md:block">
               {displayName}
             </span>
           </div>
 
           {/* Right side — User info + sign out */}
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="hidden sm:flex flex-col items-end">
+            <div className="hidden flex-col items-end sm:flex">
               <p className="text-sm font-semibold text-slate-800 leading-none">
                 {session?.user?.name || "Admin"}
               </p>
@@ -50,8 +49,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto p-5 md:p-8">
-          <div className="max-w-5xl mx-auto">
+        <div className="admin-main flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-5 lg:p-8">
+          <div className="mx-auto w-full max-w-7xl min-w-0">
             {children}
           </div>
         </div>

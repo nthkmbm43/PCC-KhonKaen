@@ -64,8 +64,8 @@ export default async function PagesList({
           <h1 className="text-2xl font-bold text-slate-900">จัดการเพจ (Pages)</h1>
           <p className="text-slate-500 text-sm mt-1">สร้าง แก้ไข เนื้อหาหน้าเว็บไซต์และจัดการ SEO</p>
         </div>
-        <Link href="/admin/pages/new">
-          <Button className="bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm shadow-blue-200">
+        <Link href="/admin/pages/new" className="w-full sm:w-auto">
+          <Button className="w-full rounded-xl bg-blue-600 shadow-sm shadow-blue-200 hover:bg-blue-700 sm:w-auto">
             <Plus className="w-4 h-4 mr-2" />
             สร้างเพจใหม่
           </Button>
@@ -73,8 +73,8 @@ export default async function PagesList({
       </div>
 
       {/* Filters & Search */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <form className="flex-1 flex gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <form className="flex min-w-0 flex-1 flex-col gap-3 lg:flex-row">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input 
@@ -86,11 +86,11 @@ export default async function PagesList({
             />
           </div>
           
-          <div className="relative">
+          <div className="relative lg:shrink-0">
             <select 
               name="status"
               defaultValue={statusFilter}
-              className="appearance-none pl-10 pr-8 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm bg-white"
+              className="w-full appearance-none rounded-xl border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="all">ทุกสถานะ (Workflow)</option>
               <option value="published">Published</option>
@@ -101,11 +101,11 @@ export default async function PagesList({
             <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           </div>
 
-          <div className="relative">
+          <div className="relative lg:shrink-0">
             <select 
               name="template"
               defaultValue={templateFilter}
-              className="appearance-none pl-10 pr-8 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm bg-white"
+              className="w-full appearance-none rounded-xl border border-slate-200 bg-white py-2 pl-10 pr-8 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="all">ทุกเทมเพลต (Template)</option>
               <option value="default">Default</option>
@@ -118,14 +118,14 @@ export default async function PagesList({
             <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           </div>
           
-          <Button type="submit" variant="secondary" className="rounded-xl">
+          <Button type="submit" variant="secondary" className="w-full rounded-xl lg:w-auto">
             ค้นหา
           </Button>
         </form>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden overflow-x-auto">
-        <Table>
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <Table className="min-w-[900px]">
           <TableHeader>
             <TableRow className="bg-slate-50 border-b border-slate-200 whitespace-nowrap">
               <TableHead className="font-semibold text-slate-700">ชื่อเพจ / URL</TableHead>

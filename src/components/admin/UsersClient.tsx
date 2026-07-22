@@ -103,12 +103,12 @@ export function UsersClient({ initialUsers }: { initialUsers: User[] }) {
 
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger render={(props) => (
-            <Button {...props} className="bg-blue-600 hover:bg-blue-700 text-white gap-2">
+            <Button {...props} className="w-full gap-2 bg-blue-600 text-white hover:bg-blue-700 sm:w-auto">
               <UserPlus className="w-4 h-4" />
               เพิ่มผู้ดูแล
             </Button>
           )} />
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[425px]">
             <form onSubmit={handleAddUser}>
               <DialogHeader>
                 <DialogTitle>เพิ่มผู้ดูแลระบบใหม่</DialogTitle>
@@ -175,8 +175,8 @@ export function UsersClient({ initialUsers }: { initialUsers: User[] }) {
         </Dialog>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm text-left">
+      <div className="overflow-x-auto overscroll-x-contain">
+        <table className="w-full min-w-[680px] text-left text-sm">
           <thead className="bg-slate-50 text-slate-500 font-medium border-b border-slate-100">
             <tr>
               <th className="px-6 py-4">ชื่อ</th>
