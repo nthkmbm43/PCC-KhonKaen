@@ -67,6 +67,23 @@ export default async function RootLayout({
     isFeatured: product.isFeatured,
     badge: product.badge,
   }));
+  const configuredNavbarLinks = settings.navbarLinks as { label: string; url: string }[];
+  const baseNavbarLinks = configuredNavbarLinks.length > 0
+    ? configuredNavbarLinks
+    : [
+        { label: "หน้าแรก", url: "/" },
+        { label: "สินค้าและบริการ", url: "/products" },
+        { label: "ผลงานของเรา", url: "/portfolio" },
+        { label: "เกี่ยวกับเรา", url: "/about" },
+        { label: "ติดต่อเรา", url: "/contact" },
+      ];
+  const navbarLinks = baseNavbarLinks.some((link) => link.url === "/articles")
+    ? baseNavbarLinks
+    : [
+        ...baseNavbarLinks.filter((link) => link.url !== "/contact"),
+        { label: "บทความ", url: "/articles" },
+        ...baseNavbarLinks.filter((link) => link.url === "/contact"),
+      ];
   
   return (
     <html lang="th" className="antialiased scroll-smooth">
@@ -78,7 +95,7 @@ export default async function RootLayout({
         <JsonLd data={organizationJsonLd(settings.contact)} />
         <JsonLd data={websiteJsonLd()} />
         <JsonLd data={serviceCatalogJsonLd()} />
-        <Navbar products={navbarProducts} contact={settings.contact} navbarLinks={settings.navbarLinks as { label: string; url: string }[]} />
+        <Navbar products={navbarProducts} contact={settings.contact} navbarLinks={navbarLinks} />
         <main className="flex-grow flex flex-col">{children}</main>
         <Footer contact={settings.contact} footerData={settings.footerData as { footerLogoUrl?: string; description?: string; copyright?: string }} />
         <StickyFloatingLineBtn lineUrl={settings.contact.lineUrl} />

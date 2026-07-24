@@ -1,4 +1,5 @@
 import { siteConfig } from "@/data/site-config";
+import { articles } from "@/data/articles";
 import { getPublishedPages } from "@/lib/repositories/page";
 import { getPublishedProducts } from "@/lib/repositories/product";
 
@@ -67,6 +68,24 @@ export async function GET() {
     priority: 0.8,
   }));
 
+  const articleEntries: SitemapEntry[] = [
+    {
+      url: `${baseUrl}/articles`,
+      lastModified: articles.reduce(
+        (latest, article) => article.updatedAt > latest ? article.updatedAt : latest,
+        articles[0]?.updatedAt || now.toISOString(),
+      ),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...articles.map((article) => ({
+      url: `${baseUrl}/articles/${article.slug}`,
+      lastModified: article.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+  ];
+
   const hasHome = pageEntries.some((entry) => entry.url === baseUrl);
   const entries: SitemapEntry[] = [
     ...(hasHome
@@ -81,6 +100,7 @@ export async function GET() {
         ]),
     ...pageEntries,
     ...productEntries,
+    ...articleEntries,
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries

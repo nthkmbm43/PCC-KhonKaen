@@ -6,6 +6,7 @@ import Image from "next/image";
 import ExitPreviewButton from '@/components/ExitPreviewButton';
 import { CheckCircle2, MessageCircle, Phone, ArrowLeft, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
+import { articles } from "@/data/articles";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 import { absoluteUrl, createSeoMetadata, JsonLd } from "@/lib/seo";
 import { ProductGalleryCarousel, type ProductGalleryItem } from "@/components/products/ProductGalleryCarousel";
@@ -64,6 +65,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   const features = Array.isArray((product as { features?: string[] }).features) ? (product as { features?: string[] }).features : [];
   const highlights = Array.isArray(product.highlights) ? product.highlights : [];
+  const relatedArticle = articles.find(
+    (article) => article.product.href === `/products/${product.slug}`,
+  );
 
   const productJsonLd = [
     {
@@ -367,6 +371,23 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               )}
 
               <div className="space-y-4 relative z-10 pt-6">
+                {relatedArticle ? (
+                  <Link
+                    href={`/articles/${relatedArticle.slug}`}
+                    className="group block border border-accent-500/20 bg-blue-50 p-5 transition-all hover:-translate-y-0.5 hover:border-accent-500/50 hover:shadow-md"
+                  >
+                    <span className="text-xs font-black uppercase tracking-widest text-accent-600">
+                      คู่มือก่อนขอราคา
+                    </span>
+                    <span className="mt-2 block font-bold leading-6 text-slate-900 group-hover:text-accent-600">
+                      {relatedArticle.title}
+                    </span>
+                    <span className="mt-3 inline-flex items-center gap-2 text-sm font-bold text-accent-600">
+                      อ่านเช็กลิสต์
+                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </Link>
+                ) : null}
                 {(prevProduct || nextProduct) && (
                   <div className={`flex flex-col gap-3 pb-8 mb-4 border-b border-gray-100 ${highlights.length > 0 ? 'pt-8 border-t mt-4' : ''}`}>
                     {prevProduct && (

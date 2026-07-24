@@ -140,6 +140,7 @@ export const footerQuickLinks = [
   { label: "หน้าแรก", href: "/" },
   { label: "เกี่ยวกับเรา", href: "/about" },
   { label: "สินค้าและบริการ", href: "/products" },
+  { label: "บทความและคู่มือ", href: "/articles" },
   { label: "ติดต่อเรา", href: "/contact" },
 ];
 
