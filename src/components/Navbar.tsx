@@ -191,7 +191,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
             </div>
           </Link>
 
-          <nav className="hidden xl:flex flex-none items-center gap-7 2xl:gap-9 font-bold text-slate-700 h-full text-sm 2xl:text-base tracking-wide">
+          <nav className="hidden xl:flex flex-none items-center gap-6 2xl:gap-7 font-bold text-slate-700 h-full text-sm 2xl:text-base tracking-wide">
             {navbarLinks && navbarLinks.length > 0 ? (
               navbarLinks.map((link, index) => {
                 if (link.url === "/products" || link.label === PRODUCT_LINK_LABEL) {
@@ -216,11 +216,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
           </nav>
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-            <a href={`tel:${phoneNo}`} className="hidden 2xl:flex items-center gap-2 whitespace-nowrap text-gray-600 hover:text-brand-600 font-medium transition-colors">
-              <Phone size={20} />
-              {displayPhone}
-            </a>
-            <a href={lineUrl} target="_blank" rel="noopener noreferrer" aria-label="ติดต่อผ่าน LINE" className="flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#06C755] px-3 py-2.5 font-medium text-white transition-all hover:-translate-y-1 hover:bg-[#05b34c] hover:shadow-[0_8px_20px_rgba(6,199,85,0.4)] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#06C755]/30 sm:px-5 lg:px-6">
+            <a href={lineUrl} target="_blank" rel="noopener noreferrer" aria-label="ติดต่อผ่าน LINE" className="flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#06C755] px-3 py-2.5 font-medium text-white transition-all hover:-translate-y-1 hover:bg-[#05b34c] hover:shadow-[0_8px_20px_rgba(6,199,85,0.4)] focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[#06C755]/30 sm:px-5 xl:px-5">
               <MessageCircle size={20} className="shrink-0" />
               <span className="hidden sm:inline">แอดไลน์สอบถาม</span>
               <span className="sm:hidden">แอดไลน์</span>
