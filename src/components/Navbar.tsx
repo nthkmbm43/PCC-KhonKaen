@@ -135,7 +135,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
 
   const renderDesktopProductLink = (label: string, url: string, keyPrefix: string) => (
     <div className="relative group/nav h-full flex items-center">
-      <Link href={url} className="relative flex items-center gap-1 hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 group-hover/nav:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
+      <Link href={url} className="relative flex items-center gap-1 whitespace-nowrap hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 group-hover/nav:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
         {label} <ChevronDown size={16} className="group-hover/nav:rotate-180 transition-transform duration-300" />
       </Link>
       {renderMegaMenu(keyPrefix)}
@@ -168,10 +168,10 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
-        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-12 xl:px-20 h-16 md:h-20 lg:h-24 xl:h-28 flex items-center justify-between gap-3">
+        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-14 h-16 md:h-20 lg:h-24 xl:h-28 flex items-center justify-between gap-4">
           <Link href="/" className="flex shrink-0 items-center group py-2">
             {contact.logoUrl ? (
-              <div className="relative w-[180px] md:w-[240px] lg:w-[320px] h-10 md:h-12 lg:h-16">
+              <div className="relative w-[180px] md:w-[230px] lg:w-[250px] xl:w-[280px] 2xl:w-[300px] h-10 md:h-12 lg:h-14 xl:h-16">
                 <Image
                   src={contact.logoUrl}
                   alt="PCC Post-Tension Logo"
@@ -181,17 +181,17 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                 />
               </div>
             ) : (
-              <span className="text-xl md:text-2xl font-bold text-brand-800 tracking-tight transition-transform group-hover:scale-105">
+              <span className="whitespace-nowrap text-xl md:text-2xl font-bold text-brand-800 tracking-tight transition-transform group-hover:scale-105">
                 PCC Post-Tension
               </span>
             )}
-            <div className="hidden lg:flex items-center">
-              <div className="h-10 w-px bg-slate-300 mx-3 xl:mx-5"></div>
+            <div className="hidden 2xl:flex items-center">
+              <div className="h-10 w-px bg-slate-300 mx-4"></div>
               <span className="text-sm bg-brand-50 text-brand-700 px-4 py-2 rounded-full font-bold border border-brand-200 shadow-sm group-hover:bg-brand-100 group-hover:border-brand-300 transition-all whitespace-nowrap">สาขาขอนแก่น</span>
             </div>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-8 xl:gap-14 font-bold text-slate-700 h-full text-[15px] xl:text-base tracking-wide">
+          <nav className="hidden xl:flex flex-none items-center gap-7 2xl:gap-9 font-bold text-slate-700 h-full text-sm 2xl:text-base tracking-wide">
             {navbarLinks && navbarLinks.length > 0 ? (
               navbarLinks.map((link, index) => {
                 if (link.url === "/products" || link.label === PRODUCT_LINK_LABEL) {
@@ -199,24 +199,24 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                 }
 
                 return (
-                  <Link key={index} href={link.url} className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
+                  <Link key={index} href={link.url} className="relative whitespace-nowrap hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">
                     {link.label}
                   </Link>
                 );
               })
             ) : (
               <>
-                <Link href="/" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">หน้าแรก</Link>
+                <Link href="/" className="relative whitespace-nowrap hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">หน้าแรก</Link>
                 {renderDesktopProductLink(PRODUCT_LINK_LABEL, "/products", "fallback")}
-                <Link href="/portfolio" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">ผลงานของเรา</Link>
-                <Link href="/about" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">เกี่ยวกับเรา</Link>
-                <Link href="/contact" className="relative hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">ติดต่อเรา</Link>
+                <Link href="/portfolio" className="relative whitespace-nowrap hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">ผลงานของเรา</Link>
+                <Link href="/about" className="relative whitespace-nowrap hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">เกี่ยวกับเรา</Link>
+                <Link href="/contact" className="relative whitespace-nowrap hover:text-brand-700 transition-colors py-8 after:absolute after:bottom-[30%] after:left-0 after:w-full after:h-[2px] after:bg-accent-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left">ติดต่อเรา</Link>
               </>
             )}
           </nav>
 
           <div className="flex shrink-0 items-center gap-2 sm:gap-4">
-            <a href={`tel:${phoneNo}`} className="hidden xl:flex items-center gap-2 text-gray-600 hover:text-brand-600 font-medium transition-colors">
+            <a href={`tel:${phoneNo}`} className="hidden 2xl:flex items-center gap-2 whitespace-nowrap text-gray-600 hover:text-brand-600 font-medium transition-colors">
               <Phone size={20} />
               {displayPhone}
             </a>
@@ -227,7 +227,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
             </a>
 
             <button
-              className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-200 lg:hidden"
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-gray-100 focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-slate-200 xl:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle Menu"
             >
@@ -238,11 +238,11 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
       </header>
 
       <div
-        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 lg:hidden ${isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+        className={`fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity duration-300 xl:hidden ${isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
         onClick={() => setIsMobileMenuOpen(false)}
       ></div>
 
-      <div className={`fixed top-16 right-0 bottom-0 z-50 w-[min(88vw,340px)] transform overflow-y-auto border-l border-gray-100 bg-white shadow-2xl transition-transform duration-300 ease-in-out sm:top-20 lg:hidden ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
+      <div className={`fixed top-16 right-0 bottom-0 z-50 w-[min(88vw,340px)] transform overflow-y-auto border-l border-gray-100 bg-white shadow-2xl transition-transform duration-300 ease-in-out sm:top-20 xl:hidden ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
         <div className="flex flex-col p-6 gap-2">
           {navbarLinks && navbarLinks.length > 0 ? (
             navbarLinks.map((link, index) => {
