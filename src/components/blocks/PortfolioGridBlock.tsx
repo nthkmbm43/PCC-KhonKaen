@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 import Image from "next/image";
-import { getAllPortfolios } from "@/data/portfolio";
+import Link from "next/link";
+import { getAllPortfolios, portfolioCategoryLabels } from "@/data/portfolio";
 
 export default async function PortfolioGridBlock() {
   const recentPortfolios = (await getAllPortfolios()).slice(0, 6);
@@ -20,8 +21,9 @@ export default async function PortfolioGridBlock() {
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
           {recentPortfolios.map((portfolio, index) => (
-            <div 
-              key={index} 
+            <Link
+              key={portfolio.slug}
+              href={`/portfolio/${portfolio.slug}`}
               className="bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] transition-all duration-500 hover:-translate-y-3 group"
               style={{ animationDelay: `${index * 100}ms` }}
             >
@@ -36,7 +38,7 @@ export default async function PortfolioGridBlock() {
                   className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
                 />
                 <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs font-bold text-brand-700 shadow-sm transform translate-y-0 opacity-100 lg:-translate-y-full lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 transition-all duration-300">
-                  {portfolio.category === "post-tension" ? "งานโพสเทนชั่น" : "งานผลิตภัณฑ์คอนกรีต"}
+                  {portfolioCategoryLabels[portfolio.category] || portfolio.category}
                 </div>
               </div>
               <div className="p-8">
@@ -48,7 +50,7 @@ export default async function PortfolioGridBlock() {
                   </div>
                 )}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { siteConfig } from "@/data/site-config";
 import { getPublishedArticles } from "@/lib/repositories/article";
 import { getPublishedDocuments } from "@/lib/repositories/document";
+import { getAllPortfolios } from "@/data/portfolio";
 import { getPublishedPages } from "@/lib/repositories/page";
 import { getPublishedProducts } from "@/lib/repositories/product";
 
@@ -46,11 +47,12 @@ function entryToXml(entry: SitemapEntry) {
 export async function GET() {
   const baseUrl = siteConfig.url.replace(/\/$/, "");
   const now = new Date();
-  const [products, pages, articles, documents] = await Promise.all([
+  const [products, pages, articles, documents, portfolios] = await Promise.all([
     getPublishedProducts(),
     getPublishedPages(),
     getPublishedArticles(),
     getPublishedDocuments(),
+    getAllPortfolios(),
   ]);
 
   const pageEntries: SitemapEntry[] = pages
@@ -101,6 +103,13 @@ export async function GET() {
     priority: 0.7,
   };
 
+  const portfolioEntries: SitemapEntry[] = portfolios.map((portfolio) => ({
+    url: `${baseUrl}/portfolio/${portfolio.slug}`,
+    lastModified: portfolio.referenceDate || now,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
   const hasHome = pageEntries.some((entry) => entry.url === baseUrl);
   const entries: SitemapEntry[] = [
     ...(hasHome
@@ -117,6 +126,7 @@ export async function GET() {
     ...productEntries,
     ...articleEntries,
     downloadEntry,
+    ...portfolioEntries,
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries

@@ -12,7 +12,7 @@ export const dynamicParams = true;
 export async function generateStaticParams() {
   const pages = await getPublishedPages()
   return pages
-    .filter((page) => page.slug !== 'home')
+    .filter((page) => page.slug !== 'home' && page.slug !== 'portfolio')
     .map((page) => ({ slug: page.slug }))
 }
 
