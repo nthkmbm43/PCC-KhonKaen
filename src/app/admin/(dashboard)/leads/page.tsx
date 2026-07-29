@@ -51,6 +51,9 @@ export default async function LeadsPage() {
                       {lead.message ? <p className="mt-1 line-clamp-3 text-xs">{lead.message}</p> : null}
                     </td>
                     <td className="px-5 py-4">
+                      <p className="mb-2 text-[11px] font-semibold text-slate-500">
+                        ทีม: {lead.teamCode} · {lead.sourceHost || 'ไม่ทราบโดเมน'}
+                      </p>
                       <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700">
                         {lead.utmSource || (lead.referrer ? 'referral' : 'direct')}
                       </span>

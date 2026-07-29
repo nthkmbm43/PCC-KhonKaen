@@ -157,7 +157,6 @@ export function organizationJsonLd(contact?: Record<string, string | undefined>)
     parentOrganization: {
       "@type": "Organization",
       name: siteConfig.legalName,
-      url: "https://pcc-posttension.com",
     },
     areaServed: siteConfig.serviceAreas.map((area) => ({
       "@type": "AdministrativeArea",
@@ -187,11 +186,6 @@ export function websiteJsonLd() {
       "@id": `${siteConfig.url}#organization`,
     },
     inLanguage: "th-TH",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${siteConfig.url}/products?search={search_term_string}`,
-      "query-input": "required name=search_term_string",
-    },
   };
 }
 

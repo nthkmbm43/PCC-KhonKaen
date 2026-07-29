@@ -63,6 +63,8 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
         form_name: 'contact_form',
         page_path: window.location.pathname,
         project_type: form.project || 'not_specified',
+        lead_team: 'khon-kaen-new-team',
+        source_site: window.location.hostname,
       });
       setSubmitStatus('success');
       setForm({ name: '', phone: '', email: '', project: '', message: '' });

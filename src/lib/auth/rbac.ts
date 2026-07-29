@@ -8,6 +8,8 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
 export const ROUTE_PERMISSION: Record<string, string> = {
   '/admin/products': 'products:*',
   '/admin/pages': 'pages:*',
+  '/admin/articles': 'pages:*',
+  '/admin/documents': 'pages:*',
   '/admin/line-marketing': 'line-marketing:*',
   '/admin/leads': 'leads:*',
   '/admin/users': 'users:*',
@@ -17,6 +19,8 @@ export const ROUTE_PERMISSION: Record<string, string> = {
   '/admin/audit': 'pages:*',
   '/api/products': 'products:*',
   '/api/pages': 'pages:*',
+  '/api/articles': 'pages:*',
+  '/api/documents': 'pages:*',
   '/api/users': 'users:*',
   '/api/settings': 'settings:*',
   '/api/media': 'pages:*',

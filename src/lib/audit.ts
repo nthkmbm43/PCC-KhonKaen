@@ -5,7 +5,7 @@ import { Session } from "next-auth";
 import { logger } from "./logger";
 
 export type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'LOGIN' | 'LOGOUT' | 'DEPLOY' | 'UPLOAD' | 'SEARCH' | 'ROLLBACK' | 'GENERATE';
-export type AuditResource = 'product' | 'page' | 'user' | 'setting' | 'upload' | 'richmenu' | 'deploy' | 'media' | 'seo' | 'revision';
+export type AuditResource = 'product' | 'page' | 'user' | 'setting' | 'upload' | 'richmenu' | 'deploy' | 'media' | 'seo' | 'revision' | 'document';
 
 interface LogAuditParams {
   tx?: unknown; // To support Drizzle transaction object

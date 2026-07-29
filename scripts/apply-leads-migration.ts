@@ -15,6 +15,8 @@ async function main() {
   await sql.query(`
     CREATE TABLE IF NOT EXISTS "leads" (
       "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+      "team_code" text DEFAULT 'khon-kaen-new-team' NOT NULL,
+      "source_host" text,
       "name" text NOT NULL,
       "phone" text NOT NULL,
       "email" text,
@@ -34,9 +36,13 @@ async function main() {
     )
   `);
 
+  await sql.query(`ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "team_code" text DEFAULT 'khon-kaen-new-team' NOT NULL`);
+  await sql.query(`ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "source_host" text`);
+
   await sql.query('CREATE INDEX IF NOT EXISTS "leads_status_created_at_idx" ON "leads" ("status", "created_at")');
   await sql.query('CREATE INDEX IF NOT EXISTS "leads_created_at_idx" ON "leads" ("created_at")');
   await sql.query('CREATE INDEX IF NOT EXISTS "leads_utm_source_idx" ON "leads" ("utm_source")');
+  await sql.query('CREATE INDEX IF NOT EXISTS "leads_team_code_created_at_idx" ON "leads" ("team_code", "created_at")');
 
   const result = await sql.query(`
     SELECT column_name
@@ -45,7 +51,7 @@ async function main() {
     ORDER BY ordinal_position
   `);
 
-  if (result.rows.length !== 17) {
+  if (result.rows.length !== 19) {
     throw new Error(`Lead migration verification failed: found ${result.rows.length} columns`);
   }
 

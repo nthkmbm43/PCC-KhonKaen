@@ -49,6 +49,8 @@ const NAVBAR_LINKS = [
   { label: 'สินค้าและบริการ', url: '/products' },
   { label: 'ผลงานของเรา', url: '/portfolio' },
   { label: 'เกี่ยวกับเรา', url: '/about' },
+  { label: 'บทความ', url: '/articles' },
+  { label: 'ดาวน์โหลด', url: '/downloads' },
   { label: 'ติดต่อเรา', url: '/contact' },
 ];
 
@@ -103,11 +105,11 @@ export async function GET(req: Request) {
           {
             type: 'stats',
             headline: 'ตัวเลขที่สะท้อนความเชี่ยวชาญของเรา',
+            description: 'ข้อมูลบริษัท ณ ปี 2569',
             stats: [
-              { value: 20, suffix: '+', label: 'ปีประสบการณ์' },
-              { value: 500, suffix: '+', label: 'โครงการสำเร็จ' },
-              { value: 1000, suffix: '+', label: 'ลูกค้าที่ไว้ใจ' },
-              { value: 100, suffix: '%', label: 'มาตรฐาน มอก.' },
+              { value: 30, suffix: '+', label: 'ปีประสบการณ์จากบริษัทในเครือ' },
+              { value: 2, label: 'สำนักงาน ขอนแก่นและเชียงใหม่' },
+              { value: 4, label: 'บริการ ออกแบบ ผลิต จัดส่ง ติดตั้ง' },
             ],
           },
           // ── ไฮไลต์ 2 สินค้าเด่น: Precast + Post-tension ──────────────────
@@ -146,11 +148,6 @@ export async function GET(req: Request) {
             headline: 'ขั้นตอนการสั่งซื้อ',
             subheadline: 'ง่าย สะดวก โปร่งใส ตั้งแต่ปรึกษาจนส่งมอบงาน',
             steps: PROCESS_STEPS,
-          },
-          {
-            type: 'testimonial',
-            headline: 'เสียงจากลูกค้าจริงของเรา',
-            subheadline: 'ความไว้วางใจที่สะสมมากกว่า 20 ปี',
           },
           {
             type: 'cta',
@@ -271,11 +268,11 @@ export async function GET(req: Request) {
           {
             type: 'stats',
             headline: 'ตัวเลขที่พิสูจน์ความเชี่ยวชาญ',
+            description: 'ข้อมูลบริษัท ณ ปี 2569',
             stats: [
-              { value: 20, suffix: '+', label: 'ปีในวงการ' },
-              { value: 500, suffix: '+', label: 'โครงการเสร็จสิ้น' },
-              { value: 2, label: 'สาขาทั่วประเทศ' },
-              { value: 50, suffix: '+', label: 'ทีมวิศวกรและช่าง' },
+              { value: 30, suffix: '+', label: 'ปีประสบการณ์จากบริษัทในเครือ' },
+              { value: 2, label: 'สำนักงาน ขอนแก่นและเชียงใหม่' },
+              { value: 4, label: 'บริการ ออกแบบ ผลิต จัดส่ง ติดตั้ง' },
             ],
           },
           {

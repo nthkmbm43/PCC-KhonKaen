@@ -141,13 +141,14 @@ export const footerQuickLinks = [
   { label: "เกี่ยวกับเรา", href: "/about" },
   { label: "สินค้าและบริการ", href: "/products" },
   { label: "บทความและคู่มือ", href: "/articles" },
+  { label: "ดาวน์โหลดเอกสาร", href: "/downloads" },
   { label: "ติดต่อเรา", href: "/contact" },
 ];
 
 export const footerSecondaryLinks = [
-  { label: "ดาวน์โหลด Catalog", href: "https://pcc-posttension.com/downloads/", external: true },
+  { label: "ดาวน์โหลด Catalog", href: "/downloads", external: false },
   { label: "ติดต่อเรา", href: "/contact", external: false },
-  { label: "เว็บไซต์บริษัทหลัก", href: "https://pcc-posttension.com/", external: true },
+  { label: "ผลงานของเรา", href: "/portfolio", external: false },
 ] as const;
 
 export const orderStatuses = {

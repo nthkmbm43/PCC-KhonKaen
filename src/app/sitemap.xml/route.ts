@@ -1,5 +1,6 @@
 import { siteConfig } from "@/data/site-config";
-import { articles } from "@/data/articles";
+import { getPublishedArticles } from "@/lib/repositories/article";
+import { getPublishedDocuments } from "@/lib/repositories/document";
 import { getPublishedPages } from "@/lib/repositories/page";
 import { getPublishedProducts } from "@/lib/repositories/product";
 
@@ -45,8 +46,12 @@ function entryToXml(entry: SitemapEntry) {
 export async function GET() {
   const baseUrl = siteConfig.url.replace(/\/$/, "");
   const now = new Date();
-  const products = await getPublishedProducts();
-  const pages = await getPublishedPages();
+  const [products, pages, articles, documents] = await Promise.all([
+    getPublishedProducts(),
+    getPublishedPages(),
+    getPublishedArticles(),
+    getPublishedDocuments(),
+  ]);
 
   const pageEntries: SitemapEntry[] = pages
     .filter((page) => !redirectedPageSlugs.has(page.slug))
@@ -86,6 +91,16 @@ export async function GET() {
     })),
   ];
 
+  const downloadEntry: SitemapEntry = {
+    url: `${baseUrl}/downloads`,
+    lastModified: documents.reduce(
+      (latest, document) => document.updatedAt > latest ? document.updatedAt : latest,
+      documents[0]?.updatedAt || now.toISOString(),
+    ),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  };
+
   const hasHome = pageEntries.some((entry) => entry.url === baseUrl);
   const entries: SitemapEntry[] = [
     ...(hasHome
@@ -101,6 +116,7 @@ export async function GET() {
     ...pageEntries,
     ...productEntries,
     ...articleEntries,
+    downloadEntry,
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries

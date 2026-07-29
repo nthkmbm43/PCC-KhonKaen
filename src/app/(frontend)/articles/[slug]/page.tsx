@@ -13,11 +13,16 @@ import {
   Phone,
   ShieldAlert,
 } from "lucide-react";
-import { articles, getArticle, getRelatedArticles } from "@/data/articles";
+import {
+  getPublishedArticle,
+  getPublishedArticles,
+  getRelatedPublishedArticles,
+} from "@/lib/repositories/article";
 import { absoluteUrl, createSeoMetadata, JsonLd } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export async function generateStaticParams() {
+  const articles = await getPublishedArticles();
   return articles.map((article) => ({ slug: article.slug }));
 }
 
@@ -27,7 +32,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const article = await getPublishedArticle(slug);
 
   if (!article) {
     return createSeoMetadata({
@@ -60,13 +65,13 @@ export default async function ArticleDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const article = await getPublishedArticle(slug);
 
   if (!article) notFound();
 
   const [settings, relatedArticles] = await Promise.all([
     getSiteSettings(),
-    Promise.resolve(getRelatedArticles(article)),
+    getRelatedPublishedArticles(article),
   ]);
   const articleUrl = absoluteUrl(`/articles/${article.slug}`);
   const phone = settings.contact.mainPhone;

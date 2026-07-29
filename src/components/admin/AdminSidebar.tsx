@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   FileText,
+  Newspaper,
   Settings,
   ExternalLink,
   Users,
@@ -19,6 +20,7 @@ import {
   UserRoundSearch,
   Menu,
   X,
+  FolderDown,
 } from "lucide-react";
 import { DeployButton } from "./DeployButton";
 import { canAccessRoute } from "@/lib/auth/rbac";
@@ -32,6 +34,8 @@ interface NavItem {
 
 const websiteItems: NavItem[] = [
   { href: "/admin/pages", label: "จัดการเพจ", icon: <FileText className="w-4 h-4" /> },
+  { href: "/admin/articles", label: "จัดการบทความ", icon: <Newspaper className="w-4 h-4" /> },
+  { href: "/admin/documents", label: "เอกสารดาวน์โหลด", icon: <FolderDown className="w-4 h-4" /> },
   { href: "/admin/products", label: "จัดการสินค้า", icon: <ShoppingBag className="w-4 h-4" /> },
   { href: "/admin/media", label: "Media Library", icon: <ImageIcon className="w-4 h-4" /> },
 ];

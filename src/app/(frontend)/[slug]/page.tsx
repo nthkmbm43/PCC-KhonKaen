@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
-import { breadcrumbJsonLd, createSeoMetadata, JsonLd } from '@/lib/seo'
+import { absoluteUrl, breadcrumbJsonLd, createSeoMetadata, JsonLd } from '@/lib/seo'
 import { getPageWithSeo, getPublishedPages } from '@/lib/repositories/page'
 import { getSiteSettings } from '@/lib/getSiteSettings'
 import { draftMode } from 'next/headers'
@@ -90,13 +90,34 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
         ]
       : layout
 
+  const schemaType = decodedSlug === 'contact'
+    ? 'ContactPage'
+    : decodedSlug === 'about'
+      ? 'AboutPage'
+      : decodedSlug === 'products' || decodedSlug === 'portfolio'
+        ? 'CollectionPage'
+        : 'WebPage'
+
   return (
     <div className="flex flex-col min-h-screen">
       <JsonLd
-        data={breadcrumbJsonLd([
-          { name: 'Home', url: '/' },
-          { name: page.title || decodedSlug, url: `/${page.slug}` },
-        ])}
+        data={[
+          breadcrumbJsonLd([
+            { name: 'หน้าแรก', url: '/' },
+            { name: page.title || decodedSlug, url: `/${page.slug}` },
+          ]),
+          {
+            '@context': 'https://schema.org',
+            '@type': schemaType,
+            '@id': `${absoluteUrl(`/${page.slug}`)}#webpage`,
+            url: absoluteUrl(`/${page.slug}`),
+            name: page.seo?.title || page.title,
+            description: page.seo?.description || undefined,
+            inLanguage: 'th-TH',
+            isPartOf: { '@id': `${absoluteUrl('/')}#website` },
+            about: { '@id': `${absoluteUrl('/')}#organization` },
+          },
+        ]}
       />
       {isDraftMode && (
         <div className="bg-amber-100 text-amber-800 text-center text-xs py-1.5 font-semibold sticky top-0 z-50 flex justify-center items-center gap-4">

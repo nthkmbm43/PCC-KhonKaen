@@ -44,6 +44,8 @@ export default function LeadAnalytics() {
       const shared = {
         page_path: window.location.pathname,
         lead_source: attribution.utmSource || 'direct',
+        lead_team: 'khon-kaen-new-team',
+        source_site: window.location.hostname,
       };
 
       if (href.startsWith('tel:')) {

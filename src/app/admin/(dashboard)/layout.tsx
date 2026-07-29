@@ -3,8 +3,10 @@ import { db } from "@/db";
 import { siteSettings } from "@/db/schema";
 import { SignOutButton } from "@/components/admin/SignOutButton";
 import { auth } from "@/auth";
+import { requireAdminPagePermission } from "@/lib/auth/page";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  await requireAdminPagePermission("/admin");
   const settingsArray = await db.select().from(siteSettings).limit(1);
   const settings = settingsArray[0];
   const session = await auth();

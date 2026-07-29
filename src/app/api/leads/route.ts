@@ -66,6 +66,8 @@ export async function POST(request: Request) {
     }
 
     const [created] = await db.insert(leads).values({
+      teamCode: 'khon-kaen-new-team',
+      sourceHost: host?.slice(0, 255) || null,
       name: data.name,
       phone: data.phone,
       email: data.email || null,

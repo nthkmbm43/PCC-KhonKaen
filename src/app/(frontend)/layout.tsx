@@ -77,13 +77,18 @@ export default async function RootLayout({
         { label: "เกี่ยวกับเรา", url: "/about" },
         { label: "ติดต่อเรา", url: "/contact" },
       ];
-  const navbarLinks = baseNavbarLinks.some((link) => link.url === "/articles")
-    ? baseNavbarLinks
-    : [
-        ...baseNavbarLinks.filter((link) => link.url !== "/contact"),
-        { label: "บทความ", url: "/articles" },
-        ...baseNavbarLinks.filter((link) => link.url === "/contact"),
-      ];
+  const resourceLinks = [
+    { label: "บทความ", url: "/articles" },
+    { label: "ดาวน์โหลด", url: "/downloads" },
+  ];
+  const missingResourceLinks = resourceLinks.filter(
+    (resourceLink) => !baseNavbarLinks.some((link) => link.url === resourceLink.url),
+  );
+  const navbarLinks = [
+    ...baseNavbarLinks.filter((link) => link.url !== "/contact"),
+    ...missingResourceLinks,
+    ...baseNavbarLinks.filter((link) => link.url === "/contact"),
+  ];
   
   return (
     <html lang="th" className="antialiased scroll-smooth">

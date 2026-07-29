@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BookOpen, CheckCircle2, Clock3, MessageCircle } from "lucide-react";
-import { articles } from "@/data/articles";
+import { getPublishedArticles } from "@/lib/repositories/article";
 import { createSeoMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createSeoMetadata({
@@ -19,7 +19,8 @@ export const metadata: Metadata = createSeoMetadata({
   ],
 });
 
-export default function ArticlesPage() {
+export default async function ArticlesPage() {
+  const articles = await getPublishedArticles();
   return (
     <div className="bg-slate-50">
       <section className="relative overflow-hidden bg-slate-950 px-4 py-20 text-white sm:px-6 lg:py-28">
