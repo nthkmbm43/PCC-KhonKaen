@@ -14,6 +14,29 @@ import { absoluteUrl, createSeoMetadata, JsonLd } from "@/lib/seo";
 import { ProductGalleryCarousel, type ProductGalleryItem } from "@/components/products/ProductGalleryCarousel";
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
+import ContactFormBlock from "@/components/blocks/ContactFormBlock";
+import { getBusinessStatus } from "@/lib/getBusinessStatus";
+import { getAllPortfolios } from "@/data/portfolio";
+
+const projectOptionBySlug: Record<string, string> = {
+  "precast-wall-khon-kaen": "ผนัง Precast (ผนังคอนกรีตสำเร็จรูป)",
+  "precast-fence-khon-kaen": "รั้วสำเร็จรูป",
+  "precast-concrete-slab-khon-kaen": "แผ่นพื้นสำเร็จรูป (Precast / Hollow Core Slab)",
+  "l-shape-retaining-wall-khon-kaen": "กำแพงกันดินตัว L",
+  "post-tension-slab-khon-kaen": "งานโพสเทนชั่น (Post-Tension)",
+  "barbed-wire-fence-post-khon-kaen": "เสารั้วลวดหนาม",
+  "concrete-pile-khon-kaen": "เสาเข็มคอนกรีตอัดแรง",
+};
+
+const portfolioCategoryBySlug: Record<string, string> = {
+  "precast-wall-khon-kaen": "precast",
+  "precast-fence-khon-kaen": "retaining-wall",
+  "precast-concrete-slab-khon-kaen": "precast",
+  "l-shape-retaining-wall-khon-kaen": "retaining-wall",
+  "post-tension-slab-khon-kaen": "post-tension",
+  "barbed-wire-fence-post-khon-kaen": "retaining-wall",
+  "concrete-pile-khon-kaen": "building",
+};
 
 export async function generateStaticParams() {
   const products = await getPublishedProducts();
@@ -45,13 +68,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [product, allProducts, settings, draft, articles, documents] = await Promise.all([
+  const [product, allProducts, settings, draft, articles, documents, portfolios, businessStatus] = await Promise.all([
     getProductWithSeo(slug),
     getPublishedProducts(),
     getSiteSettings(),
     draftMode(),
     getPublishedArticles(),
     getPublishedDocuments(),
+    getAllPortfolios(),
+    getBusinessStatus().catch(() => null),
   ]);
   const isDraftMode = draft.isEnabled;
   
@@ -75,6 +100,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const relatedDocuments = documents.filter(
     (document) => document.relatedProduct?.href === `/products/${product.slug}`,
   );
+  const relatedPortfolios = portfolios.filter(
+    (portfolio) => portfolio.category === portfolioCategoryBySlug[product.slug],
+  ).slice(0, 3);
 
   const productJsonLd = [
     {
@@ -264,6 +292,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         </div>
                       )}
                       {section.content && <div className="prose prose-lg sm:prose-xl max-w-none text-slate-700 leading-relaxed font-medium prose-p:mb-6 prose-strong:text-brand-900 prose-a:text-brand-600 hover:prose-a:text-brand-800 transition-all">{section.content.split('\\n').map((para, i) => <p key={i}>{para}</p>)}</div>}
+                      {section.bullets && section.bullets.length > 0 && (
+                        <ul className="mt-7 grid gap-4 sm:grid-cols-2">
+                          {section.bullets.map((bullet, bulletIndex) => (
+                            <li key={bulletIndex} className="flex gap-3 border border-slate-200 bg-slate-50 p-5 leading-7 text-slate-800">
+                              <CheckCircle2 size={20} className="mt-1 shrink-0 text-brand-600" />
+                              <span>{bullet}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   );
                 } else if (section.type === 'image') {
@@ -456,6 +494,62 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
       </div>
+
+      {relatedPortfolios.length > 0 && (
+        <section aria-labelledby="related-projects-heading" className="border-y border-slate-200 bg-slate-50 px-4 py-14 sm:px-6 lg:py-20">
+          <div className="mx-auto max-w-7xl">
+            <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-sm font-black uppercase tracking-widest text-brand-700">ผลงานอ้างอิงที่เกี่ยวข้อง</p>
+                <h2 id="related-projects-heading" className="mt-2 text-3xl font-black text-slate-950">
+                  ดูลักษณะงานก่อนส่งข้อมูลประเมิน
+                </h2>
+                <p className="mt-3 max-w-3xl leading-7 text-slate-600">
+                  ตัวอย่างจากประสบการณ์ดำเนินงานเดิมของบริษัท ใช้ประกอบการพิจารณาประเภทสินค้าและขอบเขตงานเบื้องต้น
+                </p>
+              </div>
+              <Link href="/portfolio" className="inline-flex items-center gap-2 font-bold text-brand-700 hover:text-brand-900">
+                ดูผลงานทั้งหมด <ArrowRight size={18} />
+              </Link>
+            </div>
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
+              {relatedPortfolios.map((portfolio) => (
+                <article key={portfolio.slug} className="overflow-hidden border border-slate-200 bg-white shadow-sm">
+                  <Link href={`/portfolio/${portfolio.slug}`} className="group block">
+                    <div className="relative aspect-[16/10] overflow-hidden bg-slate-200">
+                      <Image
+                        src={portfolio.image}
+                        alt={portfolio.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="p-5">
+                      {portfolio.location && <p className="text-sm font-bold text-brand-700">{portfolio.location}</p>}
+                      <h3 className="mt-2 text-lg font-black leading-7 text-slate-950">{portfolio.title}</h3>
+                      <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-brand-700">
+                        ดูรายละเอียดโครงการ <ArrowRight size={16} />
+                      </span>
+                    </div>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      <ContactFormBlock
+        data={{
+          headline: `ขอประเมินงาน${product.shortTitle || product.title}`,
+          subheadline: "ส่งขนาดพื้นที่ จังหวัด และรูปหรือรายละเอียดหน้างาน ทีมขอนแก่นจะรวบรวมข้อมูลและส่งต่อให้ฝ่ายขายกับผู้รับผิดชอบประเมินงาน",
+          phone: displayPhone,
+          lineUrl,
+          defaultProject: projectOptionBySlug[product.slug],
+        }}
+        initialStatus={businessStatus}
+      />
     </div>
   );
 }

@@ -20,6 +20,7 @@ type ContactFormBlockProps = {
     lineUrl?: string;
     workingHours?: string;
     holidayNotice?: string;
+    defaultProject?: string;
   };
   initialStatus?: BusinessStatus | null;
 };
@@ -37,7 +38,7 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
   const phone       = data?.phone       || '063-454-5656';
   const lineUrl     = data?.lineUrl     || '#';
 
-  const [form, setForm]           = useState({ name: '', phone: '', email: '', project: '', message: '' });
+  const [form, setForm]           = useState({ name: '', phone: '', email: '', project: data?.defaultProject || '', message: '' });
   const [website, setWebsite] = useState('');
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const status = initialStatus || null;
@@ -67,7 +68,7 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
         source_site: window.location.hostname,
       });
       setSubmitStatus('success');
-      setForm({ name: '', phone: '', email: '', project: '', message: '' });
+      setForm({ name: '', phone: '', email: '', project: data?.defaultProject || '', message: '' });
     } catch {
       setSubmitStatus('error');
     }
@@ -246,6 +247,7 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
                     <select id="contact-project" name="project" value={form.project} onChange={handleChange}
                       className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white">
                       <option value="">-- เลือกประเภทสินค้า/บริการ --</option>
+                      <option>ผนัง Precast (ผนังคอนกรีตสำเร็จรูป)</option>
                       <option>แผ่นพื้นสำเร็จรูป (Precast / Hollow Core Slab)</option>
                       <option>งานโพสเทนชั่น (Post-Tension)</option>
                       <option>กำแพงกันดินตัว L</option>
