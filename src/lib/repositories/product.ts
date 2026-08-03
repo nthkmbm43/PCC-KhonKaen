@@ -85,6 +85,10 @@ export const getPublishedProducts = unstable_cache(
       return aSort - bSort;
     });
   },
-  ['published-products'],
+  // Bump the data-cache namespace when a direct CMS import adds a new
+  // product. unstable_cache persists across deployments, so the previous key
+  // could otherwise keep the new product out of the listing and sitemap for
+  // up to an hour after deployment.
+  ['published-products-v2'],
   { tags: ['products'], revalidate: 3600 }
 );
