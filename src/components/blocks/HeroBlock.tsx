@@ -50,7 +50,7 @@ export default function HeroBlock({ data }: HeroBlockProps) {
 
       <div className={`absolute inset-0 z-0 ${opacityClass} mix-blend-overlay transition-transform duration-[20s] group-hover:scale-110`}>
         {imageUrl ? (
-          <Image src={imageUrl} alt={typeof backgroundImage === 'object' ? (backgroundImage?.alt || actualHeading || '') : (actualHeading || '')} fill quality={85} sizes="100vw" preload className="object-cover" />
+          <Image src={imageUrl} alt={typeof backgroundImage === 'object' ? (backgroundImage?.alt || actualHeading || '') : (actualHeading || '')} fill quality={75} sizes="100vw" preload className="object-cover" />
         ) : null}
       </div>
       
@@ -58,9 +58,9 @@ export default function HeroBlock({ data }: HeroBlockProps) {
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-accent-500/20 rounded-full blur-3xl z-0 pointer-events-none" />
       <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl z-0 pointer-events-none" />
 
-      <div className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col ${alignmentClass} animate-fade-up`}>
+      <div className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col ${alignmentClass}`}>
         <div className="inline-flex max-w-full items-center gap-2 bg-white/5 border border-white/10 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide mb-8 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.1)] sm:text-sm sm:mb-10">
-          <Sparkles size={16} className="text-accent-400 animate-pulse" /> 
+          <Sparkles size={16} className="text-accent-400" />
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-100 to-white">
             {badgeText || "Premium Corporate Engineering"}
           </span>

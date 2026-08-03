@@ -176,6 +176,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
                   src={contact.logoUrl}
                   alt="PCC Post-Tension Logo"
                   fill
+                  loading="eager"
                   className="object-contain object-left transition-transform group-hover:scale-105"
                   sizes="(max-width: 768px) 180px, (max-width: 1024px) 240px, 320px"
                 />

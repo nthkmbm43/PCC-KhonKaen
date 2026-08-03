@@ -10,13 +10,13 @@ export default async function HomeHeroBlock() {
   return (
     <section className="relative overflow-hidden bg-gray-900 pt-14 pb-20 group sm:pt-20 sm:pb-28 lg:pt-32 lg:pb-40">
       <div className="absolute inset-0 z-0 transition-transform duration-[20s] group-hover:scale-110">
-        <Image src="https://pcc-posttension.com/wp-content/uploads/2025/02/pcc-โรงงาน-copy.jpg" alt="PCC Post-Tension Factory" fill quality={85} sizes="100vw" preload className="object-cover opacity-60" />
+        <Image src="https://pcc-posttension.com/wp-content/uploads/2025/02/pcc-โรงงาน-copy.jpg" alt="PCC Post-Tension Factory" fill quality={75} sizes="100vw" preload className="object-cover opacity-60" />
       </div>
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900/90 via-gray-900/80 to-brand-900/90 z-0 mix-blend-multiply"></div>
       
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-up">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="inline-flex max-w-full items-center gap-2 bg-white/10 text-white border border-white/20 px-4 py-2 rounded-full text-xs font-semibold tracking-wide mb-6 backdrop-blur-md sm:px-6 sm:py-2.5 sm:text-sm sm:mb-8 hover:bg-white/20 transition-colors">
-          <Sparkles size={16} className="animate-pulse text-brand-400" /> รับประกันคุณภาพโดยทีมวิศวกรมืออาชีพ
+          <Sparkles size={16} className="text-brand-400" /> รับประกันคุณภาพโดยทีมวิศวกรมืออาชีพ
         </div>
         <h1 className="text-3xl font-bold text-white mb-5 leading-tight tracking-tight sm:text-4xl md:text-5xl lg:text-7xl lg:mb-6">
           รับเหมา <span className="text-brand-400">งานโพสเทนชั่น</span> <br className="hidden md:block" />
@@ -26,7 +26,7 @@ export default async function HomeHeroBlock() {
           บริการออกแบบ ผลิต และติดตั้งงานพื้นระบบโพสเทนชั่น กำแพงกันดิน รั้วสำเร็จรูป มั่นคง ปลอดภัย ด้วยมาตรฐานวิศวกรรมระดับสากล
         </p>
         <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
-          <a href={`tel:${phoneNo}`} className="relative overflow-hidden bg-brand-500 hover:bg-brand-600 text-white px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all animate-pulse-glow sm:px-8 sm:text-lg group">
+          <a href={`tel:${phoneNo}`} className="relative overflow-hidden bg-brand-500 hover:bg-brand-600 text-white px-6 py-4 rounded-full font-bold text-base flex items-center justify-center gap-3 transition-all sm:px-8 sm:text-lg group">
             <Phone size={24} className="group-hover:rotate-12 transition-transform" />
             ขอใบเสนอราคาฟรี
           </a>
