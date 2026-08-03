@@ -72,7 +72,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
   const renderBadge = (product: NavProduct, compact = false) => {
     if (product.badge === HOT_BADGE) {
       return (
-        <span className={`font-bold rounded-full shadow-sm flex items-center gap-1 ${compact ? "text-[10px] bg-red-100 text-red-600 px-2 py-0.5" : "bg-red-500 text-white text-[10px] px-2 py-1"}`}>
+        <span className={`font-bold rounded-full shadow-sm flex items-center gap-1 ${compact ? "text-xs bg-red-100 text-red-600 px-2 py-0.5" : "bg-red-500 text-white text-xs px-2 py-1"}`}>
           {!compact && <Zap size={10} />} {HOT_BADGE}
         </span>
       );
@@ -80,7 +80,7 @@ export default function Navbar({ products, navbarLinks, contact }: NavbarProps) 
 
     if (product.badge === NEW_BADGE) {
       return (
-        <span className={`font-bold rounded-full shadow-sm flex items-center gap-1 ${compact ? "text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5" : "bg-blue-500 text-white text-[10px] px-2 py-1"}`}>
+        <span className={`font-bold rounded-full shadow-sm flex items-center gap-1 ${compact ? "text-xs bg-blue-100 text-blue-600 px-2 py-0.5" : "bg-blue-500 text-white text-xs px-2 py-1"}`}>
           {!compact && <Sparkles size={10} />} {NEW_BADGE}
         </span>
       );

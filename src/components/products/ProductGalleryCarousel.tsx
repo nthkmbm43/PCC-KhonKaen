@@ -127,17 +127,23 @@ export function ProductGalleryCarousel({
 
       <div className="p-4 sm:p-5 bg-slate-50 flex flex-col gap-4">
         <div className="flex items-center justify-between gap-3">
-          <div className="flex gap-2">
+          <div className="flex items-center gap-1">
             {slides.map((slide, index) => (
               <button
                 key={`${slide.image}-${index}`}
                 type="button"
                 aria-label={`เปิดภาพที่ ${index + 1}`}
                 onClick={() => setActiveIndex(index)}
-                className={`h-2.5 rounded-full transition-all ${
-                  activeIndex === index ? "w-8 bg-brand-600" : "w-2.5 bg-slate-300 hover:bg-slate-400"
-                }`}
-              />
+                aria-current={activeIndex === index ? "true" : undefined}
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-300"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`h-2.5 rounded-full transition-all ${
+                    activeIndex === index ? "w-8 bg-brand-600" : "w-2.5 bg-slate-300"
+                  }`}
+                />
+              </button>
             ))}
           </div>
 

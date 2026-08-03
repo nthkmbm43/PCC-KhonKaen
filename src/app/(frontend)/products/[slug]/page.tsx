@@ -457,7 +457,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                           <ArrowLeft size={16} className="group-hover/nav:-translate-x-0.5 transition-transform" />
                         </div>
                         <div className="flex flex-col overflow-hidden">
-                          <span className="text-[10px] sm:text-xs text-brand-500/80 font-semibold mb-0.5 uppercase tracking-wider">สินค้าก่อนหน้า</span>
+                          <span className="text-xs text-brand-500/80 font-semibold mb-0.5 uppercase tracking-wider">สินค้าก่อนหน้า</span>
                           <span className="truncate w-full text-sm">{prevProduct.shortTitle || prevProduct.title}</span>
                         </div>
                       </Link>
@@ -465,7 +465,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     {nextProduct && (
                       <Link href={`/products/${nextProduct.slug}`} title={nextProduct.title} className="w-full flex items-center justify-end gap-3 text-brand-600 hover:text-brand-700 font-bold transition-all group/nav bg-brand-50 hover:bg-brand-100/70 p-3 rounded-xl border border-brand-100/50 text-right">
                         <div className="flex flex-col overflow-hidden items-end">
-                          <span className="text-[10px] sm:text-xs text-brand-500/80 font-semibold mb-0.5 uppercase tracking-wider">สินค้าถัดไป</span>
+                          <span className="text-xs text-brand-500/80 font-semibold mb-0.5 uppercase tracking-wider">สินค้าถัดไป</span>
                           <span className="truncate w-full text-sm">{nextProduct.shortTitle || nextProduct.title}</span>
                         </div>
                         <div className="bg-white p-2 rounded-lg shadow-sm group-hover/nav:shadow shrink-0">
