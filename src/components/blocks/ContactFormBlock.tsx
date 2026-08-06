@@ -38,10 +38,17 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
   const phone       = data?.phone       || '063-454-5656';
   const lineUrl     = data?.lineUrl     || '#';
 
-  const [form, setForm]           = useState({ name: '', phone: '', email: '', project: data?.defaultProject || '', message: '' });
+  const emptyForm = {
+    name: '', phone: '', email: '', project: data?.defaultProject || '', message: '',
+    province: '', district: '', estimatedLength: '', levelDifference: '',
+    waterCondition: '', accessCondition: '', nearbyLoad: '',
+  };
+  const [form, setForm]           = useState(emptyForm);
   const [website, setWebsite] = useState('');
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [leadCode, setLeadCode] = useState('');
   const status = initialStatus || null;
+  const isRetainingWall = form.project.includes('กำแพงกันดิน');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -59,6 +66,7 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
       });
 
       if (!response.ok) throw new Error('Lead submission failed');
+      const result = await response.json() as { leadCode?: string };
 
       trackLeadEvent('generate_lead', {
         form_name: 'contact_form',
@@ -67,8 +75,9 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
         lead_team: 'khon-kaen-new-team',
         source_site: window.location.hostname,
       });
+      setLeadCode(result.leadCode || '');
       setSubmitStatus('success');
-      setForm({ name: '', phone: '', email: '', project: data?.defaultProject || '', message: '' });
+      setForm(emptyForm);
     } catch {
       setSubmitStatus('error');
     }
@@ -93,7 +102,7 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
     const diffTime = new Date(nextH.startDate).getTime() - new Date().getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     if (diffDays <= 7) {
-      activeOrSoonHoliday = nextH as any;
+      activeOrSoonHoliday = nextH;
     }
   }
 
@@ -194,6 +203,13 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
                 </div>
               </div>
             </div>
+
+            <div className="rounded-xl border border-blue-200 bg-blue-50 p-5 text-sm leading-6 text-blue-950">
+              <p className="font-bold">ช่องทางประสานงานทีมขอนแก่น</p>
+              <p className="mt-1 text-blue-900">
+                ทีมนี้รับข้อมูลและส่งต่อให้ฝ่ายขายกับผู้รับผิดชอบโครงการของบริษัทดำเนินการประเมินราคา จัดทำข้อเสนอ ผลิต และติดตั้งตามขั้นตอนของบริษัท
+              </p>
+            </div>
           </div>
 
           {/* ─── Right form ──────────────────────────────────────────────── */}
@@ -206,6 +222,11 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">ส่งข้อความสำเร็จ!</h3>
                   <p className="text-gray-600">ทีมงานของเราจะติดต่อกลับหาคุณโดยเร็วที่สุด ขอบคุณที่สนใจบริการของเราครับ</p>
+                  {leadCode ? (
+                    <p className="mt-5 rounded-lg bg-slate-100 px-4 py-2 font-mono text-sm font-bold text-slate-800">
+                      เลขอ้างอิง: {leadCode}
+                    </p>
+                  ) : null}
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
@@ -257,6 +278,42 @@ export default function ContactFormBlock({ data, initialStatus }: ContactFormBlo
                       <option>อื่นๆ</option>
                     </select>
                   </div>
+
+                  {isRetainingWall ? (
+                    <fieldset className="space-y-4 rounded-xl border border-blue-200 bg-blue-50/60 p-5">
+                      <legend className="px-2 text-sm font-bold text-blue-900">ข้อมูลเบื้องต้นสำหรับประเมินกำแพงกันดิน</legend>
+                      <p className="text-xs leading-5 text-blue-800">กรอกเท่าที่ทราบได้ ทีมงานจะตรวจสอบรายละเอียดกับผู้รับผิดชอบโครงการอีกครั้ง</p>
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-gray-700" htmlFor="contact-province">จังหวัดหน้างาน</label>
+                          <input id="contact-province" name="province" value={form.province} onChange={handleChange} placeholder="เช่น ขอนแก่น" className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-gray-700" htmlFor="contact-district">อำเภอ/เขต</label>
+                          <input id="contact-district" name="district" value={form.district} onChange={handleChange} placeholder="เช่น เมืองขอนแก่น" className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-gray-700" htmlFor="contact-length">ความยาวแนวโดยประมาณ</label>
+                          <input id="contact-length" name="estimatedLength" value={form.estimatedLength} onChange={handleChange} placeholder="เช่น 40 เมตร" className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+                        <div>
+                          <label className="mb-1.5 block text-sm font-medium text-gray-700" htmlFor="contact-level">ความต่างระดับโดยประมาณ</label>
+                          <input id="contact-level" name="levelDifference" value={form.levelDifference} onChange={handleChange} placeholder="เช่น 1.5 เมตร" className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <label className="text-sm font-medium text-gray-700">น้ำ/การระบายน้ำ
+                          <select name="waterCondition" value={form.waterCondition} onChange={handleChange} className="mt-1.5 w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm"><option value="">ไม่แน่ใจ</option><option>ไม่มีน้ำขังที่สังเกตได้</option><option>มีน้ำขังหรือทางน้ำ</option><option>อยู่ใกล้แหล่งน้ำ</option></select>
+                        </label>
+                        <label className="text-sm font-medium text-gray-700">ทางเข้าหน้างาน
+                          <select name="accessCondition" value={form.accessCondition} onChange={handleChange} className="mt-1.5 w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm"><option value="">ไม่แน่ใจ</option><option>รถบรรทุกและรถยกเข้าถึงได้</option><option>ทางเข้าแคบหรือมีข้อจำกัด</option><option>ต้องสำรวจหน้างาน</option></select>
+                        </label>
+                        <label className="text-sm font-medium text-gray-700">สิ่งที่อยู่ใกล้แนว
+                          <select name="nearbyLoad" value={form.nearbyLoad} onChange={handleChange} className="mt-1.5 w-full rounded-xl border border-gray-200 bg-white px-3 py-3 text-sm"><option value="">ไม่แน่ใจ</option><option>พื้นที่ว่าง</option><option>บ้านหรืออาคาร</option><option>ถนนหรือรถใช้งาน</option><option>รั้วหรือโครงสร้างอื่น</option></select>
+                        </label>
+                      </div>
+                    </fieldset>
+                  ) : null}
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="contact-message">รายละเอียดเพิ่มเติม</label>

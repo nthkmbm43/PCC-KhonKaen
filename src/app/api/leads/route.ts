@@ -25,6 +25,13 @@ const leadSchema = z.object({
   email: z.union([z.literal(''), z.string().email().max(200)]).optional().default(''),
   project: optionalText(300),
   message: optionalText(3000),
+  province: optionalText(120),
+  district: optionalText(120),
+  estimatedLength: optionalText(80),
+  levelDifference: optionalText(80),
+  waterCondition: optionalText(120),
+  accessCondition: optionalText(120),
+  nearbyLoad: optionalText(120),
   website: optionalText(200),
   attribution: z.object({
     landingPage: optionalText(1000),
@@ -37,6 +44,17 @@ const leadSchema = z.object({
     clickId: optionalText(300),
   }).optional(),
 });
+
+function createLeadCode(id: string) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Bangkok',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value || '';
+  return `KK-${part('year')}${part('month')}${part('day')}-${id.slice(0, 4).toUpperCase()}`;
+}
 
 export async function POST(request: Request) {
   const origin = request.headers.get('origin');
@@ -65,7 +83,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true }, { status: 201 });
     }
 
+    const id = crypto.randomUUID();
+    const leadCode = createLeadCode(id);
     const [created] = await db.insert(leads).values({
+      id,
+      leadCode,
       teamCode: 'khon-kaen-new-team',
       sourceHost: host?.slice(0, 255) || null,
       name: data.name,
@@ -73,6 +95,13 @@ export async function POST(request: Request) {
       email: data.email || null,
       project: data.project || null,
       message: data.message || null,
+      province: data.province || null,
+      district: data.district || null,
+      estimatedLength: data.estimatedLength || null,
+      levelDifference: data.levelDifference || null,
+      waterCondition: data.waterCondition || null,
+      accessCondition: data.accessCondition || null,
+      nearbyLoad: data.nearbyLoad || null,
       landingPage: attribution?.landingPage || null,
       referrer: attribution?.referrer || null,
       utmSource: attribution?.utmSource || null,
@@ -82,9 +111,9 @@ export async function POST(request: Request) {
       utmTerm: attribution?.utmTerm || null,
       clickId: attribution?.clickId || null,
       userAgent: request.headers.get('user-agent')?.slice(0, 1000) || null,
-    }).returning({ id: leads.id });
+    }).returning({ id: leads.id, leadCode: leads.leadCode });
 
-    return NextResponse.json({ ok: true, id: created.id }, { status: 201 });
+    return NextResponse.json({ ok: true, id: created.id, leadCode: created.leadCode }, { status: 201 });
   } catch (error) {
     console.error('Lead submission failed', error);
     return NextResponse.json({ message: 'Unable to save lead' }, { status: 500 });

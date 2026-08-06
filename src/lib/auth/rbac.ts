@@ -30,6 +30,7 @@ export const ROUTE_PERMISSION: Record<string, string> = {
   '/api/preview': 'pages:*',
   '/api/deploy': 'pages:*',
   '/api/admin/holidays': 'settings:*',
+  '/api/admin/leads': 'leads:*',
   '/api/line/richmenu': 'line-marketing:*',
 };
 

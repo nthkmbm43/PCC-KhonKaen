@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, jsonb, uuid, pgEnum, index, integer, uniqueIndex, date, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, jsonb, uuid, pgEnum, index, integer, uniqueIndex, date, boolean, numeric } from 'drizzle-orm/pg-core';
 
 export const pageTemplateEnum = pgEnum('page_template', [
   'default',
@@ -165,6 +165,7 @@ export const leadStatusEnum = pgEnum('lead_status', ['new', 'contacted', 'qualif
 
 export const leads = pgTable('leads', {
   id: uuid('id').defaultRandom().primaryKey(),
+  leadCode: text('lead_code').unique(),
   teamCode: text('team_code').default('khon-kaen-new-team').notNull(),
   sourceHost: text('source_host'),
   name: text('name').notNull(),
@@ -172,7 +173,21 @@ export const leads = pgTable('leads', {
   email: text('email'),
   project: text('project'),
   message: text('message'),
+  province: text('province'),
+  district: text('district'),
+  estimatedLength: text('estimated_length'),
+  levelDifference: text('level_difference'),
+  waterCondition: text('water_condition'),
+  accessCondition: text('access_condition'),
+  nearbyLoad: text('nearby_load'),
   status: leadStatusEnum('status').default('new').notNull(),
+  handoffStatus: text('handoff_status').default('pending').notNull(),
+  handedOffAt: timestamp('handed_off_at', { withTimezone: true }),
+  confirmedAreaSqm: numeric('confirmed_area_sqm', { precision: 12, scale: 2 }),
+  saleValue: numeric('sale_value', { precision: 14, scale: 2 }),
+  commissionRate: numeric('commission_rate', { precision: 6, scale: 2 }),
+  commissionAmount: numeric('commission_amount', { precision: 14, scale: 2 }),
+  salesNotes: text('sales_notes'),
   landingPage: text('landing_page'),
   referrer: text('referrer'),
   utmSource: text('utm_source'),
@@ -183,11 +198,13 @@ export const leads = pgTable('leads', {
   clickId: text('click_id'),
   userAgent: text('user_agent'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 }, (table) => ({
   statusCreatedAtIdx: index('leads_status_created_at_idx').on(table.status, table.createdAt),
   createdAtIdx: index('leads_created_at_idx').on(table.createdAt),
   utmSourceIdx: index('leads_utm_source_idx').on(table.utmSource),
   teamCodeCreatedAtIdx: index('leads_team_code_created_at_idx').on(table.teamCode, table.createdAt),
+  handoffStatusCreatedAtIdx: index('leads_handoff_status_created_at_idx').on(table.handoffStatus, table.createdAt),
 }));
 
 export const admins = pgTable('admins', {
