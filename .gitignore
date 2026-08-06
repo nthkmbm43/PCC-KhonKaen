@@ -49,5 +49,8 @@ next-env.d.ts
 # sqlite
 *.db
 
+# internal engineering drawings (reference only; never publish or commit)
+/src/data/*.pdf
+
 .vercel
 .env*

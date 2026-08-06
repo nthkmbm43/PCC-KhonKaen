@@ -20,6 +20,7 @@ import {
 } from "@/lib/repositories/article";
 import { absoluteUrl, createSeoMetadata, JsonLd } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/getSiteSettings";
+import { getCooperativeSourceCanonical } from "@/data/cooperative-source-canonicals";
 
 export async function generateStaticParams() {
   const articles = await getPublishedArticles();
@@ -46,6 +47,7 @@ export async function generateMetadata({
     title: article.seoTitle,
     description: article.description,
     path: `/articles/${article.slug}`,
+    canonical: getCooperativeSourceCanonical(article.slug),
     image: article.image,
     keywords: [article.category, `${article.category} ขอนแก่น`, "คู่มือก่อสร้าง", "ขอราคางานก่อสร้าง"],
   });

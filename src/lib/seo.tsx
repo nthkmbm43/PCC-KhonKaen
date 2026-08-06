@@ -5,6 +5,7 @@ type SeoInput = {
   title: string;
   description: string;
   path?: string;
+  canonical?: string;
   keywords?: readonly string[];
   image?: string;
 };
@@ -52,10 +53,12 @@ export function createSeoMetadata({
   title,
   description,
   path = "/",
+  canonical,
   keywords = siteConfig.keywords,
   image = defaultImage,
 }: SeoInput): Metadata {
   const url = absoluteUrl(path);
+  const canonicalUrl = canonical ? absoluteUrl(canonical) : url;
   const imageUrl = absoluteUrl(image);
 
   return {
@@ -63,7 +66,7 @@ export function createSeoMetadata({
     description,
     keywords: [...keywords],
     alternates: {
-      canonical: url,
+      canonical: canonicalUrl,
     },
     openGraph: {
       type: "website",

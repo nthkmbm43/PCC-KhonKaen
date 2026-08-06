@@ -4,6 +4,7 @@ import { getPublishedDocuments } from "@/lib/repositories/document";
 import { getAllPortfolios } from "@/data/portfolio";
 import { getPublishedPages } from "@/lib/repositories/page";
 import { getPublishedProducts } from "@/lib/repositories/product";
+import { getCooperativeSourceCanonical } from "@/data/cooperative-source-canonicals";
 
 // Prerender the XML and serve it from Vercel's cache. Googlebot should never
 // have to wait for a cross-region database request just to fetch the sitemap.
@@ -85,7 +86,7 @@ export async function GET() {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    ...articles.map((article) => ({
+    ...articles.filter((article) => !getCooperativeSourceCanonical(article.slug)).map((article) => ({
       url: `${baseUrl}/articles/${article.slug}`,
       lastModified: article.updatedAt,
       changeFrequency: "monthly" as const,
