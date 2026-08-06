@@ -36,7 +36,7 @@ export const getPageWithSeo = unstable_cache(
       seo: result[0].seo,
     };
   },
-  ['page-with-seo'],
+  ['page-with-seo-v2'],
   { tags: ['pages'], revalidate: 3600 }
 );
 
@@ -52,6 +52,6 @@ export const getPublishedPages = unstable_cache(
       return [];
     }
   },
-  ['published-pages'],
+  ['published-pages-v2'],
   { tags: ['pages'], revalidate: 3600 }
 );
