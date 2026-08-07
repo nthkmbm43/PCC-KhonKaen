@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { products, seoMetadata, revisions } from "@/db/schema";
 import { eq, and, desc } from "drizzle-orm";
-import { auth } from "@/auth";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { logAudit } from "@/lib/audit";
 import crypto from "crypto";
@@ -28,12 +27,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 }
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  const { session, response } = await requireApiPermission(new URL(req.url).pathname);
   if (response) return response;
 
   try {
@@ -154,12 +148,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 }
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const { response } = await requireApiPermission(new URL(req.url).pathname);
+  const { session, response } = await requireApiPermission(new URL(req.url).pathname);
   if (response) return response;
 
   try {

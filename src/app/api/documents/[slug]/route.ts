@@ -1,17 +1,14 @@
-import { auth } from '@/auth';
 import { db } from '@/db';
 import { documents } from '@/db/schema';
 import { requireApiPermission } from '@/lib/auth/api';
 import { logAudit } from '@/lib/audit';
 import { downloadDocumentPayloadSchema } from '@/lib/validation/document';
 import { eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 export async function PUT(request: Request, { params }: { params: Promise<{ slug: string }> }) {
-  const session = await auth();
-  if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const { response } = await requireApiPermission(new URL(request.url).pathname);
+  const { session, response } = await requireApiPermission(new URL(request.url).pathname);
   if (response) return response;
 
   const { slug } = await params;
@@ -48,6 +45,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ slug
     await logAudit({ session, action: 'UPDATE', resource: 'document', resourceId: saved.id, beforeState: before[0], afterState: saved });
     revalidatePath('/downloads');
     revalidatePath('/sitemap.xml');
+    revalidateTag('documents', { expire: 0 });
     return NextResponse.json(saved);
   } catch (error) {
     console.error('Error updating document', error);

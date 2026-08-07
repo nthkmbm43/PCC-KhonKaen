@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { auth } from "@/auth";
 import { canAccessRoute } from "@/lib/auth/rbac";
+import { revalidateTag } from "next/cache";
 
 export async function GET(req: Request) {
   const session = await auth();
@@ -71,6 +72,8 @@ export async function POST(req: Request) {
       name: admins.name,
       email: admins.email,
     });
+
+    revalidateTag("admin-users", { expire: 0 });
 
     return NextResponse.json(newUser[0], { status: 201 });
   } catch (error) {

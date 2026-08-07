@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { pages } from "@/db/schema";
 import { sql } from "drizzle-orm";
 import { getSiteSettings } from "@/lib/getSiteSettings";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import {
   FileText,
@@ -14,9 +15,15 @@ import {
   Globe,
 } from "lucide-react";
 
+const getPageCount = unstable_cache(
+  () => db.select({ count: sql<number>`count(*)` }).from(pages),
+  ["admin-page-count"],
+  { tags: ["pages"], revalidate: 3600 },
+);
+
 export default async function AdminDashboard() {
   const [pagesCountRes, settings] = await Promise.all([
-    db.select({ count: sql<number>`count(*)` }).from(pages),
+    getPageCount(),
     getSiteSettings(),
   ]);
   const pagesCount = Number(pagesCountRes[0]?.count || 0);

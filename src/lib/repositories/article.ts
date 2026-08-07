@@ -4,6 +4,7 @@ import { articles as starterArticles, type KnowledgeArticle } from "@/data/artic
 import { desc, eq } from "drizzle-orm";
 import { articleDocumentSchema } from "@/lib/validation/article";
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 
 export type EditableArticle = KnowledgeArticle & {
   databaseId?: string;
@@ -35,7 +36,7 @@ function parseRecord(record: typeof articleRecords.$inferSelect): EditableArticl
   };
 }
 
-async function getDatabaseArticles() {
+const getCachedDatabaseArticles = unstable_cache(async () => {
   try {
     return await db.select().from(articleRecords).orderBy(desc(articleRecords.updatedAt));
   } catch (error) {
@@ -44,16 +45,33 @@ async function getDatabaseArticles() {
     console.error("Unable to read article overrides; using starter content", error);
     return [];
   }
+}, ["article-records"], { tags: ["articles"], revalidate: 3600 });
+
+async function getDatabaseArticles() {
+  return getCachedDatabaseArticles();
 }
 
-export async function getAdminArticles(): Promise<AdminArticleListItem[]> {
-  const records = await db.select({
+const getCachedAdminArticleRows = unstable_cache(async () => {
+  const rows = await db.select({
     slug: articleRecords.slug,
     title: articleRecords.title,
     category: articleRecords.category,
     workflowState: articleRecords.workflowState,
     updatedAt: articleRecords.updatedAt,
   }).from(articleRecords).orderBy(desc(articleRecords.updatedAt));
+  return rows.map((row) => ({ ...row, updatedAt: row.updatedAt.toISOString().slice(0, 10) }));
+}, ["admin-article-list"], {
+  tags: ["articles"],
+  revalidate: 3600,
+});
+
+const getCachedArticleRecord = unstable_cache(async (slug: string) => {
+  const [record] = await db.select().from(articleRecords).where(eq(articleRecords.slug, slug)).limit(1);
+  return record || null;
+}, ["article-record-by-slug"], { tags: ["articles"], revalidate: 3600 });
+
+export async function getAdminArticles(): Promise<AdminArticleListItem[]> {
+  const records = await getCachedAdminArticleRows();
   const overriddenSlugs = new Set(records.map((record) => record.slug));
   const starter = starterArticles
     .filter((article) => !overriddenSlugs.has(article.slug))
@@ -69,7 +87,7 @@ export async function getAdminArticles(): Promise<AdminArticleListItem[]> {
     slug: record.slug,
     title: record.title,
     category: record.category,
-    updatedAt: record.updatedAt.toISOString().slice(0, 10),
+    updatedAt: record.updatedAt,
     status: record.workflowState === "published" ? "published" as const : "draft" as const,
     source: "database" as const,
   }));
@@ -91,7 +109,7 @@ export async function getPublishedArticles(): Promise<KnowledgeArticle[]> {
 
 export const getPublishedArticle = cache(async (slug: string) => {
   try {
-    const [record] = await db.select().from(articleRecords).where(eq(articleRecords.slug, slug)).limit(1);
+    const record = await getCachedArticleRecord(slug);
     if (record) {
       if (record.workflowState !== "published") return undefined;
       return parseRecord(record) || undefined;
@@ -104,7 +122,7 @@ export const getPublishedArticle = cache(async (slug: string) => {
 
 export const getEditableArticle = cache(async (slug: string) => {
   try {
-    const [record] = await db.select().from(articleRecords).where(eq(articleRecords.slug, slug)).limit(1);
+    const record = await getCachedArticleRecord(slug);
     if (record) return parseRecord(record) || undefined;
   } catch (error) {
     console.error(`Unable to read editable article ${slug}; using starter content`, error);

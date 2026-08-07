@@ -2,13 +2,26 @@ import { db } from "@/db";
 import { products, pages } from "@/db/schema";
 import { LineMarketingForm } from "@/components/admin/LineMarketingForm";
 import { desc } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
+const getLineProductOptions = unstable_cache(
+  () => db.select({ id: products.id, title: products.title, slug: products.slug }).from(products).orderBy(desc(products.createdAt)),
+  ["line-product-options"],
+  { tags: ["products"], revalidate: 3600 },
+);
+
+const getLinePageOptions = unstable_cache(
+  () => db.select({ id: pages.id, title: pages.title, slug: pages.slug }).from(pages).orderBy(desc(pages.createdAt)),
+  ["line-page-options"],
+  { tags: ["pages"], revalidate: 3600 },
+);
+
 export default async function LineMarketingPage() {
   const [allProducts, allPages] = await Promise.all([
-    db.select({ id: products.id, title: products.title, slug: products.slug }).from(products).orderBy(desc(products.createdAt)),
-    db.select({ id: pages.id, title: pages.title, slug: pages.slug }).from(pages).orderBy(desc(pages.createdAt)),
+    getLineProductOptions(),
+    getLinePageOptions(),
   ]);
   
   // Format options for dropdown

@@ -2,12 +2,11 @@ import { db } from "@/db";
 import { products } from "@/db/schema";
 import { ProductsClient } from "@/components/admin/ProductsClient";
 import { desc } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
-export default async function ProductsPage() {
-  // The list does not need the large JSON content/highlights documents.
-  const allProducts = await db.select({
+const getAdminProductList = unstable_cache(async () => db.select({
     id: products.id,
     slug: products.slug,
     shortTitle: products.shortTitle,
@@ -18,7 +17,14 @@ export default async function ProductsPage() {
     status: products.status,
     createdAt: products.createdAt,
     updatedAt: products.updatedAt,
-  }).from(products).orderBy(desc(products.createdAt));
+  }).from(products).orderBy(desc(products.createdAt)), ["admin-product-list"], {
+  tags: ["products"],
+  revalidate: 3600,
+});
+
+export default async function ProductsPage() {
+  // The list does not need the large JSON content/highlights documents.
+  const allProducts = await getAdminProductList();
 
   const mappedProducts = allProducts.map(p => ({
     ...p,

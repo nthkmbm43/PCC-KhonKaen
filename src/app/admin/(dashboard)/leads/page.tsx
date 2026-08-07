@@ -3,8 +3,30 @@ import Link from 'next/link';
 import { ArrowRight, Phone, UserRoundSearch } from 'lucide-react';
 import { db } from '@/db';
 import { leads } from '@/db/schema';
+import { unstable_cache } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
+
+const getAdminLeadList = unstable_cache(() => db.select({
+  id: leads.id,
+  leadCode: leads.leadCode,
+  createdAt: leads.createdAt,
+  name: leads.name,
+  phone: leads.phone,
+  email: leads.email,
+  project: leads.project,
+  message: leads.message,
+  teamCode: leads.teamCode,
+  sourceHost: leads.sourceHost,
+  utmSource: leads.utmSource,
+  referrer: leads.referrer,
+  utmCampaign: leads.utmCampaign,
+  landingPage: leads.landingPage,
+  handoffStatus: leads.handoffStatus,
+}).from(leads).orderBy(desc(leads.createdAt)).limit(100), ["admin-lead-list"], {
+  tags: ["leads"],
+  revalidate: 3600,
+});
 
 const handoffLabels: Record<string, { label: string; className: string }> = {
   pending: { label: 'ยังไม่ส่งต่อ', className: 'bg-amber-50 text-amber-700' },
@@ -15,7 +37,10 @@ const handoffLabels: Record<string, { label: string; className: string }> = {
 };
 
 export default async function LeadsPage() {
-  const rows = await db.select().from(leads).orderBy(desc(leads.createdAt)).limit(200);
+  const rows = (await getAdminLeadList()).map((lead) => ({
+    ...lead,
+    createdAt: new Date(lead.createdAt),
+  }));
 
   return (
     <div className="space-y-6">

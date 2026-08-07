@@ -4,6 +4,7 @@ import { Redis } from '@upstash/redis';
 import { z } from 'zod';
 import { db } from '@/db';
 import { leads } from '@/db/schema';
+import { revalidateTag } from 'next/cache';
 
 export const runtime = 'nodejs';
 
@@ -112,6 +113,8 @@ export async function POST(request: Request) {
       clickId: attribution?.clickId || null,
       userAgent: request.headers.get('user-agent')?.slice(0, 1000) || null,
     }).returning({ id: leads.id, leadCode: leads.leadCode });
+
+    revalidateTag('leads', { expire: 0 });
 
     return NextResponse.json({ ok: true, id: created.id, leadCode: created.leadCode }, { status: 201 });
   } catch (error) {

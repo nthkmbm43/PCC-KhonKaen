@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { db } from '@/db';
 import { leads } from '@/db/schema';
 import { requireApiPermission } from '@/lib/auth/api';
+import { revalidateTag } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,6 +48,8 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     salesNotes: data.salesNotes || null,
     updatedAt: new Date(),
   }).where(eq(leads.id, id)).returning();
+
+  revalidateTag('leads', { expire: 0 });
 
   return NextResponse.json({ ok: true, lead: updated });
 }

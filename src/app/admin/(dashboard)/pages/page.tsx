@@ -13,39 +13,23 @@ import {
 } from "@/components/ui/table";
 import { FileEdit, Plus, Search, Eye, Filter } from "lucide-react";
 import { DeletePageButton } from "@/components/admin/DeletePageButton";
+import { unstable_cache } from "next/cache";
 
 export const dynamic = 'force-dynamic';
 
-export default async function PagesList({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const query = searchParams.q as string || '';
-  const statusFilter = searchParams.status as string || 'all';
-  const templateFilter = searchParams.template as string || 'all';
-
-  // Build conditions
+const getAdminPages = unstable_cache(async (query: string, statusFilter: string, templateFilter: string) => {
   const conditions = [];
   if (query) {
-    conditions.push(
-      or(
-        ilike(pages.title, `%${query}%`),
-        ilike(pages.slug, `%${query}%`)
-      )
-    );
+    conditions.push(or(ilike(pages.title, `%${query}%`), ilike(pages.slug, `%${query}%`)));
   }
-  
   if (statusFilter !== 'all') {
     conditions.push(eq(pages.workflowState, statusFilter as "published" | "review" | "draft" | "archived"));
   }
-  
   if (templateFilter !== 'all') {
     conditions.push(eq(pages.template, templateFilter as "default" | "landing" | "service" | "product" | "contact" | "about"));
   }
 
-  // Fetch data
-  const allPages = await db
+  return db
     .select({
       page: {
         id: pages.id,
@@ -64,16 +48,25 @@ export default async function PagesList({
         ogImage: seoMetadata.ogImage,
         canonical: seoMetadata.canonical,
       },
-      updatedByAdmin: {
-        id: admins.id,
-        name: admins.name,
-      },
+      updatedByAdmin: { id: admins.id, name: admins.name },
     })
     .from(pages)
     .leftJoin(seoMetadata, and(eq(seoMetadata.resourceId, pages.id), eq(seoMetadata.resourceType, 'page')))
     .leftJoin(admins, eq(pages.updatedBy, admins.id))
     .where(and(...conditions))
     .orderBy(desc(pages.updatedAt));
+}, ["admin-page-list"], { tags: ["pages"], revalidate: 3600 });
+
+export default async function PagesList({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const query = searchParams.q as string || '';
+  const statusFilter = searchParams.status as string || 'all';
+  const templateFilter = searchParams.template as string || 'all';
+
+  const allPages = await getAdminPages(query, statusFilter, templateFilter);
 
   return (
     <div className="space-y-6">

@@ -1,15 +1,11 @@
-import { auth } from "@/auth";
 import { db } from "@/db";
 import { articles } from "@/db/schema";
 import { requireApiPermission } from "@/lib/auth/api";
 import { articlePayloadSchema } from "@/lib/validation/article";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const session = await auth();
-  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
   const { response } = await requireApiPermission(new URL(request.url).pathname);
   if (response) return response;
 
@@ -34,6 +30,7 @@ export async function POST(request: Request) {
     revalidatePath("/articles");
     revalidatePath(`/articles/${article.slug}`);
     revalidatePath("/sitemap.xml");
+    revalidateTag("articles", { expire: 0 });
     return NextResponse.json(created, { status: 201 });
   } catch (error) {
     console.error("Error creating article", error);

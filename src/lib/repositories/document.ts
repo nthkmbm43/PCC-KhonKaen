@@ -3,6 +3,7 @@ import { db } from '@/db';
 import { documents as documentRecords } from '@/db/schema';
 import { starterDocuments, type DownloadDocument } from '@/data/documents';
 import { downloadDocumentSchema } from '@/lib/validation/document';
+import { unstable_cache } from 'next/cache';
 
 export type EditableDownloadDocument = DownloadDocument & {
   databaseId?: string;
@@ -26,13 +27,17 @@ function parseRecord(record: typeof documentRecords.$inferSelect): EditableDownl
   };
 }
 
-async function getDatabaseDocuments() {
+const getCachedDatabaseDocuments = unstable_cache(async () => {
   try {
     return await db.select().from(documentRecords).orderBy(asc(documentRecords.sortOrder), desc(documentRecords.updatedAt));
   } catch (error) {
     console.error('Unable to read document library; using starter documents', error);
     return [];
   }
+}, ["document-records"], { tags: ["documents"], revalidate: 3600 });
+
+async function getDatabaseDocuments() {
+  return getCachedDatabaseDocuments();
 }
 
 export async function getAdminDocuments(): Promise<EditableDownloadDocument[]> {

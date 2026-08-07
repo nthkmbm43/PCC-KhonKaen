@@ -5,12 +5,18 @@ import { ArrowLeft, MapPin, Phone } from 'lucide-react';
 import { db } from '@/db';
 import { leads } from '@/db/schema';
 import { LeadTrackingForm } from '@/components/admin/LeadTrackingForm';
+import { unstable_cache } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
+const getAdminLead = unstable_cache(async (id: string) => {
+  const [lead] = await db.select().from(leads).where(eq(leads.id, id)).limit(1);
+  return lead || null;
+}, ["admin-lead-by-id"], { tags: ["leads"], revalidate: 3600 });
+
 export default async function LeadDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [lead] = await db.select().from(leads).where(eq(leads.id, id)).limit(1);
+  const lead = await getAdminLead(id);
   if (!lead) notFound();
 
   const siteDetails = [
