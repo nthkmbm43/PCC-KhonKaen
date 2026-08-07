@@ -6,7 +6,19 @@ import { desc } from "drizzle-orm";
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
-  const allProducts = await db.select().from(products).orderBy(desc(products.createdAt));
+  // The list does not need the large JSON content/highlights documents.
+  const allProducts = await db.select({
+    id: products.id,
+    slug: products.slug,
+    shortTitle: products.shortTitle,
+    title: products.title,
+    image: products.image,
+    category: products.category,
+    isFeatured: products.isFeatured,
+    status: products.status,
+    createdAt: products.createdAt,
+    updatedAt: products.updatedAt,
+  }).from(products).orderBy(desc(products.createdAt));
 
   const mappedProducts = allProducts.map(p => ({
     ...p,

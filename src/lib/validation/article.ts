@@ -24,6 +24,11 @@ export const articleDocumentSchema = z.object({
     paragraphs: nonEmptyLines,
     bullets: z.array(z.string().trim().min(1)).optional(),
     callout: z.string().trim().optional(),
+    images: z.array(z.object({
+      src: z.string().trim().min(1).max(1000),
+      alt: z.string().trim().min(1).max(300),
+      caption: z.string().trim().max(500).optional(),
+    })).max(12).optional(),
   })).min(1),
   checklist: nonEmptyLines,
   faq: z.array(z.object({

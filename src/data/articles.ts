@@ -3,6 +3,11 @@ export type ArticleSection = {
   paragraphs: string[];
   bullets?: string[];
   callout?: string;
+  images?: Array<{
+    src: string;
+    alt: string;
+    caption?: string;
+  }>;
 };
 
 export type KnowledgeArticle = {

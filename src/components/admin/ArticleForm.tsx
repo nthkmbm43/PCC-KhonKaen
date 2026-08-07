@@ -31,7 +31,7 @@ function createEmptyArticle(): ArticleFormState {
     imageAlt: "",
     product: { label: "ดูสินค้าและบริการที่เกี่ยวข้อง", href: "/products" },
     summary: [""],
-    sections: [{ heading: "", paragraphs: [""], bullets: [], callout: "" }],
+    sections: [{ heading: "", paragraphs: [""], bullets: [], callout: "", images: [] }],
     checklist: [""],
     faq: [{ question: "", answer: "" }],
     status: "draft",
@@ -84,6 +84,13 @@ export function ArticleForm({ initialData }: { initialData?: EditableArticle }) 
         paragraphs: section.paragraphs.filter(Boolean),
         bullets: section.bullets?.filter(Boolean),
         callout: section.callout?.trim() || undefined,
+        images: section.images
+          ?.filter((image) => image.src.trim())
+          .map((image) => ({
+            src: image.src.trim(),
+            alt: image.alt.trim(),
+            caption: image.caption?.trim() || undefined,
+          })),
       })),
       faq: form.faq.filter((item) => item.question.trim() || item.answer.trim()),
     };
@@ -137,12 +144,78 @@ export function ArticleForm({ initialData }: { initialData?: EditableArticle }) 
           </section>
 
           <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="flex items-center justify-between border-b pb-4"><div><h2 className="text-lg font-semibold">เนื้อหาหลัก</h2><p className="mt-1 text-xs text-slate-500">หนึ่งบรรทัดต่อหนึ่งย่อหน้าหรือ bullet</p></div><Button type="button" variant="outline" size="sm" onClick={() => setField("sections", [...form.sections, { heading: "", paragraphs: [""], bullets: [], callout: "" }])}><Plus className="mr-1 h-4 w-4" />เพิ่มหัวข้อ</Button></div>
+            <div className="flex items-center justify-between border-b pb-4"><div><h2 className="text-lg font-semibold">เนื้อหาหลัก</h2><p className="mt-1 text-xs text-slate-500">หนึ่งบรรทัดต่อหนึ่งย่อหน้าหรือ bullet</p></div><Button type="button" variant="outline" size="sm" onClick={() => setField("sections", [...form.sections, { heading: "", paragraphs: [""], bullets: [], callout: "", images: [] }])}><Plus className="mr-1 h-4 w-4" />เพิ่มหัวข้อ</Button></div>
             {form.sections.map((section, index) => (
               <div key={index} className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div className="flex items-center gap-3"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-sm font-bold text-white">{index + 1}</span><Input required value={section.heading} onChange={(event) => updateSection(index, { heading: event.target.value })} placeholder="หัวข้อย่อย" className="bg-white font-semibold" /><Button type="button" variant="ghost" size="icon" disabled={form.sections.length === 1} onClick={() => setField("sections", form.sections.filter((_, itemIndex) => itemIndex !== index))} className="text-rose-600"><Trash2 className="h-4 w-4" /></Button></div>
                 <textarea required value={section.paragraphs.join("\n")} onChange={(event) => updateSection(index, { paragraphs: event.target.value.split("\n") })} className={textAreaClass} placeholder="เนื้อหาแต่ละย่อหน้า (ขึ้นบรรทัดใหม่เพื่อแยกย่อหน้า)" />
                 <textarea value={(section.bullets || []).join("\n")} onChange={(event) => updateSection(index, { bullets: lines(event.target.value) })} className={textAreaClass} placeholder="รายการ bullet (ถ้ามี) หนึ่งรายการต่อบรรทัด" />
+                <div className="space-y-3 rounded-xl border border-dashed border-slate-300 bg-white p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <Label>ภาพประกอบหัวข้อนี้ (ไม่บังคับ)</Label>
+                      <p className="mt-1 text-xs text-slate-500">เพิ่มได้หลายภาพ ภาพจะโหลดเมื่อเลื่อนมาถึงเพื่อไม่ให้หน้าเว็บช้า</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => updateSection(index, {
+                        images: [...(section.images || []), { src: "", alt: "", caption: "" }],
+                      })}
+                    >
+                      <Plus className="mr-1 h-4 w-4" />เพิ่มภาพ
+                    </Button>
+                  </div>
+                  {(section.images || []).map((image, imageIndex) => (
+                    <div key={imageIndex} className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-semibold text-slate-700">ภาพที่ {imageIndex + 1}</p>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => updateSection(index, {
+                            images: (section.images || []).filter((_, itemIndex) => itemIndex !== imageIndex),
+                          })}
+                          className="text-rose-600"
+                          aria-label={`ลบภาพที่ ${imageIndex + 1}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <ImageUpload
+                        value={image.src}
+                        onChange={(value) => updateSection(index, {
+                          images: (section.images || []).map((item, itemIndex) => itemIndex === imageIndex ? { ...item, src: value } : item),
+                        })}
+                      />
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <Label>Alt Text สำหรับ SEO</Label>
+                          <Input
+                            required={Boolean(image.src)}
+                            value={image.alt}
+                            onChange={(event) => updateSection(index, {
+                              images: (section.images || []).map((item, itemIndex) => itemIndex === imageIndex ? { ...item, alt: event.target.value } : item),
+                            })}
+                            placeholder="เช่น ทีมงานติดตั้งลวด Post-Tension"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>คำบรรยายใต้ภาพ (ไม่บังคับ)</Label>
+                          <Input
+                            value={image.caption || ""}
+                            onChange={(event) => updateSection(index, {
+                              images: (section.images || []).map((item, itemIndex) => itemIndex === imageIndex ? { ...item, caption: event.target.value } : item),
+                            })}
+                            placeholder="อธิบายสิ่งที่ลูกค้าเห็นในภาพ"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
                 <textarea value={section.callout || ""} onChange={(event) => updateSection(index, { callout: event.target.value })} className={textAreaClass} placeholder="กล่องหมายเหตุสำคัญ (ถ้ามี)" />
               </div>
             ))}

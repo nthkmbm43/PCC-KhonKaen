@@ -1,14 +1,14 @@
 import { db } from "@/db";
 import { admins } from "@/db/schema";
 import { UsersClient } from "@/components/admin/UsersClient";
-import { auth } from "@/auth";
 import { canAccessRoute } from "@/lib/auth/rbac";
 import { redirect } from "next/navigation";
+import { getAdminSession } from "@/lib/auth/page";
 
 export const dynamic = "force-dynamic";
 
 export default async function UsersPage() {
-  const session = await auth();
+  const session = await getAdminSession();
   if (!session || !canAccessRoute(session.user?.role, "/admin/users")) {
     redirect("/admin"); // Defense in depth
   }

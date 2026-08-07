@@ -6,8 +6,10 @@ import { desc } from "drizzle-orm";
 export const dynamic = "force-dynamic";
 
 export default async function LineMarketingPage() {
-  const allProducts = await db.select({ id: products.id, title: products.title, slug: products.slug }).from(products).orderBy(desc(products.createdAt));
-  const allPages = await db.select({ id: pages.id, title: pages.title, slug: pages.slug }).from(pages).orderBy(desc(pages.createdAt));
+  const [allProducts, allPages] = await Promise.all([
+    db.select({ id: products.id, title: products.title, slug: products.slug }).from(products).orderBy(desc(products.createdAt)),
+    db.select({ id: pages.id, title: pages.title, slug: pages.slug }).from(pages).orderBy(desc(pages.createdAt)),
+  ]);
   
   // Format options for dropdown
   const productOptions = allProducts.map(p => ({

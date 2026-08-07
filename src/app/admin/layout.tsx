@@ -1,12 +1,11 @@
 import "../globals.css";
-import { db } from "@/db";
-import { siteSettings } from "@/db/schema";
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settingsArray = await db.select().from(siteSettings).limit(1);
-  const settings = settingsArray[0];
+  const settings = await getSiteSettings();
+  const icon = settings.contact.faviconUrl || settings.contact.logoUrl || "/images/logo.png";
 
   return {
     title: "Admin Dashboard | PCC CMS",
@@ -20,9 +19,9 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     icons: {
-      icon: settings?.faviconUrl || settings?.logoUrl || "/images/logo.png",
-      shortcut: settings?.faviconUrl || settings?.logoUrl || "/images/logo.png",
-      apple: settings?.faviconUrl || settings?.logoUrl || "/images/logo.png",
+      icon,
+      shortcut: icon,
+      apple: icon,
     },
   };
 }

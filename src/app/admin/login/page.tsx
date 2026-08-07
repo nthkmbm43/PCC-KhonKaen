@@ -1,20 +1,19 @@
 import { LoginForm } from "@/components/admin/LoginForm";
-import { db } from "@/db";
-import { siteSettings } from "@/db/schema";
 import Image from "next/image";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export default async function LoginPage() {
-  const settingsArray = await db.select().from(siteSettings).limit(1);
-  const settings = settingsArray[0];
+  const settings = await getSiteSettings();
+  const logoUrl = settings.contact.logoUrl;
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-slate-100 p-3 sm:p-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
         <div className="p-5 sm:p-10">
           <div className="flex justify-center mb-8">
-            {settings?.logoUrl ? (
+            {logoUrl ? (
               <Image 
-                src={settings.logoUrl} 
+                src={logoUrl}
                 alt="Logo" 
                 width={120} 
                 height={40} 

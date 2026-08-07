@@ -86,7 +86,10 @@ export default async function ArticleDetailPage({
       "@id": `${articleUrl}#article`,
       headline: article.title,
       description: article.description,
-      image: [absoluteUrl(article.image)],
+      image: [
+        absoluteUrl(article.image),
+        ...article.sections.flatMap((section) => section.images?.map((image) => absoluteUrl(image.src)) || []),
+      ],
       datePublished: article.publishedAt,
       dateModified: article.updatedAt,
       inLanguage: "th-TH",
@@ -236,6 +239,29 @@ export default async function ArticleDetailPage({
                       <p key={paragraph}>{paragraph}</p>
                     ))}
                   </div>
+                  {section.images?.length ? (
+                    <div className={`mt-7 grid gap-5 ${section.images.length > 1 ? "sm:grid-cols-2" : ""}`}>
+                      {section.images.map((image, imageIndex) => (
+                        <figure key={`${image.src}-${imageIndex}`} className="overflow-hidden border border-slate-200 bg-slate-50">
+                          <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                            <Image
+                              src={image.src}
+                              alt={image.alt}
+                              fill
+                              quality={82}
+                              sizes={section.images && section.images.length > 1 ? "(max-width: 640px) 100vw, 425px" : "(max-width: 1024px) 100vw, 850px"}
+                              className="object-cover"
+                            />
+                          </div>
+                          {image.caption ? (
+                            <figcaption className="px-4 py-3 text-sm leading-6 text-slate-600">
+                              {image.caption}
+                            </figcaption>
+                          ) : null}
+                        </figure>
+                      ))}
+                    </div>
+                  ) : null}
                   {section.bullets ? (
                     <ul className="mt-6 grid gap-3 border border-slate-200 bg-slate-50 p-6 sm:grid-cols-2">
                       {section.bullets.map((bullet) => (

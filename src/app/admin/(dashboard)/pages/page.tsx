@@ -47,9 +47,27 @@ export default async function PagesList({
   // Fetch data
   const allPages = await db
     .select({
-      page: pages,
-      seo: seoMetadata,
-      updatedByAdmin: admins,
+      page: {
+        id: pages.id,
+        slug: pages.slug,
+        title: pages.title,
+        template: pages.template,
+        status: pages.status,
+        workflowState: pages.workflowState,
+        publishedAt: pages.publishedAt,
+        updatedAt: pages.updatedAt,
+      },
+      seo: {
+        id: seoMetadata.id,
+        title: seoMetadata.title,
+        description: seoMetadata.description,
+        ogImage: seoMetadata.ogImage,
+        canonical: seoMetadata.canonical,
+      },
+      updatedByAdmin: {
+        id: admins.id,
+        name: admins.name,
+      },
     })
     .from(pages)
     .leftJoin(seoMetadata, and(eq(seoMetadata.resourceId, pages.id), eq(seoMetadata.resourceType, 'page')))

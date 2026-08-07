@@ -1,11 +1,21 @@
 import { db } from "@/db";
 import { articles as articleRecords } from "@/db/schema";
 import { articles as starterArticles, type KnowledgeArticle } from "@/data/articles";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { articleDocumentSchema } from "@/lib/validation/article";
+import { cache } from "react";
 
 export type EditableArticle = KnowledgeArticle & {
   databaseId?: string;
+  status: "draft" | "published";
+  source: "starter" | "database";
+};
+
+export type AdminArticleListItem = {
+  slug: string;
+  title: string;
+  category: string;
+  updatedAt: string;
   status: "draft" | "published";
   source: "starter" | "database";
 };
@@ -36,13 +46,33 @@ async function getDatabaseArticles() {
   }
 }
 
-export async function getAdminArticles(): Promise<EditableArticle[]> {
-  const records = await getDatabaseArticles();
-  const overrides = new Map(records.map((record) => [record.slug, parseRecord(record)]));
+export async function getAdminArticles(): Promise<AdminArticleListItem[]> {
+  const records = await db.select({
+    slug: articleRecords.slug,
+    title: articleRecords.title,
+    category: articleRecords.category,
+    workflowState: articleRecords.workflowState,
+    updatedAt: articleRecords.updatedAt,
+  }).from(articleRecords).orderBy(desc(articleRecords.updatedAt));
+  const overriddenSlugs = new Set(records.map((record) => record.slug));
   const starter = starterArticles
-    .filter((article) => !overrides.has(article.slug))
-    .map((article) => ({ ...article, status: "published" as const, source: "starter" as const }));
-  const database = records.map(parseRecord).filter((article): article is EditableArticle => Boolean(article));
+    .filter((article) => !overriddenSlugs.has(article.slug))
+    .map((article) => ({
+      slug: article.slug,
+      title: article.title,
+      category: article.category,
+      updatedAt: article.updatedAt,
+      status: "published" as const,
+      source: "starter" as const,
+    }));
+  const database = records.map((record) => ({
+    slug: record.slug,
+    title: record.title,
+    category: record.category,
+    updatedAt: record.updatedAt.toISOString().slice(0, 10),
+    status: record.workflowState === "published" ? "published" as const : "draft" as const,
+    source: "database" as const,
+  }));
 
   return [...database, ...starter].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
@@ -59,15 +89,29 @@ export async function getPublishedArticles(): Promise<KnowledgeArticle[]> {
   return [...database, ...starter].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 }
 
-export async function getPublishedArticle(slug: string) {
-  const articles = await getPublishedArticles();
-  return articles.find((article) => article.slug === slug);
-}
+export const getPublishedArticle = cache(async (slug: string) => {
+  try {
+    const [record] = await db.select().from(articleRecords).where(eq(articleRecords.slug, slug)).limit(1);
+    if (record) {
+      if (record.workflowState !== "published") return undefined;
+      return parseRecord(record) || undefined;
+    }
+  } catch (error) {
+    console.error(`Unable to read article ${slug}; using starter content`, error);
+  }
+  return starterArticles.find((article) => article.slug === slug);
+});
 
-export async function getEditableArticle(slug: string) {
-  const articles = await getAdminArticles();
-  return articles.find((article) => article.slug === slug);
-}
+export const getEditableArticle = cache(async (slug: string) => {
+  try {
+    const [record] = await db.select().from(articleRecords).where(eq(articleRecords.slug, slug)).limit(1);
+    if (record) return parseRecord(record) || undefined;
+  } catch (error) {
+    console.error(`Unable to read editable article ${slug}; using starter content`, error);
+  }
+  const starter = starterArticles.find((article) => article.slug === slug);
+  return starter ? { ...starter, status: "published" as const, source: "starter" as const } : undefined;
+});
 
 export async function getRelatedPublishedArticles(article: KnowledgeArticle, limit = 3) {
   const articles = await getPublishedArticles();

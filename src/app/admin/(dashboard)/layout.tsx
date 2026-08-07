@@ -1,23 +1,20 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { db } from "@/db";
-import { siteSettings } from "@/db/schema";
 import { SignOutButton } from "@/components/admin/SignOutButton";
-import { auth } from "@/auth";
 import { requireAdminPagePermission } from "@/lib/auth/page";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  await requireAdminPagePermission("/admin");
-  const settingsArray = await db.select().from(siteSettings).limit(1);
-  const settings = settingsArray[0];
-  const session = await auth();
+  const [session, settings] = await Promise.all([
+    requireAdminPagePermission("/admin"),
+    getSiteSettings(),
+  ]);
   const role = session?.user?.role;
 
-  const displayName =
-    (settings as { companyName?: string })?.companyName || "PCC Post-Tension";
+  const displayName = "PCC Post-Tension";
 
   return (
     <div className="flex min-h-screen min-w-0 bg-slate-50">
-      <AdminSidebar logoUrl={settings?.logoUrl || undefined} role={role} />
+      <AdminSidebar logoUrl={settings.contact.logoUrl || undefined} role={role} />
 
       {/* Main Content */}
       <main className="flex min-w-0 flex-1 flex-col overflow-x-hidden">

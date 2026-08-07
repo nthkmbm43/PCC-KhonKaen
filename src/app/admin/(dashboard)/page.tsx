@@ -1,6 +1,7 @@
 import { db } from "@/db";
-import { pages, siteSettings } from "@/db/schema";
+import { pages } from "@/db/schema";
 import { sql } from "drizzle-orm";
+import { getSiteSettings } from "@/lib/getSiteSettings";
 import Link from "next/link";
 import {
   FileText,
@@ -14,17 +15,17 @@ import {
 } from "lucide-react";
 
 export default async function AdminDashboard() {
-  const pagesCountRes = await db.select({ count: sql<number>`count(*)` }).from(pages);
+  const [pagesCountRes, settings] = await Promise.all([
+    db.select({ count: sql<number>`count(*)` }).from(pages),
+    getSiteSettings(),
+  ]);
   const pagesCount = Number(pagesCountRes[0]?.count || 0);
 
-  const settingsArray = await db.select().from(siteSettings).limit(1);
-  const settings = settingsArray[0];
-
-  const hasLogo = !!settings?.logoUrl;
-  const hasFavicon = !!settings?.faviconUrl;
-  const hasPhone = !!settings?.mainPhone;
+  const hasLogo = !!settings.contact.logoUrl;
+  const hasFavicon = !!settings.contact.faviconUrl;
+  const hasPhone = !!settings.contact.mainPhone;
   const hasNavbarLinks =
-    settings?.navbarLinks && Array.isArray(settings.navbarLinks) && settings.navbarLinks.length > 0;
+    Array.isArray(settings.navbarLinks) && settings.navbarLinks.length > 0;
 
   const checks = [
     { label: "โลโก้หลัก (Navbar)", done: hasLogo },
