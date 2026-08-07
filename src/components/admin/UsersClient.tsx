@@ -6,7 +6,7 @@ import { th } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserPlus, Trash2, Mail, Lock, User as UserIcon } from "lucide-react";
+import { UserPlus, Trash2, Mail, Lock, User as UserIcon, Pencil, ShieldCheck } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -41,11 +41,57 @@ export function UsersClient({ initialUsers }: { initialUsers: User[] }) {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   
   // Form state
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
+  const [editRole, setEditRole] = useState<"admin" | "superuser">("admin");
+  const [editPassword, setEditPassword] = useState("");
+
+  const openEditDialog = (user: User) => {
+    setEditingUser(user);
+    setEditName(user.name);
+    setEditEmail(user.email);
+    setEditRole(user.role === "superuser" ? "superuser" : "admin");
+    setEditPassword("");
+  };
+
+  const handleEditUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    setIsEditing(true);
+
+    try {
+      const res = await fetch(`/api/users/${editingUser.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editName,
+          email: editEmail,
+          role: editRole,
+          password: editPassword,
+        }),
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "แก้ไขผู้ดูแลระบบไม่สำเร็จ");
+
+      setUsers((current) => current.map((user) => user.id === result.id
+        ? { ...user, ...result, createdAt: result.createdAt ? new Date(result.createdAt) : user.createdAt }
+        : user));
+      setEditingUser(null);
+      setEditPassword("");
+      toast.success("แก้ไขข้อมูลผู้ดูแลระบบเรียบร้อยแล้ว");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "แก้ไขผู้ดูแลระบบไม่สำเร็จ");
+    } finally {
+      setIsEditing(false);
+    }
+  };
 
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,7 +130,10 @@ export function UsersClient({ initialUsers }: { initialUsers: User[] }) {
         method: "DELETE",
       });
 
-      if (!res.ok) throw new Error("Failed to delete user");
+      if (!res.ok) {
+        const result = await res.json();
+        throw new Error(result.error || "Failed to delete user");
+      }
 
       setUsers(users.filter((u) => u.id !== id));
       toast.success("ลบผู้ดูแลระบบสำเร็จ");
@@ -207,6 +256,18 @@ export function UsersClient({ initialUsers }: { initialUsers: User[] }) {
                     {user.createdAt ? format(new Date(user.createdAt), "dd MMM yyyy", { locale: th }) : "-"}
                   </td>
                   <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-1">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="text-blue-600 hover:bg-blue-50 hover:text-blue-800"
+                      onClick={() => openEditDialog(user)}
+                      aria-label={`แก้ไขข้อมูล ${user.name}`}
+                    >
+                      <Pencil className="mr-1.5 h-4 w-4" />
+                      แก้ไข
+                    </Button>
                     <AlertDialog>
                       <AlertDialogTrigger render={(props) => (
                         <Button 
@@ -237,6 +298,7 @@ export function UsersClient({ initialUsers }: { initialUsers: User[] }) {
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -244,6 +306,106 @@ export function UsersClient({ initialUsers }: { initialUsers: User[] }) {
           </tbody>
         </table>
       </div>
+
+      <Dialog open={editingUser !== null} onOpenChange={(open) => {
+        if (!open && !isEditing) setEditingUser(null);
+      }}>
+        <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-[460px]">
+          <form onSubmit={handleEditUser}>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Pencil className="h-4 w-4 text-blue-600" />
+                แก้ไขข้อมูลผู้ดูแลระบบ
+              </DialogTitle>
+              <DialogDescription>
+                แก้ไขชื่อ อีเมล บทบาท หรือกำหนดรหัสผ่านใหม่ หากไม่ต้องการเปลี่ยนรหัสผ่านให้เว้นช่องไว้
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-6">
+              <div className="space-y-2">
+                <Label htmlFor="edit-name">ชื่อ-นามสกุล</Label>
+                <div className="relative">
+                  <UserIcon className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                  <Input
+                    id="edit-name"
+                    required
+                    minLength={2}
+                    maxLength={100}
+                    className="pl-9"
+                    value={editName}
+                    onChange={(event) => setEditName(event.target.value)}
+                    disabled={isEditing}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-email">อีเมลสำหรับเข้าสู่ระบบ</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                  <Input
+                    id="edit-email"
+                    type="email"
+                    required
+                    maxLength={255}
+                    className="pl-9"
+                    value={editEmail}
+                    onChange={(event) => setEditEmail(event.target.value)}
+                    disabled={isEditing}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-role">บทบาทและสิทธิ์</Label>
+                <div className="relative">
+                  <ShieldCheck className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                  <select
+                    id="edit-role"
+                    value={editRole}
+                    onChange={(event) => setEditRole(event.target.value as "admin" | "superuser")}
+                    disabled={isEditing}
+                    className="h-9 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50"
+                  >
+                    <option value="admin">Admin — จัดการเนื้อหาและลูกค้า</option>
+                    <option value="superuser">Superuser — เข้าถึงทุกส่วน</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-password">รหัสผ่านใหม่ (ไม่บังคับ)</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                  <Input
+                    id="edit-password"
+                    type="password"
+                    minLength={8}
+                    maxLength={128}
+                    autoComplete="new-password"
+                    placeholder="เว้นว่างเพื่อใช้รหัสผ่านเดิม"
+                    className="pl-9"
+                    value={editPassword}
+                    onChange={(event) => setEditPassword(event.target.value)}
+                    disabled={isEditing}
+                  />
+                </div>
+                <p className="text-xs text-slate-500">กรอกรหัสผ่านใหม่อย่างน้อย 8 ตัวอักษร เฉพาะเมื่อต้องการเปลี่ยน</p>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setEditingUser(null)} disabled={isEditing}>
+                ยกเลิก
+              </Button>
+              <Button type="submit" disabled={isEditing} className="bg-blue-600 text-white hover:bg-blue-700">
+                {isEditing ? "กำลังบันทึก..." : "บันทึกการแก้ไข"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
