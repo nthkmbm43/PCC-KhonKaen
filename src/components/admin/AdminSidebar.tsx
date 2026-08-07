@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   FileText,
@@ -53,6 +53,7 @@ const systemItems: NavItem[] = [
 
 export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: string }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -78,6 +79,25 @@ export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: strin
   const filteredMarketingItems = marketingItems.filter((item) => canAccessRoute(role, item.href));
   const filteredSystemItems = systemItems.filter((item) => canAccessRoute(role, item.href));
 
+  useEffect(() => {
+    // Warm every permitted dashboard route shortly after login. Next's
+    // scheduler de-duplicates these with Link prefetches, while the stagger
+    // avoids sending a burst of requests at the same instant.
+    const routes = [
+      "/admin",
+      ...websiteItems,
+      ...marketingItems,
+      ...systemItems,
+    ]
+      .map((item) => typeof item === "string" ? item : item.href)
+      .filter((href) => canAccessRoute(role, href));
+    const timers = routes.map((href, index) => window.setTimeout(() => {
+      router.prefetch(href);
+    }, index * 75));
+
+    return () => timers.forEach((timer) => window.clearTimeout(timer));
+  }, [role, router]);
+
   const renderNavSection = (title: string, items: NavItem[]) => {
     if (items.length === 0) return null;
     return (
@@ -92,6 +112,7 @@ export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: strin
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 onClick={() => setMobileOpen(false)}
                 className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                   active
@@ -149,7 +170,7 @@ export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: strin
     >
       {/* Logo / Brand */}
       <div className="border-b border-slate-800 py-5 pl-16 pr-4 lg:px-4">
-        <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 group">
+        <Link href="/admin" prefetch={true} onClick={() => setMobileOpen(false)} className="flex items-center gap-3 group">
           <div className="flex-shrink-0">
             {logoUrl ? (
               <div className="relative w-10 h-10 rounded-xl overflow-hidden ring-2 ring-slate-700 group-hover:ring-blue-500 transition-all bg-white flex items-center justify-center">
@@ -176,6 +197,7 @@ export function AdminSidebar({ logoUrl, role }: { logoUrl?: string; role?: strin
         <div className="mb-5">
           <Link
             href="/admin"
+            prefetch={true}
             onClick={() => setMobileOpen(false)}
             className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
               isDashboard

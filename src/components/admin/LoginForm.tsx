@@ -30,8 +30,10 @@ export function LoginForm() {
         toast.error("Username หรือ Password ไม่ถูกต้อง");
       } else {
         toast.success("เข้าสู่ระบบสำเร็จ");
-        router.push("/admin");
-        router.refresh();
+        // The successful credentials request has already written the session
+        // cookie. Replacing the login route is sufficient; refreshing here
+        // caused the dashboard to be requested and rendered twice.
+        router.replace("/admin");
       }
     } catch {
       toast.error("เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");

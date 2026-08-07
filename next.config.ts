@@ -3,6 +3,15 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   serverExternalPackages: ["sharp"],
+  experimental: {
+    // Admin pages are dynamic because they are protected by an authenticated
+    // layout. Keep their RSC payloads in the client router cache so switching
+    // between dashboard tabs does not require a fresh server round-trip.
+    staleTimes: {
+      dynamic: 300,
+      static: 300,
+    },
+  },
   async redirects() {
     return [
       {
